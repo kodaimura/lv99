@@ -37,5 +37,6 @@ func main() {
 	}))
 
 	router.SetApi(r.Group("/api"))
+	router.SetAdminApi(r.Group("/api"))
 	r.Run(":" + config.AppPort)
 }

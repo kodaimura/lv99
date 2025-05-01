@@ -37,10 +37,40 @@ func ApiAuth() gin.HandlerFunc {
 			return
 		}
 
+		if payload.AccountRole != 1 {
+			c.Error(core.ErrForbidden)
+			c.Abort()
+			return
+		}
+
 		c.Set(helper.CONTEXT_KEY_PAYLOAD, payload)
 		c.Next()
 	}
 }
+
+// ApiAdminAuth is a middleware that validates the JWT token for API access.
+// If the token is invalid, it returns an Unauthorized error in JSON format.
+func ApiAdminAuth() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		token := helper.GetAccessToken(c)
+		payload, err := core.Auth.VerifyAccessToken(token)
+		if err != nil {
+			c.Error(core.ErrUnauthorized)
+			c.Abort()
+			return
+		}
+
+		if payload.AccountRole != 0 {
+			c.Error(core.ErrForbidden)
+			c.Abort()
+			return
+		}
+
+		c.Set(helper.CONTEXT_KEY_PAYLOAD, payload)
+		c.Next()
+	}
+}
+
 
 // ApiErrorHandler is a middleware that handles API errors.
 // It checks for specific error types and returns the appropriate HTTP status and message.

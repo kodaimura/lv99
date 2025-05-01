@@ -11,6 +11,7 @@ type AuthI interface {
 type AuthPayload struct {
 	AccountId   int
 	AccountName string
+	AccountRole int
 }
 
 var Auth AuthI = &noopAuth{}
