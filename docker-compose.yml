@@ -1,0 +1,44 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/api/Dockerfile
+    volumes:
+      - ./api:/app
+      - ./api/linux/logrotate.d/app:/etc/logrotate.d/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - ENV=dev
+    working_dir: /app
+    command: sh -c "go run cmd/main.go"
+    tty: true
+
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile
+    volumes:
+      - ./web:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - API_HOST=http://api:8000
+      - NEXT_PUBLIC_API_HOST=http://localhost:8000
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    tty: true
+
+  db:
+    image: postgres:17.4
+    volumes:
+      - ./api/migrations:/docker-entrypoint-initdb.d
+      - ./docker/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=project_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
