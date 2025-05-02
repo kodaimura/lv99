@@ -42,6 +42,7 @@ func (ctrl *AccountController) ApiSignup(c *gin.Context) {
 	c.JSON(200, response.Account{
 		AccountId:   account.AccountId,
 		AccountName: account.AccountName,
+		AccountRole: account.AccountRole,
 		CreatedAt:   account.CreatedAt,
 		UpdatedAt:   account.UpdatedAt,
 	})
@@ -67,6 +68,7 @@ func (ctrl *AccountController) ApiLogin(c *gin.Context) {
 	accessToken, err := core.Auth.CreateAccessToken(core.AuthPayload{
 		AccountId:   account.AccountId,
 		AccountName: account.AccountName,
+		AccountRole: account.AccountRole,
 	})
 	if err != nil {
 		c.Error(err)
@@ -76,6 +78,7 @@ func (ctrl *AccountController) ApiLogin(c *gin.Context) {
 	refreshToken, err := core.Auth.CreateRefreshToken(core.AuthPayload{
 		AccountId:   account.AccountId,
 		AccountName: account.AccountName,
+		AccountRole: account.AccountRole,
 	})
 	if err != nil {
 		c.Error(err)
@@ -95,6 +98,7 @@ func (ctrl *AccountController) ApiLogin(c *gin.Context) {
 		Account: response.Account{
 			AccountId:   account.AccountId,
 			AccountName: account.AccountName,
+			AccountRole: account.AccountRole,
 			CreatedAt:   account.CreatedAt,
 			UpdatedAt:   account.UpdatedAt,
 		},
@@ -114,6 +118,7 @@ func (ctrl *AccountController) ApiRefresh(c *gin.Context) {
 	accessToken, err := core.Auth.CreateAccessToken(core.AuthPayload{
 		AccountId:   payload.AccountId,
 		AccountName: payload.AccountName,
+		AccountRole: payload.AccountRole,
 	})
 	if err != nil {
 		c.Error(err)
@@ -150,6 +155,7 @@ func (ctrl *AccountController) ApiGetOne(c *gin.Context) {
 	c.JSON(200, response.Account{
 		AccountId:   account.AccountId,
 		AccountName: account.AccountName,
+		AccountRole: account.AccountRole,
 		CreatedAt:   account.CreatedAt,
 		UpdatedAt:   account.UpdatedAt,
 	})
@@ -208,6 +214,7 @@ func (ctrl *AccountController) ApiPutOne(c *gin.Context) {
 	c.JSON(200, response.Account{
 		AccountId:   account.AccountId,
 		AccountName: account.AccountName,
+		AccountRole: account.AccountRole,
 		CreatedAt:   account.CreatedAt,
 		UpdatedAt:   account.UpdatedAt,
 	})

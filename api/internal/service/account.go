@@ -7,6 +7,7 @@ import (
 
 	"lv99/internal/core"
 	"lv99/internal/dto/input"
+	"lv99/internal/helper"
 	"lv99/internal/model"
 	"lv99/internal/repository"
 )
@@ -87,6 +88,7 @@ func (srv *accountService) Signup(in input.Signup) (model.Account, error) {
 	account := model.Account{
 		AccountName:     in.AccountName,
 		AccountPassword: string(hashed),
+		AccountRole: helper.ACCOUNT_ROLE_NOMAL,
 	}
 
 	account, err = srv.accountRepository.Insert(&account)

@@ -3,6 +3,7 @@ package response
 type Account struct {
 	AccountId   int    `json:"account_id"`
 	AccountName string `json:"account_name"`
+	AccountRole int    `json:"account_role"`
 	CreatedAt   string `json:"created_at"`
 	UpdatedAt   string `json:"updated_at"`
 }
