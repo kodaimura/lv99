@@ -67,7 +67,6 @@ func (ctrl *AccountController) ApiLogin(c *gin.Context) {
 	accessToken, err := core.Auth.CreateAccessToken(core.AuthPayload{
 		AccountId:   account.AccountId,
 		AccountName: account.AccountName,
-		AccountRole: 1,
 	})
 	if err != nil {
 		c.Error(err)
@@ -77,7 +76,6 @@ func (ctrl *AccountController) ApiLogin(c *gin.Context) {
 	refreshToken, err := core.Auth.CreateRefreshToken(core.AuthPayload{
 		AccountId:   account.AccountId,
 		AccountName: account.AccountName,
-		AccountRole: 1,
 	})
 	if err != nil {
 		c.Error(err)
@@ -116,7 +114,6 @@ func (ctrl *AccountController) ApiRefresh(c *gin.Context) {
 	accessToken, err := core.Auth.CreateAccessToken(core.AuthPayload{
 		AccountId:   payload.AccountId,
 		AccountName: payload.AccountName,
-		AccountRole: 1,
 	})
 	if err != nil {
 		c.Error(err)
@@ -124,6 +121,8 @@ func (ctrl *AccountController) ApiRefresh(c *gin.Context) {
 	}
 
 	helper.SetAccessTokenCookie(c, accessToken)
+
+	core.Logger.Info("access token refreshed: id=%d name=%s", payload.AccountId, payload.AccountName)
 
 	c.JSON(200, response.Refresh{
 		AccessToken: accessToken,
