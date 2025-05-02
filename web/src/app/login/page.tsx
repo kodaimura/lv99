@@ -17,8 +17,12 @@ const LoginPage: React.FC = () => {
     setError(null);
 
     try {
-      await api.post('accounts/login', { account_name, account_password });
-      router.push('/dashboard');
+      const response: any = await api.post('accounts/login', { account_name, account_password });
+      if (response?.account?.account_role == 0) {
+        router.push('/admin');
+      } else {
+        router.push('/dashboard');
+      }
     } catch (err) {
       if (err instanceof HttpError && err.status === 401) {
         setError('ユーザ名又はパスワードが異なります。');

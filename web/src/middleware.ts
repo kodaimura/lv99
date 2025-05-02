@@ -1,5 +1,22 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
+
+const isAdminPath = (pathname: string) => pathname.startsWith('/admin');
+
+const isAdminAccount = async (access_token: string): Promise<boolean> => {
+  try {
+    const res = await fetch(`${process.env.API_HOST}/api/accounts/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: `access_token=${access_token}`,
+      },
+      credentials: 'include',
+    });
+    return (await res.json())?.account_role === 0
+  } catch (err) {
+    return false;
+  }
+}
 
 export async function middleware(request: NextRequest) {
   const accessToken = request.cookies.get('access_token')?.value;
@@ -10,6 +27,9 @@ export async function middleware(request: NextRequest) {
   const bufferSeconds = 30;
 
   if (accessToken && accessTokenExpiresAt && now < parseInt(accessTokenExpiresAt) - bufferSeconds) {
+    if (isAdminPath(request.nextUrl.pathname) && !(await isAdminAccount(accessToken))) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
     return NextResponse.next();
   }
 
@@ -63,11 +83,16 @@ export async function middleware(request: NextRequest) {
     cookies.forEach(cookie => response.headers.append('Set-Cookie', cookie.trim()));
   }
 
+  if (isAdminPath(request.nextUrl.pathname) && !(await isAdminAccount(access_token))) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
   return response;
 }
 
 export const config = {
   matcher: [
     '/dashboard',
+    '/admin/:path*',
   ],
 };
