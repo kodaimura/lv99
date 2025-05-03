@@ -15,15 +15,19 @@ var gorm = db.NewGormDB()
 
 /* DI (Repository) */
 var accountRepository = repository.NewGormAccountRepository(gorm)
+var questionRepository = repository.NewGormQuestionRepository(gorm)
 
 /* DI (Query) */
 //var xxxQuery = query.NewXxxQuery(sqlx)
 
 /* DI (Service) */
 var accountService = service.NewAccountService(accountRepository)
+var questionService = service.NewQuestionService(questionRepository)
 
 /* DI (Controller) */
 var accountController = controller.NewAccountController(accountService)
+var questionController = controller.NewQuestionController(questionService)
+
 
 func SetApi(r *gin.RouterGroup) {
 	r.Use(middleware.ApiErrorHandler())
@@ -38,5 +42,11 @@ func SetApi(r *gin.RouterGroup) {
 		auth.PUT("/accounts/me", accountController.ApiPutOne)
 		auth.PUT("/accounts/me/password", accountController.ApiPutPassword)
 		auth.DELETE("/accounts/me", accountController.ApiDeleteOne)
+
+		auth.POST("/questions", questionController.ApiPostOne)
+		auth.GET("/questions", questionController.ApiGet)
+		auth.GET("/questions/:question_id", questionController.ApiGetOne)
+		auth.PUT("/questions/:question_id", questionController.ApiPutOne)
+		auth.DELETE("/questions/:question_id", questionController.ApiDeleteOne)
 	}
 }
