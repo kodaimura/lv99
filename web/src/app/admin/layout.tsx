@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Header from "@/app/components/layout/header";
-import Footer from "@/app/components/layout/footer";
-import Main from "@/app/components/layout/main";
-import LogoutButton from "@/app/components/parts/button/logout-button";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
+import Main from "@/components/layout/main";
+import LogoutButton from "@/components/parts/button/logout-button";
 
 export const metadata: Metadata = {
   title: "lv99",

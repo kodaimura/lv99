@@ -1,6 +1,6 @@
 'use client';
 
-import { api } from '@/app/lib/api/api.client';
+import { api } from '@/lib/api/api.client';
 import styles from './logout-button.module.css';
 
 const logout = async () => {

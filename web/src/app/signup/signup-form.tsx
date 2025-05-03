@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { HttpError } from '@/app/lib/api/common';
-import { api } from '@/app/lib/api/api.client';
+import { HttpError } from '@/lib/api/common';
+import { api } from '@/lib/api/api.client';
 import styles from './signup-form.module.css';
 
 const SignupForm: React.FC = () => {

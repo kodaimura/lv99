@@ -1,10 +1,10 @@
 import React from 'react';
 import type { Metadata } from "next";
 import styles from './page.module.css';
-import Header from '@/app/components/layout/header';
-import Main from '@/app/components/layout/main';
-import Footer from "@/app/components/layout/footer";
-import SignupLink from '@/app/components/parts/button/signup-link';
+import Header from '@/components/layout/header';
+import Main from '@/components/layout/main';
+import Footer from "@/components/layout/footer";
+import SignupLink from '@/components/parts/button/signup-link';
 import LoginForm from './login-form';
 
 export const metadata: Metadata = {

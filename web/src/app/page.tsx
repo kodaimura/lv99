@@ -1,9 +1,9 @@
 import styles from "./page.module.css";
-import Header from '@/app/components/layout/header';
-import Main from '@/app/components/layout/main';
-import Footer from "@/app/components/layout/footer";
-import LoginLink from "@/app/components/parts/button/login-link";
-import SignupLink from "@/app/components/parts/button/signup-link";
+import Header from '@/components/layout/header';
+import Main from '@/components/layout/main';
+import Footer from "@/components/layout/footer";
+import LoginLink from "@/components/parts/button/login-link";
+import SignupLink from "@/components/parts/button/signup-link";
 
 export default function Home() {
   return (
