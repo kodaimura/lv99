@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS question (
+	question_id SERIAL PRIMARY KEY,
+	question_title TEXT NOT NULL,
+	question_content TEXT NOT NULL,
+  question_answer TEXT NOT NULL,
+  question_level INTEGER NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted_at TIMESTAMP NULL
+);
+
+create trigger trg_question_upd BEFORE UPDATE ON question FOR EACH ROW
+  execute procedure set_updated_at();
