@@ -1,0 +1,25 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  height: 65px;
+  padding: 0 15px;
+}
+
+.title {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.childrenWrapper {
+  display: flex;
+  gap: 12px;
+}
