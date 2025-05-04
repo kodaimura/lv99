@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import React from 'react';
 import { Metadata } from 'next';
+import styles from './page.module.css';
 import { api } from '@/lib/api/api.server';
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 const DashboardPage: React.FC = async () => {
   const data: any = await api.get('accounts/me');
   return (
-    <div>
+    <div className={styles.container}>
       ようこそ {data.account_name} さん
     </div>
   );
