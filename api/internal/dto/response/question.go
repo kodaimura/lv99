@@ -3,6 +3,8 @@ package response
 import (
 	"lv99/internal/model"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 // ============================
@@ -10,13 +12,14 @@ import (
 // ============================
 
 type Question struct {
-	QuestionId      int       `json:"question_id"`
-	QuestionTitle   string    `json:"question_title"`
-	QuestionContent string    `json:"question_content"`
-	QuestionAnswer  string    `json:"question_answer"`
-	QuestionLevel   int       `json:"question_level"`
-	CreatedAt       time.Time `json:"created_at"`
-	UpdatedAt       time.Time `json:"updated_at"`
+	QuestionId      int            `json:"question_id"`
+	QuestionTitle   string         `json:"question_title"`
+	QuestionContent string         `json:"question_content"`
+	QuestionAnswer  string         `json:"question_answer"`
+	QuestionLevel   int            `json:"question_level"`
+	CreatedAt       time.Time      `json:"created_at"`
+	UpdatedAt       time.Time      `json:"updated_at"`
+	DeletedAt       gorm.DeletedAt `json:"deleted_at"`
 }
 
 func FromModelQuestion(m model.Question) Question {
@@ -28,6 +31,7 @@ func FromModelQuestion(m model.Question) Question {
 		QuestionLevel:   m.QuestionLevel,
 		CreatedAt:       m.CreatedAt,
 		UpdatedAt:       m.UpdatedAt,
+		DeletedAt:       m.DeletedAt,
 	}
 }
 

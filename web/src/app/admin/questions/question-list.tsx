@@ -19,6 +19,15 @@ const QuestionList: React.FC<Props> = ({ questions, onClickRow }) => {
     }
   }
 
+  const restoreRow = async (q: any) => {
+    const question_id = q.question_id;
+    try {
+      await api.patch(`questions/${question_id}/restore`);
+    } catch (err) {
+
+    }
+  }
+
   return (
     <div className={styles.tableContainer}>
       <table className={styles.table}>
@@ -44,7 +53,10 @@ const QuestionList: React.FC<Props> = ({ questions, onClickRow }) => {
               <td className={styles.td}>{q.question_level}</td>
               <td className={styles.td}>{q.updated_at}</td>
               <td className={styles.td}><button onClick={() => onClickRow(q)}>編集</button></td>
-              <td className={styles.td}><button onClick={() => deleteRow(q)}>編集</button></td>
+              <td className={styles.td}>
+                {q.deleted_at ? <button onClick={() => restoreRow(q)}>復元</button> : <button onClick={() => deleteRow(q)}>削除</button>}
+
+              </td>
             </tr>
           ))}
         </tbody>

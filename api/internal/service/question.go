@@ -8,10 +8,12 @@ import (
 
 type QuestionService interface {
 	Get(in input.Question) ([]model.Question, error)
+	GetAll(in input.Question) ([]model.Question, error)
 	GetOne(in input.Question) (model.Question, error)
 	CreateOne(in input.Question) (model.Question, error)
 	UpdateOne(in input.Question) (model.Question, error)
 	DeleteOne(in input.Question) error
+	RestoreOne(in input.QuestionPK) error
 }
 
 type questionService struct {
@@ -25,7 +27,23 @@ func NewQuestionService(questionRepository repository.QuestionRepository) Questi
 }
 
 func (srv *questionService) Get(in input.Question) ([]model.Question, error) {
-	return srv.questionRepository.Get(&model.Question{
+	//return srv.questionRepository.Get(&model.Question{
+	//	QuestionTitle: in.QuestionTitle,
+	//	QuestionContent: in.QuestionContent,
+	//	QuestionAnswer: in.QuestionAnswer,
+	//	QuestionLevel: in.QuestionLevel,
+	//})
+
+	return srv.questionRepository.GetAll(&model.Question{
+		QuestionTitle: in.QuestionTitle,
+		QuestionContent: in.QuestionContent,
+		QuestionAnswer: in.QuestionAnswer,
+		QuestionLevel: in.QuestionLevel,
+	})
+}
+
+func (srv *questionService) GetAll(in input.Question) ([]model.Question, error) {
+	return srv.questionRepository.GetAll(&model.Question{
 		QuestionTitle: in.QuestionTitle,
 		QuestionContent: in.QuestionContent,
 		QuestionAnswer: in.QuestionAnswer,
@@ -60,4 +78,8 @@ func (srv *questionService) UpdateOne(in input.Question) (model.Question, error)
 
 func (srv *questionService) DeleteOne(in input.Question) error {
 	return srv.questionRepository.Delete(&model.Question{QuestionId: in.QuestionId})
+}
+
+func (srv *questionService) RestoreOne(in input.QuestionPK) error {
+	return srv.questionRepository.RestoreOne(&model.Question{QuestionId: in.QuestionId})
 }

@@ -48,5 +48,6 @@ func SetApi(r *gin.RouterGroup) {
 		auth.GET("/questions/:question_id", questionController.ApiGetOne)
 		auth.PUT("/questions/:question_id", questionController.ApiPutOne)
 		auth.DELETE("/questions/:question_id", questionController.ApiDeleteOne)
+		auth.PATCH("/questions/:question_id/restore", questionController.ApiRestoreOne)
 	}
 }

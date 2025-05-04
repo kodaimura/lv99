@@ -89,6 +89,10 @@ class Api {
     return this.apiFetch<T>(endpoint, 'DELETE', body);
   }
 
+  async patch<T>(endpoint: string, body?: unknown): Promise<T> {
+    return this.apiFetch<T>(endpoint, 'PATCH', body);
+  }
+
   handleHttpError(error: HttpError): void {
     console.error(error);
     const status = error.status

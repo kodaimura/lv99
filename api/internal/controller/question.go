@@ -112,3 +112,20 @@ func (ctrl *QuestionController) ApiDeleteOne(c *gin.Context) {
 
 	c.JSON(204, nil)
 }
+
+// PATCH /api/questions/:question_id/restore
+func (ctrl *QuestionController) ApiRestoreOne(c *gin.Context) {
+	var uri request.QuestionPK
+	if err := helper.BindUri(c, &uri); err != nil {
+		c.Error(err)
+		return
+	}
+
+	err := ctrl.questionService.RestoreOne(input.QuestionPK{QuestionId: uri.QuestionId})
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(200, nil)
+}
