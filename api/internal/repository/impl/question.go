@@ -16,7 +16,7 @@ func NewGormQuestionRepository(db *gorm.DB) *gormQuestionRepository {
 
 func (rep *gormQuestionRepository) Get(q *model.Question) ([]model.Question, error) {
 	var questions []model.Question
-	err := rep.db.Find(&questions, q).Error
+	err := rep.db.Order("question_id ASC").Find(&questions, q).Error
 	return questions, handleGormError(err)
 }
 
@@ -28,7 +28,7 @@ func (rep *gormQuestionRepository) GetOne(q *model.Question) (model.Question, er
 
 func (rep *gormQuestionRepository) GetAll(q *model.Question) ([]model.Question, error) {
 	var questions []model.Question
-	err := rep.db.Unscoped().Find(&questions, q).Error
+	err := rep.db.Unscoped().Order("question_id ASC").Find(&questions, q).Error
 	return questions, handleGormError(err)
 }
 

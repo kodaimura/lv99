@@ -1,32 +1,32 @@
-'use client';
-
 import React from 'react';
 import styles from './question-list.module.css';
-import { api } from '@/lib/api/api.client';
+import type { Question } from "@/types/models";
 
 type Props = {
-  questions: any[];
-  onClickRow: (q: any) => void
+  questions: Question[];
+  onClickEdit: (question: Question) => void
+  onClickDelete: (question: Question) => void
+  onClickRestore: (question: Question) => void
 };
 
-const QuestionList: React.FC<Props> = ({ questions, onClickRow }) => {
-  const deleteRow = async (q: any) => {
-    const question_id = q.question_id;
-    try {
-      await api.delete(`questions/${question_id}`);
-    } catch (err) {
+const QuestionList: React.FC<Props> = ({
+  questions,
+  onClickEdit,
+  onClickDelete,
+  onClickRestore
+}) => {
 
-    }
-  }
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
 
-  const restoreRow = async (q: any) => {
-    const question_id = q.question_id;
-    try {
-      await api.patch(`questions/${question_id}/restore`);
-    } catch (err) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
 
-    }
-  }
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  };
 
   return (
     <div className={styles.tableContainer}>
@@ -51,11 +51,14 @@ const QuestionList: React.FC<Props> = ({ questions, onClickRow }) => {
               <td className={styles.td}>{q.question_content}</td>
               <td className={styles.td}>{q.question_answer}</td>
               <td className={styles.td}>{q.question_level}</td>
-              <td className={styles.td}>{q.updated_at}</td>
-              <td className={styles.td}><button onClick={() => onClickRow(q)}>編集</button></td>
+              <td className={styles.td}>{formatDate(q.updated_at)}</td>
+              <td className={styles.td}><button onClick={() => onClickEdit(q)}>編集</button></td>
               <td className={styles.td}>
-                {q.deleted_at ? <button onClick={() => restoreRow(q)}>復元</button> : <button onClick={() => deleteRow(q)}>削除</button>}
-
+                {
+                  q.deleted_at ?
+                    <button onClick={() => onClickRestore(q)}>復元</button> :
+                    <button onClick={() => onClickDelete(q)}>削除</button>
+                }
               </td>
             </tr>
           ))}

@@ -43,11 +43,17 @@ func SetApi(r *gin.RouterGroup) {
 		auth.PUT("/accounts/me/password", accountController.ApiPutPassword)
 		auth.DELETE("/accounts/me", accountController.ApiDeleteOne)
 
-		auth.POST("/questions", questionController.ApiPostOne)
 		auth.GET("/questions", questionController.ApiGet)
 		auth.GET("/questions/:question_id", questionController.ApiGetOne)
-		auth.PUT("/questions/:question_id", questionController.ApiPutOne)
-		auth.DELETE("/questions/:question_id", questionController.ApiDeleteOne)
-		auth.PATCH("/questions/:question_id/restore", questionController.ApiRestoreOne)
+	}
+
+	admin := r.Group("admin", middleware.ApiAuth())
+	{
+		admin.POST("/questions", questionController.AdminPostOne)
+		admin.GET("/questions", questionController.AdminGet)
+		admin.GET("/questions/:question_id", questionController.AdminGetOne)
+		admin.PUT("/questions/:question_id", questionController.AdminPutOne)
+		admin.DELETE("/questions/:question_id", questionController.AdminDeleteOne)
+		admin.PATCH("/questions/:question_id", questionController.AdminRestoreOne)
 	}
 }

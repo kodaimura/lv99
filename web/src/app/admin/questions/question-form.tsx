@@ -5,14 +5,7 @@ import { useRouter } from 'next/navigation';
 import { HttpError } from '@/lib/api/common';
 import { api } from '@/lib/api/api.client';
 import styles from './question-form.module.css';
-
-type Question = {
-  question_id: number;
-  question_title: string;
-  question_content: string;
-  question_answer: string;
-  question_level: number;
-};
+import type { Question } from "@/types/models";
 
 type Props = {
   onSuccess: () => void;
@@ -51,9 +44,9 @@ const QuestionForm: React.FC<Props> = ({ onSuccess, question }) => {
 
     try {
       if (question_id) {
-        await api.put(`questions/${question_id}`, body);
+        await api.put(`admin/questions/${question_id}`, body);
       } else {
-        await api.post('questions', body);
+        await api.post('admin/questions', body);
       }
       onSuccess();
     } catch (err) {

@@ -27,14 +27,7 @@ func NewQuestionService(questionRepository repository.QuestionRepository) Questi
 }
 
 func (srv *questionService) Get(in input.Question) ([]model.Question, error) {
-	//return srv.questionRepository.Get(&model.Question{
-	//	QuestionTitle: in.QuestionTitle,
-	//	QuestionContent: in.QuestionContent,
-	//	QuestionAnswer: in.QuestionAnswer,
-	//	QuestionLevel: in.QuestionLevel,
-	//})
-
-	return srv.questionRepository.GetAll(&model.Question{
+	return srv.questionRepository.Get(&model.Question{
 		QuestionTitle: in.QuestionTitle,
 		QuestionContent: in.QuestionContent,
 		QuestionAnswer: in.QuestionAnswer,

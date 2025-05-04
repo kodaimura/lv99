@@ -6,10 +6,11 @@ import styles from './page.module.css';
 import Modal from '@/components/ui/Modal';
 import QuestionList from './question-list';
 import QuestionForm from './question-form';
+import type { Question } from "@/types/models";
 
 const QuestionsPage: React.FC = () => {
-  const [questions, setQuesions] = useState<any[]>([]);
-  const [question, setQuesion] = useState<any>(null);
+  const [questions, setQuesions] = useState<Question[]>([]);
+  const [question, setQuesion] = useState<Question | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -17,7 +18,7 @@ const QuestionsPage: React.FC = () => {
   }, [])
 
   const getQuestions = async () => {
-    const data: any[] = await api.get('questions');
+    const data: Question[] = await api.get('admin/questions');
     setQuesions(data);
   }
 
@@ -26,9 +27,29 @@ const QuestionsPage: React.FC = () => {
     setShowModal(false);
   };
 
-  const handleClickRow = (question: any) => {
+  const handleClickEdit = (question: Question) => {
     setQuesion(question);
     setShowModal(true);
+  }
+
+  const handleClickDelete = async (question: Question) => {
+    const questionId = question.question_id;
+    try {
+      await api.delete(`admin/questions/${questionId}`);
+      getQuestions();
+    } catch (err) {
+
+    }
+  }
+
+  const handleClickRestore = async (question: Question) => {
+    const questionId = question.question_id;
+    try {
+      await api.patch(`admin/questions/${questionId}`);
+      getQuestions();
+    } catch (err) {
+
+    }
   }
 
   return (
@@ -37,7 +58,12 @@ const QuestionsPage: React.FC = () => {
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title='問題追加' >
         <QuestionForm onSuccess={handleSuccess} question={question} />
       </Modal>
-      <QuestionList questions={questions} onClickRow={handleClickRow} />
+      <QuestionList
+        questions={questions}
+        onClickEdit={handleClickEdit}
+        onClickDelete={handleClickDelete}
+        onClickRestore={handleClickRestore}
+      />
     </div >
   );
 };
