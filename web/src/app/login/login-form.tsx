@@ -21,7 +21,7 @@ const LoginForm: React.FC = () => {
       if (response?.account?.account_role == 0) {
         router.push('/admin');
       } else {
-        router.push('/dashboard');
+        router.push('/home');
       }
     } catch (err) {
       if (err instanceof HttpError && err.status === 401) {
