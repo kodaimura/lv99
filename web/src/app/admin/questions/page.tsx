@@ -9,6 +9,7 @@ import QuestionForm from './question-form';
 
 const QuestionsPage: React.FC = () => {
   const [questions, setQuesions] = useState<any[]>([]);
+  const [question, setQuesion] = useState<any>(null);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -25,13 +26,18 @@ const QuestionsPage: React.FC = () => {
     setShowModal(false);
   };
 
+  const handleClickRow = (question: any) => {
+    setQuesion(question);
+    setShowModal(true);
+  }
+
   return (
     <div className={styles.container}>
       <button onClick={() => setShowModal(true)} className={styles.addButton}>問題を追加</button>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title='問題追加' >
-        <QuestionForm onSuccess={handleSuccess} />
+        <QuestionForm onSuccess={handleSuccess} question={question} />
       </Modal>
-      <QuestionList questions={questions} />
+      <QuestionList questions={questions} onClickRow={handleClickRow} />
     </div >
   );
 };

@@ -2,12 +2,23 @@
 
 import React from 'react';
 import styles from './question-list.module.css';
+import { api } from '@/lib/api/api.client';
 
 type Props = {
   questions: any[];
+  onClickRow: (q: any) => void
 };
 
-const QuestionList: React.FC<Props> = ({ questions }) => {
+const QuestionList: React.FC<Props> = ({ questions, onClickRow }) => {
+  const deleteRow = async (q: any) => {
+    const question_id = q.question_id;
+    try {
+      await api.delete(`questions/${question_id}`);
+    } catch (err) {
+
+    }
+  }
+
   return (
     <div className={styles.tableContainer}>
       <table className={styles.table}>
@@ -19,6 +30,8 @@ const QuestionList: React.FC<Props> = ({ questions }) => {
             <th className={styles.th}>答え</th>
             <th className={styles.th}>レベル</th>
             <th className={styles.th}>更新日</th>
+            <th className={styles.th}>更新</th>
+            <th className={styles.th}>削除</th>
           </tr>
         </thead>
         <tbody className={styles.tbody}>
@@ -30,6 +43,8 @@ const QuestionList: React.FC<Props> = ({ questions }) => {
               <td className={styles.td}>{q.question_answer}</td>
               <td className={styles.td}>{q.question_level}</td>
               <td className={styles.td}>{q.updated_at}</td>
+              <td className={styles.td}><button onClick={() => onClickRow(q)}>編集</button></td>
+              <td className={styles.td}><button onClick={() => deleteRow(q)}>編集</button></td>
             </tr>
           ))}
         </tbody>

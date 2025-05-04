@@ -1,16 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { HttpError } from '@/lib/api/common';
 import { api } from '@/lib/api/api.client';
 import styles from './question-form.module.css';
 
-type Props = {
-  onSuccess: () => void;
+type Question = {
+  question_id: number;
+  question_title: string;
+  question_content: string;
+  question_answer: string;
+  question_level: number;
 };
 
-const QuestionForm: React.FC<Props> = ({ onSuccess }) => {
+type Props = {
+  onSuccess: () => void;
+  question?: Question;
+};
+
+const QuestionForm: React.FC<Props> = ({ onSuccess, question }) => {
+  const [question_id, setQuestionId] = useState<number | null>(null);
   const [question_title, setQuestionTitle] = useState<string>('');
   const [question_content, setQuestionContent] = useState<string>('');
   const [question_answer, setQuestionAnswer] = useState<string>('');
@@ -18,17 +28,33 @@ const QuestionForm: React.FC<Props> = ({ onSuccess }) => {
   const [error, setError] = useState<string>('');
   const router = useRouter();
 
+  useEffect(() => {
+    if (question) {
+      setQuestionId(question.question_id);
+      setQuestionTitle(question.question_title);
+      setQuestionContent(question.question_content);
+      setQuestionAnswer(question.question_answer);
+      setQuestionLevel(question.question_level);
+    }
+  }, [question]);
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
+    const body = {
+      question_title,
+      question_content,
+      question_answer,
+      question_level,
+    }
+
     try {
-      await api.post('questions', {
-        question_title,
-        question_content,
-        question_answer,
-        question_level,
-      });
+      if (question_id) {
+        await api.put(`questions/${question_id}`, body);
+      } else {
+        await api.post('questions', body);
+      }
       onSuccess();
     } catch (err) {
       setError('登録に失敗しました。\nもう一度お試しください。');
