@@ -2,14 +2,14 @@ import styles from "./page.module.css";
 import Header from '@/components/layout/header';
 import Main from '@/components/layout/main';
 import Footer from "@/components/layout/footer";
-import LoginLink from "@/components/parts/button/login-link";
-import SignupLink from "@/components/parts/button/signup-link";
+import Link from 'next/link';
 
 export default function Home() {
   return (
     <>
       <Header>
-        <LoginLink /><SignupLink />
+        <Link href="/login" className={styles.loginLink}>ログイン</Link>
+        <Link href="/signup" className={styles.signupLink}>サインアップ</Link>
       </Header>
       <Main>
         <div className={styles.container}>

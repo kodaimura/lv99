@@ -7,14 +7,14 @@ import { api } from '@/lib/api/api.client';
 import styles from './login-form.module.css';
 
 const LoginForm: React.FC = () => {
-  const [account_name, setAccountName] = useState('');
-  const [account_password, setAccountPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [account_name, setAccountName] = useState<string>('');
+  const [account_password, setAccountPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setError('');
 
     try {
       const response: any = await api.post('accounts/login', { account_name, account_password });

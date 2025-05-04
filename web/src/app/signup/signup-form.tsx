@@ -7,10 +7,10 @@ import { api } from '@/lib/api/api.client';
 import styles from './signup-form.module.css';
 
 const SignupForm: React.FC = () => {
-  const [account_name, setAccountName] = useState('');
-  const [account_password, setAccountPassword] = useState('');
-  const [confirm_password, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [account_name, setAccountName] = useState<string>('');
+  const [account_password, setAccountPassword] = useState<string>('');
+  const [confirm_password, setConfirmPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const router = useRouter();
 
   const handleSignup = async (e: React.FormEvent) => {

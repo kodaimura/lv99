@@ -4,7 +4,7 @@ import styles from './page.module.css';
 import Header from '@/components/layout/header';
 import Main from '@/components/layout/main';
 import Footer from "@/components/layout/footer";
-import LoginLink from '../components/parts/button/login-link';
+import Link from 'next/link';
 import SignupForm from './signup-form';
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ const SignupPage: React.FC = () => {
   return (
     <>
       <Header>
-        <LoginLink />
+        <Link href="/login" className={styles.loginLink}>ログイン</Link>
       </Header>
       <Main>
         <div className={styles.container}>
