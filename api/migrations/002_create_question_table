@@ -8,6 +8,3 @@ CREATE TABLE IF NOT EXISTS question (
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   deleted_at TIMESTAMP NULL
 );
-
-create trigger trg_question_upd BEFORE UPDATE ON question FOR EACH ROW
-  execute procedure set_updated_at();

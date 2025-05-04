@@ -4,8 +4,6 @@ CREATE TABLE IF NOT EXISTS account (
 	account_password TEXT NOT NULL,
   account_role INTEGER NOT NULL DEFAULT 1,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted_at TIMESTAMP NULL
 );
-
-create trigger trg_account_upd BEFORE UPDATE ON account FOR EACH ROW
-  execute procedure set_updated_at();

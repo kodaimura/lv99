@@ -2,6 +2,7 @@ package response
 
 import (
 	"lv99/internal/model"
+	"time"
 )
 
 // ============================
@@ -9,11 +10,11 @@ import (
 // ============================
 
 type Account struct {
-	AccountId   int    `json:"account_id"`
-	AccountName string `json:"account_name"`
-	AccountRole int    `json:"account_role"`
-	CreatedAt   string `json:"created_at"`
-	UpdatedAt   string `json:"updated_at"`
+	AccountId   int       `json:"account_id"`
+	AccountName string    `json:"account_name"`
+	AccountRole int       `json:"account_role"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 func FromModelAccount(m model.Account) Account {
