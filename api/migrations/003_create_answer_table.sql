@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS answer (
+	answer_id SERIAL PRIMARY KEY,
+  question_id INTEGER NOT NULL,
+	code_def TEXT,
+  code_call TEXT,
+  is_correct BOOLEAN,
+  correct_at TIMESTAMP NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted_at TIMESTAMP NULL
+);
