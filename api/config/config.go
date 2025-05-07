@@ -54,6 +54,10 @@ var (
 	FrontendOrigin string
 )
 
+var (
+	CodeExecutorHost string
+)
+
 func init() {
 	env := os.Getenv("ENV")
 	if env != "" {
@@ -117,6 +121,8 @@ func init() {
 	}
 	LogLevel = getEnv("LOG_LEVEL", "INFO")
 	FrontendOrigin = getEnv("FRONTEND_ORIGIN", "http://localhost:3000")
+
+	CodeExecutorHost = getEnv("CODE_EXECUTOR_HOST")
 }
 
 func getEnv(key string, defaultValue ...string) string {
