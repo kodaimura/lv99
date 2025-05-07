@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './question-list.module.css';
 import type { Question } from "@/types/models";
+import Link from 'next/link';
 
 type Props = {
   questions: Question[];
@@ -37,7 +38,7 @@ const QuestionList: React.FC<Props> = ({ questions }) => {
           {questions.map((q, i) => (
             <tr key={i} className={styles.tr}>
               <td className={styles.td}>{q.question_id}</td>
-              <td className={styles.td}>{q.question_title}</td>
+              <td className={styles.td}><Link href={`questions/${q.question_id}`}>{q.question_title}</Link></td>
               <td className={styles.td}>{q.question_content}</td>
               <td className={styles.td}>{q.question_answer}</td>
               <td className={styles.td}>{q.question_level}</td>
