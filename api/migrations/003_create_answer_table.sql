@@ -3,6 +3,8 @@ CREATE TABLE IF NOT EXISTS answer (
   question_id INTEGER NOT NULL,
 	code_def TEXT,
   code_call TEXT,
+  call_output TEXT,
+  call_error TEXT,
   is_correct BOOLEAN,
   correct_at TIMESTAMP NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
