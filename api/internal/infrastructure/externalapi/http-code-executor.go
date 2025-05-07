@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 	"time"
 
 	"lv99/config"
@@ -43,6 +44,10 @@ func (api *HttpCodeExecutor) Execute(in service.CodeExecRequest) (service.CodeEx
 	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
 		return service.CodeExecResponse{}, fmt.Errorf("failed to decode response: %w", err)
 	}
+
+	re := regexp.MustCompile(`File\s+"\/tmp\/[^\"]+\.py",\s*`)
+    cleaned := re.ReplaceAllString(res.Error, "")
+	res.Error = cleaned
 
 	return res, nil
 }
