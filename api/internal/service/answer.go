@@ -51,16 +51,11 @@ func (srv *answerService) CreateOne(in input.Answer) (model.Answer, error) {
 		return model.Answer{}, err
 	}
 
-	var isCorrect bool
+	isCorrect := false
 	var correctAt time.Time
-	var callOutput string
-	var callError string
 	if result.Output == question.QuestionAnswer {
 		isCorrect = true
 		correctAt = time.Now()
-		callOutput = result.Output
-	} else {
-		callError = result.Error
 	}
 
 	return srv.answerRepository.Insert(&model.Answer{
@@ -68,8 +63,8 @@ func (srv *answerService) CreateOne(in input.Answer) (model.Answer, error) {
 		AccountId: in.AccountId,
 		CodeDef: in.CodeDef,
 		CodeCall: in.CodeCall,
-		CallOutput: callOutput,
-		CallError: callError,
+		CallOutput: result.Output,
+		CallError: result.Error,
 		IsCorrect: isCorrect,
 		CorrectAt: correctAt,
 	})
