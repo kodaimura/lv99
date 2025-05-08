@@ -1,0 +1,22 @@
+.addAnswerButton {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  margin-top: 1.5rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: #005dc1;
+}
