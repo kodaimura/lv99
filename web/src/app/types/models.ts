@@ -11,8 +11,11 @@ export type Question = {
 export type Answer = {
   answer_id: number;
   question_id: number;
+  account_id: number;
   code_def: string;
   code_call: string;
+  call_output: string;
+  call_error: string;
   is_correct: boolean | null;
   correct_at: string | null;
   updated_at: string;

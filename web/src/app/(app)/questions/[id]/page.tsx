@@ -1,5 +1,5 @@
 import React from 'react';
-import { Question } from '@/types/models';
+import { Answer, Question } from '@/types/models';
 import { api } from '@/lib/api/api.server';
 import styles from './page.module.css';
 import AnswerForm from './answer-form';
@@ -11,6 +11,7 @@ type Props = {
 const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
   const { id } = await params
   const question: Question = await api.get(`questions/${id}`);
+  const answers: Answer[] = await api.get(`questions/${id}/answers`)
 
   return (
     <div className={styles.container}>
@@ -22,10 +23,16 @@ const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
       <div className={styles.content}>
         <p>{question.question_content}</p>
       </div>
+      {answers.length > 0 ? (answers.map((answer, index) => (
+        <div className={styles.answerSection} key={index}>
+          <AnswerForm questionId={id} answer={answer} />
+        </div>
+      ))) : (
+        <div className={styles.answerSection}>
+          <AnswerForm questionId={id} />
+        </div>
+      )}
 
-      <div className={styles.answerSection}>
-        <AnswerForm questionId={id} />
-      </div>
     </div>
   );
 };

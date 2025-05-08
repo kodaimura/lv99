@@ -11,6 +11,7 @@ import (
 type AnswerService interface {
 	Get(in input.Answer) ([]model.Answer, error)
 	CreateOne(in input.Answer) (model.Answer, error)
+	UpdateOne(in input.Answer) (model.Answer, error)
 }
 
 type answerService struct {
@@ -68,4 +69,39 @@ func (srv *answerService) CreateOne(in input.Answer) (model.Answer, error) {
 		IsCorrect: isCorrect,
 		CorrectAt: correctAt,
 	})
+}
+
+func (srv *answerService) UpdateOne(in input.Answer) (model.Answer, error) {
+	answer, err := srv.answerRepository.GetOne(&model.Answer{
+		AnswerId: in.AnswerId,
+		QuestionId: in.QuestionId,
+		AccountId: in.AccountId,
+	})
+	if err != nil {
+		return model.Answer{}, err
+	}
+
+	result, err := srv.codeExecutor.Execute(CodeExecRequest{
+		CodeDef: in.CodeDef,
+		CodeCall: in.CodeCall,
+	})
+	if err != nil {
+		return model.Answer{}, err
+	}
+	question, err := srv.questionRepository.GetOne(&model.Question{QuestionId: in.QuestionId})
+	if err != nil {
+		return model.Answer{}, err
+	}
+
+	answer.CodeDef = in.CodeDef
+	answer.CodeCall = in.CodeCall
+	answer.CallOutput = result.Output
+	answer.CallError = result.Error
+	answer.IsCorrect = result.Output == question.QuestionAnswer
+ 
+	if answer.IsCorrect && answer.CorrectAt.IsZero() {
+		answer.CorrectAt = time.Now()
+	}
+
+	return srv.answerRepository.Update(&answer)
 }

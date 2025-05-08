@@ -8,3 +8,8 @@ type Answer struct {
 type AnswerPK struct {
 	AnswerId int `uri:"answer_id"`
 }
+
+type PutAnswer struct {
+	QuestionId int `uri:"question_id"`
+	AnswerId   int `uri:"answer_id"`
+}

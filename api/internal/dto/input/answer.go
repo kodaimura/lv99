@@ -1,6 +1,7 @@
 package input
 
 type Answer struct {
+	AnswerId   int
 	QuestionId int
 	AccountId  int
 	CodeDef    string
