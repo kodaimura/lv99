@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS answer (
 	answer_id SERIAL PRIMARY KEY,
   question_id INTEGER NOT NULL,
+  account_id INTEGER NOT NULL,
 	code_def TEXT,
   code_call TEXT,
   call_output TEXT,

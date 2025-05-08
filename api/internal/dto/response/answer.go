@@ -14,6 +14,7 @@ import (
 type Answer struct {
 	AnswerId   int            `json:"answer_id"`
 	QuestionId int            `json:"question_id"`
+	AccountId  int            `json:"account_id"`
 	CodeDef    string         `json:"code_def"`
 	CodeCall   string         `json:"code_call"`
 	CallOutput string         `json:"call_output"`
@@ -29,6 +30,7 @@ func FromModelAnswer(m model.Answer) Answer {
 	return Answer{
 		AnswerId:   m.AnswerId,
 		QuestionId: m.QuestionId,
+		AccountId: m.AccountId,
 		CodeDef:    m.CodeDef,
 		CodeCall:   m.CodeCall,
 		CallOutput: m.CallOutput,

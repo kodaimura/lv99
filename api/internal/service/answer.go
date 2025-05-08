@@ -34,6 +34,7 @@ func NewAnswerService(
 func (srv *answerService) Get(in input.Answer) ([]model.Answer, error) {
 	return srv.answerRepository.Get(&model.Answer{
 		QuestionId: in.QuestionId,
+		AccountId: in.AccountId,
 	})
 }
 
@@ -64,6 +65,7 @@ func (srv *answerService) CreateOne(in input.Answer) (model.Answer, error) {
 
 	return srv.answerRepository.Insert(&model.Answer{
 		QuestionId: in.QuestionId,
+		AccountId: in.AccountId,
 		CodeDef: in.CodeDef,
 		CodeCall: in.CodeCall,
 		CallOutput: callOutput,

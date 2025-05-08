@@ -9,6 +9,7 @@ import (
 type Answer struct {
 	AnswerId   int            `db:"answer_id" json:"answer_id" gorm:"primaryKey;autoIncrement"`
 	QuestionId int            `db:"question_id" json:"question_id"`
+	AccountId  int            `db:"account_id" json:"account_id"`
 	CodeDef    string         `db:"code_def" json:"code_def"`
 	CodeCall   string         `db:"code_call" json:"code_call"`
 	CallOutput string         `db:"call_output" json:"call_output"`

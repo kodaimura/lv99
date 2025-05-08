@@ -2,6 +2,7 @@ package input
 
 type Answer struct {
 	QuestionId int
+	AccountId  int
 	CodeDef    string
 	CodeCall   string
 }

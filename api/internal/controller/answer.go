@@ -22,8 +22,12 @@ func NewAnswerController(answerService service.AnswerService) *AnswerController 
 
 // GET /api/answers/:question_id/answers
 func (ctrl *AnswerController) ApiGet(c *gin.Context) {
+	accountId := helper.GetAccountId(c)
 	var uri request.QuestionPK
-	answers, err := ctrl.answerService.Get(input.Answer{QuestionId: uri.QuestionId})
+	answers, err := ctrl.answerService.Get(input.Answer{
+		QuestionId: uri.QuestionId, 
+		AccountId: accountId,
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -34,6 +38,7 @@ func (ctrl *AnswerController) ApiGet(c *gin.Context) {
 
 // POST /api/answers/:question_id/answers
 func (ctrl *AnswerController) ApiPostOne(c *gin.Context) {
+	accountId := helper.GetAccountId(c)
 	var uri request.QuestionPK
 	var req request.Answer
 	if err := helper.BindJSON(c, &req); err != nil {
@@ -43,6 +48,7 @@ func (ctrl *AnswerController) ApiPostOne(c *gin.Context) {
 
 	answer, err := ctrl.answerService.CreateOne(input.Answer{
 		QuestionId:   uri.QuestionId,
+		AccountId: accountId,
 		CodeDef: req.CodeDef,
 		CodeCall: req.CodeCall,
 	})
