@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import styles from './answer-form.module.css';
+import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api/api.client';
 import { Answer } from '@/types/models';
+import { Trash2 } from 'lucide-react';
 
 type Props = {
   questionId: number;
@@ -19,6 +21,8 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
   const [call_output, setCallOutput] = useState<string>(answer?.call_output ?? '');
   const [call_error, setCallError] = useState<string>(answer?.call_error ?? '');
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,8 +45,26 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
     setLoading(false);
   };
 
+  const handleDelete = async () => {
+    if (!answerId) return;
+    if (!confirm('この回答を削除しますか？')) return;
+    await api.delete(`/questions/${questionId}/answers/${answerId}`);
+    router.refresh();
+  };
+
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
+      {answerId && (
+        <button
+          type="button"
+          onClick={handleDelete}
+          disabled={loading}
+          className={styles.deleteButton}
+          aria-label="削除"
+        >
+          <Trash2 size={20} />
+        </button>
+      )}
       <h2 className={styles.heading}>関数定義</h2>
       <textarea
         value={code_def}

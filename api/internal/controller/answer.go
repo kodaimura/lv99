@@ -28,6 +28,7 @@ func (ctrl *AnswerController) ApiGet(c *gin.Context) {
 		c.Error(err)
 		return
 	}
+
 	answers, err := ctrl.answerService.Get(input.Answer{
 		QuestionId: uri.QuestionId,
 		AccountId:  accountId,
@@ -95,4 +96,26 @@ func (ctrl *AnswerController) ApiPutOne(c *gin.Context) {
 	}
 
 	c.JSON(200, response.FromModelAnswer(answer))
+}
+
+// DELETE /api/answers/:question_id/answers/:answer_id
+func (ctrl *AnswerController) ApiDeleteOne(c *gin.Context) {
+	accountId := helper.GetAccountId(c)
+	var uri request.DeleteAnswer
+	if err := helper.BindUri(c, &uri); err != nil {
+		c.Error(err)
+		return
+	}
+
+	err := ctrl.answerService.DeleteOne(input.Answer{
+		AnswerId:   uri.AnswerId,
+		QuestionId: uri.QuestionId,
+		AccountId:  accountId,
+	})
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(200, nil)
 }

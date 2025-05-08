@@ -13,3 +13,8 @@ type PutAnswer struct {
 	QuestionId int `uri:"question_id"`
 	AnswerId   int `uri:"answer_id"`
 }
+
+type DeleteAnswer struct {
+	QuestionId int `uri:"question_id"`
+	AnswerId   int `uri:"answer_id"`
+}

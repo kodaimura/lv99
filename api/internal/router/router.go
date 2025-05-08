@@ -53,6 +53,7 @@ func SetApi(r *gin.RouterGroup) {
 		auth.GET("/questions/:question_id/answers", answerController.ApiGet)
 		auth.POST("/questions/:question_id/answers", answerController.ApiPostOne)
 		auth.PUT("/questions/:question_id/answers/:answer_id", answerController.ApiPutOne)
+		auth.DELETE("/questions/:question_id/answers/:answer_id", answerController.ApiDeleteOne)
 	}
 
 	admin := r.Group("admin", middleware.ApiAuth())

@@ -12,6 +12,7 @@ type AnswerService interface {
 	Get(in input.Answer) ([]model.Answer, error)
 	CreateOne(in input.Answer) (model.Answer, error)
 	UpdateOne(in input.Answer) (model.Answer, error)
+	DeleteOne(in input.Answer) error
 }
 
 type answerService struct {
@@ -104,4 +105,12 @@ func (srv *answerService) UpdateOne(in input.Answer) (model.Answer, error) {
 	}
 
 	return srv.answerRepository.Update(&answer)
+}
+
+func (srv *answerService) DeleteOne(in input.Answer) error {
+	return srv.answerRepository.Delete(&model.Answer{
+		AnswerId: in.AnswerId,
+		QuestionId: in.QuestionId,
+		AccountId: in.AccountId,
+	})
 }

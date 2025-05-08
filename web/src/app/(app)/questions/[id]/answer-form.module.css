@@ -1,4 +1,5 @@
 .form {
+  position: relative;
   margin-top: 2rem;
   padding: 1.5rem;
   border: 1px solid #ddd;
@@ -117,4 +118,19 @@
   white-space: pre-wrap;
   border: 1px solid #f5c2c2;
   border-radius: 4px;
+}
+
+.deleteButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.deleteButton:hover {
+  color: #e63946;
 }
