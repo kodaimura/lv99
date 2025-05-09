@@ -1,3 +1,11 @@
+export type Account = {
+  id: number,
+  name: string,
+  role: number,
+  created_at: string,
+  updated_at: string,
+}
+
 export type Question = {
   question_id: number;
   question_title: string;

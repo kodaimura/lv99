@@ -4,6 +4,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import styles from './page.module.css';
 import { api } from '@/lib/api/api.server';
+import { Account } from '@/types/models';
 
 export const metadata: Metadata = {
   title: "lv99 - home",
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 const HomePage: React.FC = async () => {
-  const data: any = await api.get('accounts/me');
+  const data: Account = await api.get('accounts/me');
   return (
     <div className={styles.container}>
       ようこそ {data.name} さん
