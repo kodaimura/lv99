@@ -18,6 +18,7 @@ var gorm = db.NewGormDB()
 var accountRepository = repository.NewGormAccountRepository(gorm)
 var questionRepository = repository.NewGormQuestionRepository(gorm)
 var answerRepository = repository.NewGormAnswerRepository(gorm)
+var commentRepository = repository.NewGormCommentRepository(gorm)
 
 /* DI (Query) */
 //var xxxQuery = query.NewXxxQuery(sqlx)
@@ -26,11 +27,13 @@ var answerRepository = repository.NewGormAnswerRepository(gorm)
 var accountService = service.NewAccountService(accountRepository)
 var questionService = service.NewQuestionService(questionRepository)
 var answerService = service.NewAnswerService(questionRepository, answerRepository, externalapi.NewHttpCodeExecutor())
+var commentService = service.NewCommentService(commentRepository)
 
 /* DI (Controller) */
 var accountController = controller.NewAccountController(accountService)
 var questionController = controller.NewQuestionController(questionService)
 var answerController = controller.NewAnswerController(answerService)
+var commentController = controller.NewCommentController(commentService)
 
 
 func SetApi(r *gin.RouterGroup) {
@@ -54,6 +57,10 @@ func SetApi(r *gin.RouterGroup) {
 		auth.POST("/questions/:question_id/answers", answerController.ApiPostOne)
 		auth.PUT("/questions/:question_id/answers/:answer_id", answerController.ApiPutOne)
 		auth.DELETE("/questions/:question_id/answers/:answer_id", answerController.ApiDeleteOne)
+		auth.GET("/answers/:answer_id/comments", commentController.ApiGet)
+		auth.POST("/answers/:answer_id/comments", commentController.ApiPostOne)
+		auth.PUT("/answers/:answer_id/comments/:comment_id", commentController.ApiPutOne)
+		auth.DELETE("/answers/:answer_id/comments/:comment_id", commentController.ApiDeleteOne)
 	}
 
 	admin := r.Group("admin", middleware.ApiAuth())

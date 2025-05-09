@@ -4,6 +4,7 @@ import { api } from '@/lib/api/api.server';
 import styles from './page.module.css';
 import AnswerForm from './answer-form';
 import AddAnswerButton from './add-answer-button';
+import Comment from './comment';
 
 type Props = {
   params: Promise<{ id: number }>
@@ -29,6 +30,7 @@ const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
           {answers.map((answer, index) => (
             <div className={styles.answerSection} key={index}>
               <AnswerForm questionId={id} answer={answer} />
+              <Comment answerId={answer.answer_id} />
             </div>
           ))}
           <AddAnswerButton questionId={id} />

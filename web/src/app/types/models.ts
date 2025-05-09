@@ -20,3 +20,12 @@ export type Answer = {
   correct_at: string | null;
   updated_at: string;
 };
+
+export type Comment = {
+  comment_id: number;
+  answer_id: number;
+  account_id: number;
+  comment_content: string;
+  created_at: string;
+  updated_at: string;
+};
