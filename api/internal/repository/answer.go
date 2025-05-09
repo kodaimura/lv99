@@ -7,15 +7,15 @@ import (
 )
 
 type AnswerRepository interface {
-	Get(a *model.Answer) ([]model.Answer, error)
-	GetOne(a *model.Answer) (model.Answer, error)
-	GetAll(a *model.Answer) ([]model.Answer, error)
+	Get(m *model.Answer) ([]model.Answer, error)
+	GetOne(m *model.Answer) (model.Answer, error)
+	GetAll(m *model.Answer) ([]model.Answer, error)
 
-	Insert(a *model.Answer) (model.Answer, error)
-	Update(a *model.Answer) (model.Answer, error)
-	Delete(a *model.Answer) error
+	Insert(m *model.Answer) (model.Answer, error)
+	Update(m *model.Answer) (model.Answer, error)
+	Delete(m *model.Answer) error
 
-	InsertTx(a *model.Answer, tx *gorm.DB) (model.Answer, error)
-	UpdateTx(a *model.Answer, tx *gorm.DB) (model.Answer, error)
-	DeleteTx(a *model.Answer, tx *gorm.DB) error
+	InsertTx(m *model.Answer, tx *gorm.DB) (model.Answer, error)
+	UpdateTx(m *model.Answer, tx *gorm.DB) (model.Answer, error)
+	DeleteTx(m *model.Answer, tx *gorm.DB) error
 }

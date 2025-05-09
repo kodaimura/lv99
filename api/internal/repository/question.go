@@ -7,17 +7,17 @@ import (
 )
 
 type QuestionRepository interface {
-	Get(q *model.Question) ([]model.Question, error)
-	GetOne(q *model.Question) (model.Question, error)
-	GetAll(q *model.Question) ([]model.Question, error)
+	Get(m *model.Question) ([]model.Question, error)
+	GetOne(m *model.Question) (model.Question, error)
+	GetAll(m *model.Question) ([]model.Question, error)
 
-	Insert(q *model.Question) (model.Question, error)
-	Update(q *model.Question) (model.Question, error)
-	Delete(q *model.Question) error
+	Insert(m *model.Question) (model.Question, error)
+	Update(m *model.Question) (model.Question, error)
+	Delete(m *model.Question) error
 
-	InsertTx(q *model.Question, tx *gorm.DB) (model.Question, error)
-	UpdateTx(q *model.Question, tx *gorm.DB) (model.Question, error)
-	DeleteTx(q *model.Question, tx *gorm.DB) error
+	InsertTx(m *model.Question, tx *gorm.DB) (model.Question, error)
+	UpdateTx(m *model.Question, tx *gorm.DB) (model.Question, error)
+	DeleteTx(m *model.Question, tx *gorm.DB) error
 
-	RestoreOne(q *model.Question) error
+	RestoreOne(m *model.Question) error
 }
