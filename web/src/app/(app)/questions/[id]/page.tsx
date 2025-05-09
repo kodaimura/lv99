@@ -24,16 +24,20 @@ const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
       <div className={styles.content}>
         <p>{question.question_content}</p>
       </div>
-      {answers.length > 0 ? (answers.map((answer, index) => (
-        <div className={styles.answerSection} key={index}>
-          <AnswerForm questionId={id} answer={answer} />
-        </div>
-      ))) : (
+      {answers.length > 0 ? (
+        <>
+          {answers.map((answer, index) => (
+            <div className={styles.answerSection} key={index}>
+              <AnswerForm questionId={id} answer={answer} />
+            </div>
+          ))}
+          <AddAnswerButton questionId={id} />
+        </>
+      ) : (
         <div className={styles.answerSection}>
           <AnswerForm questionId={id} />
         </div>
       )}
-      <AddAnswerButton questionId={id} />
     </div>
   );
 };
