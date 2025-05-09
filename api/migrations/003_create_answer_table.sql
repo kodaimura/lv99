@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS answer (
 	answer_id SERIAL PRIMARY KEY,
   question_id INTEGER NOT NULL REFERENCES question(question_id) ON DELETE CASCADE,
-  account_id INTEGER NOT NULL REFERENCES account(account_id) ON DELETE CASCADE,
+  account_id INTEGER NOT NULL REFERENCES account(id) ON DELETE CASCADE,
 	code_def TEXT,
   code_call TEXT,
   call_output TEXT,

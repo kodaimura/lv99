@@ -14,7 +14,7 @@ const HomePage: React.FC = async () => {
   const data: any = await api.get('accounts/me');
   return (
     <div className={styles.container}>
-      ようこそ {data.account_name} さん
+      ようこそ {data.name} さん
     </div>
   );
 };

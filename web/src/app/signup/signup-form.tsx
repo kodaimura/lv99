@@ -7,8 +7,8 @@ import { api } from '@/lib/api/api.client';
 import styles from './signup-form.module.css';
 
 const SignupForm: React.FC = () => {
-  const [account_name, setAccountName] = useState<string>('');
-  const [account_password, setAccountPassword] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [confirm_password, setConfirmPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
   const router = useRouter();
@@ -17,18 +17,18 @@ const SignupForm: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    if (account_password.length < 8) {
+    if (password.length < 8) {
       setError('パスワードは8文字以上で入力してください。');
       return;
-    } else if (account_password !== confirm_password) {
+    } else if (password !== confirm_password) {
       setError('パスワードが一致しません。');
       return;
     }
 
     try {
       await api.post('accounts/signup', {
-        account_name,
-        account_password,
+        name,
+        password,
       });
       router.push('/login');
     } catch (err) {
@@ -48,27 +48,27 @@ const SignupForm: React.FC = () => {
       <form className={styles.form} onSubmit={handleSignup}>
         {error && <p className={styles.error}>{error}</p>}
         <div className={styles.inputGroup}>
-          <label htmlFor='account_name' className={styles.label}>
+          <label htmlFor='name' className={styles.label}>
             アカウント名
           </label>
           <input
             type='text'
-            id='account_name'
-            value={account_name}
-            onChange={(e) => setAccountName(e.target.value)}
+            id='name'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className={styles.input}
             required
           />
         </div>
         <div className={styles.inputGroup}>
-          <label htmlFor='account_password' className={styles.label}>
+          <label htmlFor='password' className={styles.label}>
             パスワード
           </label>
           <input
             type='password'
-            id='account_password'
-            value={account_password}
-            onChange={(e) => setAccountPassword(e.target.value)}
+            id='password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className={styles.input}
             required
           />

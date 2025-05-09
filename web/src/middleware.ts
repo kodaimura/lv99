@@ -12,7 +12,7 @@ const isAdminAccount = async (access_token: string): Promise<boolean> => {
       },
       credentials: 'include',
     });
-    return (await res.json())?.account_role === 0
+    return (await res.json())?.role === 0
   } catch (err) {
     return false;
   }
