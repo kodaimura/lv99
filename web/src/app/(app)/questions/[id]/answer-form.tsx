@@ -13,7 +13,7 @@ type Props = {
 };
 
 const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
-  const answerId = answer?.id;
+  const [id, setId] = useState<number | null>(answer?.id ?? null);
   const [code_def, setCodeDef] = useState<string>(answer?.code_def ?? '');
   const [code_call, setCodeCall] = useState<string>(answer?.code_call ?? '');
   const [is_correct, setIsCorrect] = useState<null | boolean>(answer?.is_correct ?? null);
@@ -29,14 +29,15 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
     setLoading(true);
 
     let response: Answer;
-    if (answerId) {
-      response = await api.put(`/answers/${answerId}`, {
+    if (id) {
+      response = await api.put(`/answers/${id}`, {
         code_def, code_call
       });
     } else {
       response = await api.post(`/questions/${questionId}/answers`, {
         code_def, code_call
       });
+      setId(response?.id);
     }
     setIsCorrect(response.is_correct);
     setCallOutput(response.call_output);
@@ -46,15 +47,15 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
   };
 
   const handleDelete = async () => {
-    if (!answerId) return;
+    if (!id) return;
     if (!confirm('この回答を削除しますか？')) return;
-    await api.delete(`/answers/${answerId}`);
+    await api.delete(`/answers/${id}`);
     router.refresh();
   };
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      {answerId && (
+      {id && (
         <button
           type="button"
           onClick={handleDelete}

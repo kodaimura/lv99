@@ -101,7 +101,7 @@ const QuestionForm: React.FC<Props> = ({ onSuccess, question }) => {
           </label>
           <input
             type='number'
-            onChange={(e) => setLevel(parseInt(e.target.value))}
+            onChange={(e) => setLevel(parseInt(e.target.value ?? 0))}
             value={level}
             className={styles.input}
             required

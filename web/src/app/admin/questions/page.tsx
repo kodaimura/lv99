@@ -25,6 +25,7 @@ const QuestionsPage: React.FC = () => {
   const handleSuccess = () => {
     getQuestions();
     setShowModal(false);
+    setQuesion(null);
   };
 
   const handleClickEdit = (question: Question) => {
