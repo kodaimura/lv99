@@ -1,7 +1,7 @@
 package input
 
 type Answer struct {
-	Id   int
+	Id         int
 	QuestionId int
 	AccountId  int
 	CodeDef    string

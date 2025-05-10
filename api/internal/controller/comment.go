@@ -22,14 +22,14 @@ func NewCommentController(commentService service.CommentService) *CommentControl
 
 // GET /api/answers/:answer_id/comments
 func (ctrl *CommentController) ApiGet(c *gin.Context) {
-	var req request.AnswerUri
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.AnswerUri
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
 	comments, err := ctrl.commentService.Get(input.Comment{
-		AnswerId: req.AnswerId,
+		AnswerId: uri.AnswerId,
 	})
 	if err != nil {
 		c.Error(err)
@@ -42,8 +42,9 @@ func (ctrl *CommentController) ApiGet(c *gin.Context) {
 // POST /api/answers/:answer_id/comments
 func (ctrl *CommentController) ApiPostOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.PostComment
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.AnswerUri
+	var req request.CommentBody
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
@@ -53,7 +54,7 @@ func (ctrl *CommentController) ApiPostOne(c *gin.Context) {
 	}
 
 	comment, err := ctrl.commentService.CreateOne(input.Comment{
-		AnswerId:  req.AnswerId,
+		AnswerId:  uri.AnswerId,
 		AccountId: accountId,
 		Content:   req.Content,
 	})
@@ -68,14 +69,14 @@ func (ctrl *CommentController) ApiPostOne(c *gin.Context) {
 // GET /api/comments/:comment_id
 func (ctrl *CommentController) ApiGetOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.CommentUri
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.CommentUri
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
 	comment, err := ctrl.commentService.GetOne(input.Comment{
-		Id:        req.CommentId,
+		Id:        uri.CommentId,
 		AccountId: accountId,
 	})
 	if err != nil {
@@ -89,8 +90,9 @@ func (ctrl *CommentController) ApiGetOne(c *gin.Context) {
 // PUT /api/comments/:comment_id
 func (ctrl *CommentController) ApiPutOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.PutComment
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.CommentUri
+	var req request.CommentBody
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
@@ -100,7 +102,7 @@ func (ctrl *CommentController) ApiPutOne(c *gin.Context) {
 	}
 
 	comment, err := ctrl.commentService.UpdateOne(input.Comment{
-		Id:        req.CommentId,
+		Id:        uri.CommentId,
 		AccountId: accountId,
 		Content:   req.Content,
 	})
@@ -115,14 +117,14 @@ func (ctrl *CommentController) ApiPutOne(c *gin.Context) {
 // DELETE /api/comments/:comment_id
 func (ctrl *CommentController) ApiDeleteOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.CommentUri
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.CommentUri
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
 	err := ctrl.commentService.DeleteOne(input.Comment{
-		Id:        req.CommentId,
+		Id:        uri.CommentId,
 		AccountId: accountId,
 	})
 	if err != nil {

@@ -7,13 +7,3 @@ type CommentUri struct {
 type CommentBody struct {
 	Content string `json:"content" binding:"required"`
 }
-
-type PostComment struct {
-	AnswerUri
-	CommentBody
-}
-
-type PutComment struct {
-	CommentUri
-	CommentBody
-}

@@ -23,14 +23,14 @@ func NewAnswerController(answerService service.AnswerService) *AnswerController 
 // GET /api/questions/:question_id/answers
 func (ctrl *AnswerController) ApiGet(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.QuestionUri
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.QuestionUri
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
 	answers, err := ctrl.answerService.Get(input.Answer{
-		QuestionId: req.QuestionId,
+		QuestionId: uri.QuestionId,
 		AccountId:  accountId,
 	})
 	if err != nil {
@@ -44,8 +44,9 @@ func (ctrl *AnswerController) ApiGet(c *gin.Context) {
 // POST /api/questions/:question_id/answers
 func (ctrl *AnswerController) ApiPostOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.PostAnswer
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.QuestionUri
+	var req request.AnswerBody
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
@@ -55,7 +56,7 @@ func (ctrl *AnswerController) ApiPostOne(c *gin.Context) {
 	}
 
 	answer, err := ctrl.answerService.CreateOne(input.Answer{
-		QuestionId: req.QuestionId,
+		QuestionId: uri.QuestionId,
 		AccountId:  accountId,
 		CodeDef:    req.CodeDef,
 		CodeCall:   req.CodeCall,
@@ -71,15 +72,15 @@ func (ctrl *AnswerController) ApiPostOne(c *gin.Context) {
 // GET /api/answers/:answer_id
 func (ctrl *AnswerController) ApiGetOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.AnswerUri
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.AnswerUri
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
 	answer, err := ctrl.answerService.GetOne(input.Answer{
-		Id: req.AnswerId,
-		AccountId:  accountId,
+		Id:        uri.AnswerId,
+		AccountId: accountId,
 	})
 	if err != nil {
 		c.Error(err)
@@ -92,8 +93,9 @@ func (ctrl *AnswerController) ApiGetOne(c *gin.Context) {
 // PUT /api/answers/:answer_id
 func (ctrl *AnswerController) ApiPutOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.PutAnswer
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.AnswerUri
+	var req request.AnswerBody
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
@@ -103,10 +105,10 @@ func (ctrl *AnswerController) ApiPutOne(c *gin.Context) {
 	}
 
 	answer, err := ctrl.answerService.UpdateOne(input.Answer{
-		Id:   req.AnswerId,
-		AccountId:  accountId,
-		CodeDef:    req.CodeDef,
-		CodeCall:   req.CodeCall,
+		Id:        uri.AnswerId,
+		AccountId: accountId,
+		CodeDef:   req.CodeDef,
+		CodeCall:  req.CodeCall,
 	})
 	if err != nil {
 		c.Error(err)
@@ -119,15 +121,15 @@ func (ctrl *AnswerController) ApiPutOne(c *gin.Context) {
 // DELETE /api/answers/:answer_id
 func (ctrl *AnswerController) ApiDeleteOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.AnswerUri
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.AnswerUri
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
 	err := ctrl.answerService.DeleteOne(input.Answer{
-		Id:   req.AnswerId,
-		AccountId:  accountId,
+		Id:        uri.AnswerId,
+		AccountId: accountId,
 	})
 	if err != nil {
 		c.Error(err)

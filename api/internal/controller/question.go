@@ -33,12 +33,12 @@ func (ctrl *QuestionController) ApiGet(c *gin.Context) {
 
 // GET /api/questions/:question_id
 func (ctrl *QuestionController) ApiGetOne(c *gin.Context) {
-	var req request.QuestionUri
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.QuestionUri
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
-	question, err := ctrl.questionService.GetOne(input.Question{Id: req.QuestionId})
+	question, err := ctrl.questionService.GetOne(input.Question{Id: uri.QuestionId})
 	if err != nil {
 		c.Error(err)
 		return
@@ -60,12 +60,12 @@ func (ctrl *QuestionController) AdminGet(c *gin.Context) {
 
 // GET /api/admin/questions/:question_id
 func (ctrl *QuestionController) AdminGetOne(c *gin.Context) {
-	var req request.QuestionUri
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.QuestionUri
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
-	question, err := ctrl.questionService.GetOne(input.Question{Id: req.QuestionId})
+	question, err := ctrl.questionService.GetOne(input.Question{Id: uri.QuestionId})
 	if err != nil {
 		c.Error(err)
 		return
@@ -76,7 +76,7 @@ func (ctrl *QuestionController) AdminGetOne(c *gin.Context) {
 
 // POST /api/admin/questions
 func (ctrl *QuestionController) AdminPostOne(c *gin.Context) {
-	var req request.PostQuestion
+	var req request.QuestionBody
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
@@ -98,8 +98,9 @@ func (ctrl *QuestionController) AdminPostOne(c *gin.Context) {
 
 // PUT /api/admin/questions/:question_id
 func (ctrl *QuestionController) AdminPutOne(c *gin.Context) {
-	var req request.PutQuestion
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.QuestionUri
+	var req request.QuestionBody
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
@@ -109,7 +110,7 @@ func (ctrl *QuestionController) AdminPutOne(c *gin.Context) {
 	}
 
 	question, err := ctrl.questionService.UpdateOne(input.Question{
-		Id:      req.QuestionId,
+		Id:      uri.QuestionId,
 		Title:   req.Title,
 		Content: req.Content,
 		Answer:  req.Answer,
@@ -125,12 +126,12 @@ func (ctrl *QuestionController) AdminPutOne(c *gin.Context) {
 
 // DELETE /api/admin/questions/:question_id
 func (ctrl *QuestionController) AdminDeleteOne(c *gin.Context) {
-	var req request.QuestionUri
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.QuestionUri
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
-	if err := ctrl.questionService.DeleteOne(input.Question{Id: req.QuestionId}); err != nil {
+	if err := ctrl.questionService.DeleteOne(input.Question{Id: uri.QuestionId}); err != nil {
 		c.Error(err)
 		return
 	}
@@ -140,13 +141,13 @@ func (ctrl *QuestionController) AdminDeleteOne(c *gin.Context) {
 
 // PATCH /api/admin/questions/:question_id
 func (ctrl *QuestionController) AdminRestoreOne(c *gin.Context) {
-	var req request.QuestionUri
-	if err := helper.BindUri(c, &req); err != nil {
+	var uri request.QuestionUri
+	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
-	err := ctrl.questionService.RestoreOne(input.Question{Id: req.QuestionId})
+	err := ctrl.questionService.RestoreOne(input.Question{Id: uri.QuestionId})
 	if err != nil {
 		c.Error(err)
 		return
