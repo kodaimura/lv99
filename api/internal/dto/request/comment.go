@@ -1,19 +1,19 @@
 package request
 
-type CommentPK struct {
-	Id int `uri:"id"`
+type CommentUri struct {
+	CommentId int `uri:"comment_id" binding:"required"`
 }
 
-type GetComment struct {
-	AnswerId  int `uri:"answer_id"`
+type CommentBody struct {
+	Content string `json:"content" binding:"required"`
 }
 
 type PostComment struct {
-	AnswerId  int `uri:"answer_id"`
-	Content string `json:"content"`
+	AnswerUri
+	CommentBody
 }
 
 type PutComment struct {
-	Id int `uri:"id"`
-	Content string `json:"content"`
+	CommentUri
+	CommentBody
 }

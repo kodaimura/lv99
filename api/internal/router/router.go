@@ -51,28 +51,28 @@ func SetApi(r *gin.RouterGroup) {
 		auth.DELETE("/accounts/me", accountController.ApiDeleteOne)
 
 		auth.GET("/questions", questionController.ApiGet)
-		auth.GET("/questions/:id", questionController.ApiGetOne)
+		auth.GET("/questions/:question_id", questionController.ApiGetOne)
 
 		auth.GET("/questions/:question_id/answers", answerController.ApiGet)
 		auth.POST("/questions/:question_id/answers", answerController.ApiPostOne)
-		auth.GET("/answers/:id", answerController.ApiGetOne)
-		auth.PUT("/answers/:id", answerController.ApiPutOne)
-		auth.DELETE("/answers/:id", answerController.ApiDeleteOne)
+		auth.GET("/answers/:answer_id", answerController.ApiGetOne)
+		auth.PUT("/answers/:answer_id", answerController.ApiPutOne)
+		auth.DELETE("/answers/:answer_id", answerController.ApiDeleteOne)
 
 		auth.GET("/answers/:answer_id/comments", commentController.ApiGet)
 		auth.POST("/answers/:answer_id/comments", commentController.ApiPostOne)
-		auth.GET("/comments/:id", commentController.ApiGetOne)
-		auth.PUT("/comments/:id", commentController.ApiPutOne)
-		auth.DELETE("/comments/:id", commentController.ApiDeleteOne)
+		auth.GET("/comments/:comment_id", commentController.ApiGetOne)
+		auth.PUT("/comments/:comment_id", commentController.ApiPutOne)
+		auth.DELETE("/comments/:comment_id", commentController.ApiDeleteOne)
 	}
 
 	admin := r.Group("admin", middleware.ApiAuth())
 	{
 		admin.GET("/questions", questionController.AdminGet)
 		admin.POST("/questions", questionController.AdminPostOne)
-		admin.GET("/questions/:id", questionController.AdminGetOne)
-		admin.PUT("/questions/:id", questionController.AdminPutOne)
-		admin.DELETE("/questions/:id", questionController.AdminDeleteOne)
-		admin.PATCH("/questions/:id", questionController.AdminRestoreOne)
+		admin.GET("/questions/:question_id", questionController.AdminGetOne)
+		admin.PUT("/questions/:question_id", questionController.AdminPutOne)
+		admin.DELETE("/questions/:question_id", questionController.AdminDeleteOne)
+		admin.PATCH("/questions/:question_id", questionController.AdminRestoreOne)
 	}
 }

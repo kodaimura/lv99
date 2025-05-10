@@ -1,7 +1,7 @@
 package request
 
-type QuestionPK struct {
-	Id int `uri:"id"`
+type QuestionUri struct {
+	QuestionId int `uri:"question_id" binding:"required"`
 }
 
 type QuestionBody struct {
@@ -16,6 +16,6 @@ type PostQuestion struct {
 }
 
 type PutQuestion struct {
-    Id int `uri:"id"`
+    QuestionUri
     QuestionBody
 }

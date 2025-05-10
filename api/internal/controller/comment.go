@@ -22,7 +22,7 @@ func NewCommentController(commentService service.CommentService) *CommentControl
 
 // GET /api/answers/:answer_id/comments
 func (ctrl *CommentController) ApiGet(c *gin.Context) {
-	var req request.GetComment
+	var req request.AnswerUri
 	if err := helper.BindUri(c, &req); err != nil {
 		c.Error(err)
 		return
@@ -65,17 +65,17 @@ func (ctrl *CommentController) ApiPostOne(c *gin.Context) {
 	c.JSON(201, response.FromModelComment(comment))
 }
 
-// GET /api/comments/:id
+// GET /api/comments/:comment_id
 func (ctrl *CommentController) ApiGetOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.CommentPK
+	var req request.CommentUri
 	if err := helper.BindUri(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
 	comment, err := ctrl.commentService.GetOne(input.Comment{
-		Id:        req.Id,
+		Id:        req.CommentId,
 		AccountId: accountId,
 	})
 	if err != nil {
@@ -86,7 +86,7 @@ func (ctrl *CommentController) ApiGetOne(c *gin.Context) {
 	c.JSON(200, response.FromModelComment(comment))
 }
 
-// PUT /api/comments/:id
+// PUT /api/comments/:comment_id
 func (ctrl *CommentController) ApiPutOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 	var req request.PutComment
@@ -100,7 +100,7 @@ func (ctrl *CommentController) ApiPutOne(c *gin.Context) {
 	}
 
 	comment, err := ctrl.commentService.UpdateOne(input.Comment{
-		Id:        req.Id,
+		Id:        req.CommentId,
 		AccountId: accountId,
 		Content:   req.Content,
 	})
@@ -112,17 +112,17 @@ func (ctrl *CommentController) ApiPutOne(c *gin.Context) {
 	c.JSON(200, response.FromModelComment(comment))
 }
 
-// DELETE /api/comments/:id
+// DELETE /api/comments/:comment_id
 func (ctrl *CommentController) ApiDeleteOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.CommentPK
+	var req request.CommentUri
 	if err := helper.BindUri(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
 	err := ctrl.commentService.DeleteOne(input.Comment{
-		Id:        req.Id,
+		Id:        req.CommentId,
 		AccountId: accountId,
 	})
 	if err != nil {

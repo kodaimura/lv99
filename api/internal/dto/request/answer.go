@@ -1,21 +1,20 @@
 package request
 
-type AnswerPK struct {
-	Id int `uri:"id"`
+type AnswerUri struct {
+	AnswerId int `uri:"answer_id" binding:"required"`
 }
 
-type GetAnswer struct {
-	QuestionId int `uri:"question_id"`
+type AnswerBody struct {
+	CodeDef  string `json:"code_def" binding:"required"`
+	CodeCall string `json:"code_call" binding:"required"`
 }
 
 type PostAnswer struct {
-	QuestionId int `uri:"question_id"`
-	CodeDef  string `json:"code_def"`
-	CodeCall string `json:"code_call"`
+	QuestionUri
+	AnswerBody
 }
 
 type PutAnswer struct {
-	Id         int `uri:"id"`
-	CodeDef  string `json:"code_def"`
-	CodeCall string `json:"code_call"`
+	AnswerUri
+	AnswerBody
 }

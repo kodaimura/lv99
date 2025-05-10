@@ -23,7 +23,7 @@ func NewAnswerController(answerService service.AnswerService) *AnswerController 
 // GET /api/questions/:question_id/answers
 func (ctrl *AnswerController) ApiGet(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.GetAnswer
+	var req request.QuestionUri
 	if err := helper.BindUri(c, &req); err != nil {
 		c.Error(err)
 		return
@@ -68,17 +68,17 @@ func (ctrl *AnswerController) ApiPostOne(c *gin.Context) {
 	c.JSON(201, response.FromModelAnswer(answer))
 }
 
-// GET /api/answers/:id
+// GET /api/answers/:answer_id
 func (ctrl *AnswerController) ApiGetOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.AnswerPK
+	var req request.AnswerUri
 	if err := helper.BindUri(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
 	answer, err := ctrl.answerService.GetOne(input.Answer{
-		Id: req.Id,
+		Id: req.AnswerId,
 		AccountId:  accountId,
 	})
 	if err != nil {
@@ -89,7 +89,7 @@ func (ctrl *AnswerController) ApiGetOne(c *gin.Context) {
 	c.JSON(200, response.FromModelAnswer(answer))
 }
 
-// PUT /api/answers/:id
+// PUT /api/answers/:answer_id
 func (ctrl *AnswerController) ApiPutOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 	var req request.PutAnswer
@@ -103,7 +103,7 @@ func (ctrl *AnswerController) ApiPutOne(c *gin.Context) {
 	}
 
 	answer, err := ctrl.answerService.UpdateOne(input.Answer{
-		Id:   req.Id,
+		Id:   req.AnswerId,
 		AccountId:  accountId,
 		CodeDef:    req.CodeDef,
 		CodeCall:   req.CodeCall,
@@ -116,17 +116,17 @@ func (ctrl *AnswerController) ApiPutOne(c *gin.Context) {
 	c.JSON(200, response.FromModelAnswer(answer))
 }
 
-// DELETE /api/answers/:id
+// DELETE /api/answers/:answer_id
 func (ctrl *AnswerController) ApiDeleteOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req request.AnswerPK
+	var req request.AnswerUri
 	if err := helper.BindUri(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
 	err := ctrl.answerService.DeleteOne(input.Answer{
-		Id:   req.Id,
+		Id:   req.AnswerId,
 		AccountId:  accountId,
 	})
 	if err != nil {
