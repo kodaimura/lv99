@@ -37,11 +37,11 @@ const QuestionList: React.FC<Props> = ({ questions }) => {
         <tbody className={styles.tbody}>
           {questions.map((q, i) => (
             <tr key={i} className={styles.tr}>
-              <td className={styles.td}>{q.question_id}</td>
-              <td className={styles.td}><Link href={`questions/${q.question_id}`}>{q.question_title}</Link></td>
-              <td className={styles.td}>{q.question_content}</td>
-              <td className={styles.td}>{q.question_answer}</td>
-              <td className={styles.td}>{q.question_level}</td>
+              <td className={styles.td}>{q.id}</td>
+              <td className={styles.td}><Link href={`questions/${q.id}`}>{q.title}</Link></td>
+              <td className={styles.td}>{q.content}</td>
+              <td className={styles.td}>{q.answer}</td>
+              <td className={styles.td}>{q.level}</td>
               <td className={styles.td}>{formatDate(q.updated_at)}</td>
             </tr>
           ))}

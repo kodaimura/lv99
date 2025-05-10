@@ -51,7 +51,7 @@ func SetApi(r *gin.RouterGroup) {
 		auth.DELETE("/accounts/me", accountController.ApiDeleteOne)
 
 		auth.GET("/questions", questionController.ApiGet)
-		auth.GET("/questions/:question_id", questionController.ApiGetOne)
+		auth.GET("/questions/:id", questionController.ApiGetOne)
 
 		auth.GET("/questions/:question_id/answers", answerController.ApiGet)
 		auth.POST("/questions/:question_id/answers", answerController.ApiPostOne)
@@ -67,9 +67,9 @@ func SetApi(r *gin.RouterGroup) {
 	{
 		admin.POST("/questions", questionController.AdminPostOne)
 		admin.GET("/questions", questionController.AdminGet)
-		admin.GET("/questions/:question_id", questionController.AdminGetOne)
-		admin.PUT("/questions/:question_id", questionController.AdminPutOne)
-		admin.DELETE("/questions/:question_id", questionController.AdminDeleteOne)
-		admin.PATCH("/questions/:question_id", questionController.AdminRestoreOne)
+		admin.GET("/questions/:id", questionController.AdminGetOne)
+		admin.PUT("/questions/:id", questionController.AdminPutOne)
+		admin.DELETE("/questions/:id", questionController.AdminDeleteOne)
+		admin.PATCH("/questions/:id", questionController.AdminRestoreOne)
 	}
 }

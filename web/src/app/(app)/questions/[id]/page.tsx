@@ -18,12 +18,12 @@ const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <span className={styles.levelBadge}>Lv {question.question_level}</span>
-        <h1 className={styles.title}>{question.question_title}</h1>
+        <span className={styles.levelBadge}>Lv {question.level}</span>
+        <h1 className={styles.title}>{question.title}</h1>
       </div>
 
       <div className={styles.content}>
-        <p>{question.question_content}</p>
+        <p>{question.content}</p>
       </div>
       {answers.length > 0 ? (
         <>

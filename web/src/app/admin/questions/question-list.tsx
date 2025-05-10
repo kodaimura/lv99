@@ -46,11 +46,11 @@ const QuestionList: React.FC<Props> = ({
         <tbody className={styles.tbody}>
           {questions.map((q, i) => (
             <tr key={i} className={styles.tr}>
-              <td className={styles.td}>{q.question_id}</td>
-              <td className={styles.td}>{q.question_title}</td>
-              <td className={styles.td}>{q.question_content}</td>
-              <td className={styles.td}>{q.question_answer}</td>
-              <td className={styles.td}>{q.question_level}</td>
+              <td className={styles.td}>{q.id}</td>
+              <td className={styles.td}>{q.title}</td>
+              <td className={styles.td}>{q.content}</td>
+              <td className={styles.td}>{q.answer}</td>
+              <td className={styles.td}>{q.level}</td>
               <td className={styles.td}>{formatDate(q.updated_at)}</td>
               <td className={styles.td}><button onClick={() => onClickEdit(q)}>編集</button></td>
               <td className={styles.td}>

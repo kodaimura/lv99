@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '@/lib/api/api.client';
 import styles from './page.module.css';
-import Modal from '@/components/ui/Modal';
+import Modal from '@/components/ui/modal';
 import QuestionList from './question-list';
 import QuestionForm from './question-form';
 import type { Question } from "@/types/models";
@@ -33,7 +33,7 @@ const QuestionsPage: React.FC = () => {
   }
 
   const handleClickDelete = async (question: Question) => {
-    const questionId = question.question_id;
+    const questionId = question.id;
     try {
       await api.delete(`admin/questions/${questionId}`);
       getQuestions();
@@ -43,7 +43,7 @@ const QuestionsPage: React.FC = () => {
   }
 
   const handleClickRestore = async (question: Question) => {
-    const questionId = question.question_id;
+    const questionId = question.id;
     try {
       await api.patch(`admin/questions/${questionId}`);
       getQuestions();

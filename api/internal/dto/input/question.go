@@ -1,13 +1,13 @@
 package input
 
 type Question struct {
-	QuestionId      int
-	QuestionTitle   string
-	QuestionContent string
-	QuestionAnswer  string
-	QuestionLevel   int
+	Id      int
+	Title   string
+	Content string
+	Answer  string
+	Level   int
 }
 
 type QuestionPK struct {
-	QuestionId int
+	Id int
 }

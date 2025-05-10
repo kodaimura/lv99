@@ -48,14 +48,14 @@ func (srv *answerService) CreateOne(in input.Answer) (model.Answer, error) {
 	if err != nil {
 		return model.Answer{}, err
 	}
-	question, err := srv.questionRepository.GetOne(&model.Question{QuestionId: in.QuestionId})
+	question, err := srv.questionRepository.GetOne(&model.Question{Id: in.QuestionId})
 	if err != nil {
 		return model.Answer{}, err
 	}
 
 	isCorrect := false
 	var correctAt time.Time
-	if result.Output == question.QuestionAnswer {
+	if result.Output == question.Answer {
 		isCorrect = true
 		correctAt = time.Now()
 	}
@@ -89,7 +89,7 @@ func (srv *answerService) UpdateOne(in input.Answer) (model.Answer, error) {
 	if err != nil {
 		return model.Answer{}, err
 	}
-	question, err := srv.questionRepository.GetOne(&model.Question{QuestionId: in.QuestionId})
+	question, err := srv.questionRepository.GetOne(&model.Question{Id: in.QuestionId})
 	if err != nil {
 		return model.Answer{}, err
 	}
@@ -98,7 +98,7 @@ func (srv *answerService) UpdateOne(in input.Answer) (model.Answer, error) {
 	answer.CodeCall = in.CodeCall
 	answer.CallOutput = result.Output
 	answer.CallError = result.Error
-	answer.IsCorrect = result.Output == question.QuestionAnswer
+	answer.IsCorrect = result.Output == question.Answer
  
 	if answer.IsCorrect && answer.CorrectAt.IsZero() {
 		answer.CorrectAt = time.Now()

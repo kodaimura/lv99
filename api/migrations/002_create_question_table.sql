@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS question (
-	question_id SERIAL PRIMARY KEY,
-	question_title TEXT NOT NULL,
-	question_content TEXT NOT NULL,
-  question_answer TEXT NOT NULL,
-  question_level INTEGER NOT NULL,
+	id SERIAL PRIMARY KEY,
+	title TEXT NOT NULL,
+	content TEXT NOT NULL,
+  answer TEXT NOT NULL,
+  level INTEGER NOT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   deleted_at TIMESTAMP NULL

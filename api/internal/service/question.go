@@ -13,7 +13,7 @@ type QuestionService interface {
 	CreateOne(in input.Question) (model.Question, error)
 	UpdateOne(in input.Question) (model.Question, error)
 	DeleteOne(in input.Question) error
-	RestoreOne(in input.QuestionPK) error
+	RestoreOne(in input.Question) error
 }
 
 type questionService struct {
@@ -28,51 +28,51 @@ func NewQuestionService(questionRepository repository.QuestionRepository) Questi
 
 func (srv *questionService) Get(in input.Question) ([]model.Question, error) {
 	return srv.questionRepository.Get(&model.Question{
-		QuestionTitle: in.QuestionTitle,
-		QuestionContent: in.QuestionContent,
-		QuestionAnswer: in.QuestionAnswer,
-		QuestionLevel: in.QuestionLevel,
+		Title: in.Title,
+		Content: in.Content,
+		Answer: in.Answer,
+		Level: in.Level,
 	})
 }
 
 func (srv *questionService) GetAll(in input.Question) ([]model.Question, error) {
 	return srv.questionRepository.GetAll(&model.Question{
-		QuestionTitle: in.QuestionTitle,
-		QuestionContent: in.QuestionContent,
-		QuestionAnswer: in.QuestionAnswer,
-		QuestionLevel: in.QuestionLevel,
+		Title: in.Title,
+		Content: in.Content,
+		Answer: in.Answer,
+		Level: in.Level,
 	})
 }
 
 func (srv *questionService) GetOne(in input.Question) (model.Question, error) {
-	return srv.questionRepository.GetOne(&model.Question{QuestionId: in.QuestionId})
+	return srv.questionRepository.GetOne(&model.Question{Id: in.Id})
 }
 
 func (srv *questionService) CreateOne(in input.Question) (model.Question, error) {
 	return srv.questionRepository.Insert(&model.Question{
-		QuestionTitle:     in.QuestionTitle,
-		QuestionContent: in.QuestionContent,
-		QuestionAnswer: in.QuestionAnswer,
-		QuestionLevel: in.QuestionLevel,
+		Title:     in.Title,
+		Content: in.Content,
+		Answer: in.Answer,
+		Level: in.Level,
 	})
 }
 
 func (srv *questionService) UpdateOne(in input.Question) (model.Question, error) {
-	question, err := srv.questionRepository.GetOne(&model.Question{QuestionId: in.QuestionId})
+	question, err := srv.questionRepository.GetOne(&model.Question{Id: in.Id})
 	if err != nil {
 		return model.Question{}, err
 	}
-	question.QuestionTitle = in.QuestionTitle
-	question.QuestionContent = in.QuestionContent
-	question.QuestionAnswer = in.QuestionAnswer
-	question.QuestionLevel = in.QuestionLevel
+	question.Title = in.Title
+	question.Content = in.Content
+	question.Answer = in.Answer
+	question.Level = in.Level
 	return srv.questionRepository.Update(&question)
 }
 
 func (srv *questionService) DeleteOne(in input.Question) error {
-	return srv.questionRepository.Delete(&model.Question{QuestionId: in.QuestionId})
+	return srv.questionRepository.Delete(&model.Question{Id: in.Id})
 }
 
-func (srv *questionService) RestoreOne(in input.QuestionPK) error {
-	return srv.questionRepository.RestoreOne(&model.Question{QuestionId: in.QuestionId})
+func (srv *questionService) RestoreOne(in input.Question) error {
+	return srv.questionRepository.RestoreOne(&model.Question{Id: in.Id})
 }

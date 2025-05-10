@@ -16,7 +16,7 @@ func NewGormQuestionRepository(db *gorm.DB) *gormQuestionRepository {
 
 func (rep *gormQuestionRepository) Get(m *model.Question) ([]model.Question, error) {
 	var questions []model.Question
-	err := rep.db.Order("question_id ASC").Find(&questions, m).Error
+	err := rep.db.Order("id ASC").Find(&questions, m).Error
 	return questions, handleGormError(err)
 }
 
@@ -28,7 +28,7 @@ func (rep *gormQuestionRepository) GetOne(m *model.Question) (model.Question, er
 
 func (rep *gormQuestionRepository) GetAll(m *model.Question) ([]model.Question, error) {
 	var questions []model.Question
-	err := rep.db.Unscoped().Order("question_id ASC").Find(&questions, m).Error
+	err := rep.db.Unscoped().Order("id ASC").Find(&questions, m).Error
 	return questions, handleGormError(err)
 }
 
@@ -66,6 +66,6 @@ func (rep *gormQuestionRepository) RestoreOne(m *model.Question) error {
 	return rep.db.
 		Unscoped().
 		Model(&model.Question{}).
-		Where("question_id = ?", m.QuestionId).
+		Where("id = ?", m.Id).
 		Update("deleted_at", nil).Error
 }
