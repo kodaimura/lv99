@@ -7,16 +7,16 @@ import (
 )
 
 type Answer struct {
-	Id         int            `db:"id" json:"id" gorm:"primaryKey;autoIncrement"`
-	QuestionId int            `db:"question_id" json:"question_id"`
-	AccountId  int            `db:"account_id" json:"account_id"`
-	CodeDef    string         `db:"code_def" json:"code_def"`
-	CodeCall   string         `db:"code_call" json:"code_call"`
-	CallOutput string         `db:"call_output" json:"call_output"`
-	CallError  string         `db:"call_error" json:"call_error"`
-	IsCorrect  bool           `db:"is_correct" json:"is_correct"`
-	CorrectAt  time.Time      `db:"correct_at" json:"correct_at"`
-	CreatedAt  time.Time      `db:"created_at" json:"created_at" gorm:"column:created_at"`
-	UpdatedAt  time.Time      `db:"updated_at" json:"updated_at" gorm:"column:updated_at"`
-	DeletedAt  gorm.DeletedAt `db:"deleted_at" json:"deleted_at" gorm:"index"`
+	Id         int            `db:"id" gorm:"column:id;primaryKey;autoIncrement"`
+	QuestionId int            `db:"question_id" gorm:"column:question_id"`
+	AccountId  int            `db:"account_id" gorm:"column:account_id"`
+	CodeDef    string         `db:"code_def" gorm:"column:code_def"`
+	CodeCall   string         `db:"code_call" gorm:"column:code_call"`
+	CallOutput string         `db:"call_output" gorm:"column:call_output"`
+	CallError  string         `db:"call_error" gorm:"column:call_error"`
+	IsCorrect  bool           `db:"is_correct" gorm:"column:is_correct"`
+	CorrectAt  time.Time      `db:"correct_at" gorm:"column:correct_at"`
+	CreatedAt  time.Time      `db:"created_at" gorm:"column:created_at"`
+	UpdatedAt  time.Time      `db:"updated_at" gorm:"column:updated_at"`
+	DeletedAt  gorm.DeletedAt `db:"deleted_at" gorm:"column:deleted_at;index"`
 }
