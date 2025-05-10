@@ -12,24 +12,24 @@ import (
 // ============================
 
 type Comment struct {
-	CommentId      int            `json:"comment_id"`
-	AnswerId       int            `json:"answer_id"`
-	AccountId      int            `json:"account_id"`
-	CommentContent string         `json:"comment_content"`
-	CreatedAt      time.Time      `json:"created_at"`
-	UpdatedAt      time.Time      `json:"updated_at"`
-	DeletedAt      gorm.DeletedAt `json:"deleted_at"`
+	Id        int            `json:"id"`
+	AnswerId  int            `json:"answer_id"`
+	AccountId int            `json:"account_id"`
+	Content   string         `json:"content"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }
 
 func FromModelComment(m model.Comment) Comment {
 	return Comment{
-		CommentId:      m.CommentId,
-		AnswerId:       m.AnswerId,
-		AccountId:      m.AccountId,
-		CommentContent: m.CommentContent,
-		CreatedAt:      m.CreatedAt,
-		UpdatedAt:      m.UpdatedAt,
-		DeletedAt:      m.DeletedAt,
+		Id:        m.Id,
+		AnswerId:  m.AnswerId,
+		AccountId: m.AccountId,
+		Content:   m.Content,
+		CreatedAt: m.CreatedAt,
+		UpdatedAt: m.UpdatedAt,
+		DeletedAt: m.DeletedAt,
 	}
 }
 

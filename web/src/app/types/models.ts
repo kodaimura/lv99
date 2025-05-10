@@ -17,7 +17,7 @@ export type Question = {
 };
 
 export type Answer = {
-  answer_id: number;
+  id: number;
   question_id: number;
   account_id: number;
   code_def: string;
@@ -30,10 +30,10 @@ export type Answer = {
 };
 
 export type Comment = {
-  comment_id: number;
+  id: number;
   answer_id: number;
   account_id: number;
-  comment_content: string;
+  content: string;
   created_at: string;
   updated_at: string;
 };

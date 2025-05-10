@@ -38,7 +38,7 @@ const CommentCount: React.FC<Props> = ({ answerId }) => {
           <div className={styles.commentList}>
             {comments.map((comment, index) => (
               <div key={index} className={styles.commentItem}>
-                <p>{comment.comment_content}</p>
+                <p>{comment.content}</p>
               </div>
             ))}
           </div>

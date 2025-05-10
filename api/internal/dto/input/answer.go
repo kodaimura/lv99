@@ -1,7 +1,7 @@
 package input
 
 type Answer struct {
-	AnswerId   int
+	Id   int
 	QuestionId int
 	AccountId  int
 	CodeDef    string
@@ -9,5 +9,5 @@ type Answer struct {
 }
 
 type AnswerPK struct {
-	AnswerId int
+	Id int
 }

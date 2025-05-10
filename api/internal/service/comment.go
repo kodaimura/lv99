@@ -8,6 +8,7 @@ import (
 
 type CommentService interface {
 	Get(in input.Comment) ([]model.Comment, error)
+	GetOne(in input.Comment) (model.Comment, error)
 	CreateOne(in input.Comment) (model.Comment, error)
 	UpdateOne(in input.Comment) (model.Comment, error)
 	DeleteOne(in input.Comment) error
@@ -32,32 +33,37 @@ func (srv *commentService) Get(in input.Comment) ([]model.Comment, error) {
 	})
 }
 
+func (srv *commentService) GetOne(in input.Comment) (model.Comment, error) {
+	return srv.commentRepository.GetOne(&model.Comment{
+		Id: in.Id,
+		AccountId: in.AccountId,
+	})
+}
+
 func (srv *commentService) CreateOne(in input.Comment) (model.Comment, error) {
 	return srv.commentRepository.Insert(&model.Comment{
 		AnswerId: in.AnswerId,
 		AccountId: in.AccountId,
-		CommentContent: in.CommentContent,
+		Content: in.Content,
 	})
 }
 
 func (srv *commentService) UpdateOne(in input.Comment) (model.Comment, error) {
 	comment, err := srv.commentRepository.GetOne(&model.Comment{
-		CommentId: in.CommentId,
-		AnswerId: in.AnswerId,
+		Id: in.Id,
 		AccountId: in.AccountId,
 	})
 	if err != nil {
 		return model.Comment{}, err
 	}
 
-	comment.CommentContent = in.CommentContent
+	comment.Content = in.Content
 	return srv.commentRepository.Update(&comment)
 }
 
 func (srv *commentService) DeleteOne(in input.Comment) error {
 	return srv.commentRepository.Delete(&model.Comment{
-		CommentId: in.CommentId,
-		AnswerId: in.AnswerId,
+		Id: in.Id,
 		AccountId: in.AccountId,
 	})
 }

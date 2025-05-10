@@ -10,6 +10,7 @@ import (
 
 type AnswerService interface {
 	Get(in input.Answer) ([]model.Answer, error)
+	GetOne(in input.Answer) (model.Answer, error)
 	CreateOne(in input.Answer) (model.Answer, error)
 	UpdateOne(in input.Answer) (model.Answer, error)
 	DeleteOne(in input.Answer) error
@@ -36,6 +37,13 @@ func NewAnswerService(
 func (srv *answerService) Get(in input.Answer) ([]model.Answer, error) {
 	return srv.answerRepository.Get(&model.Answer{
 		QuestionId: in.QuestionId,
+		AccountId: in.AccountId,
+	})
+}
+
+func (srv *answerService) GetOne(in input.Answer) (model.Answer, error) {
+	return srv.answerRepository.GetOne(&model.Answer{
+		Id: in.Id,
 		AccountId: in.AccountId,
 	})
 }
@@ -74,8 +82,7 @@ func (srv *answerService) CreateOne(in input.Answer) (model.Answer, error) {
 
 func (srv *answerService) UpdateOne(in input.Answer) (model.Answer, error) {
 	answer, err := srv.answerRepository.GetOne(&model.Answer{
-		AnswerId: in.AnswerId,
-		QuestionId: in.QuestionId,
+		Id: in.Id,
 		AccountId: in.AccountId,
 	})
 	if err != nil {
@@ -109,8 +116,7 @@ func (srv *answerService) UpdateOne(in input.Answer) (model.Answer, error) {
 
 func (srv *answerService) DeleteOne(in input.Answer) error {
 	return srv.answerRepository.Delete(&model.Answer{
-		AnswerId: in.AnswerId,
-		QuestionId: in.QuestionId,
+		Id: in.Id,
 		AccountId: in.AccountId,
 	})
 }

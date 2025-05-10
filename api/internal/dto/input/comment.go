@@ -1,12 +1,12 @@
 package input
 
 type Comment struct {
-	CommentId      int
-	AnswerId       int
-	AccountId      int
-	CommentContent string
+	Id        int
+	AnswerId  int
+	AccountId int
+	Content   string
 }
 
 type CommentPK struct {
-	CommentId int
+	Id int
 }

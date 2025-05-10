@@ -13,7 +13,7 @@ type Props = {
 };
 
 const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
-  const answerId = answer?.answer_id;
+  const answerId = answer?.id;
   const [code_def, setCodeDef] = useState<string>(answer?.code_def ?? '');
   const [code_call, setCodeCall] = useState<string>(answer?.code_call ?? '');
   const [is_correct, setIsCorrect] = useState<null | boolean>(answer?.is_correct ?? null);
@@ -30,7 +30,7 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
 
     let response: Answer;
     if (answerId) {
-      response = await api.put(`/questions/${questionId}/answers/${answerId}`, {
+      response = await api.put(`/answers/${answerId}`, {
         code_def, code_call
       });
     } else {
@@ -48,7 +48,7 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
   const handleDelete = async () => {
     if (!answerId) return;
     if (!confirm('この回答を削除しますか？')) return;
-    await api.delete(`/questions/${questionId}/answers/${answerId}`);
+    await api.delete(`/answers/${answerId}`);
     router.refresh();
   };
 

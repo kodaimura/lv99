@@ -55,18 +55,21 @@ func SetApi(r *gin.RouterGroup) {
 
 		auth.GET("/questions/:question_id/answers", answerController.ApiGet)
 		auth.POST("/questions/:question_id/answers", answerController.ApiPostOne)
-		auth.PUT("/questions/:question_id/answers/:answer_id", answerController.ApiPutOne)
-		auth.DELETE("/questions/:question_id/answers/:answer_id", answerController.ApiDeleteOne)
+		auth.GET("/answers/:id", answerController.ApiGetOne)
+		auth.PUT("/answers/:id", answerController.ApiPutOne)
+		auth.DELETE("/answers/:id", answerController.ApiDeleteOne)
+
 		auth.GET("/answers/:answer_id/comments", commentController.ApiGet)
 		auth.POST("/answers/:answer_id/comments", commentController.ApiPostOne)
-		auth.PUT("/answers/:answer_id/comments/:comment_id", commentController.ApiPutOne)
-		auth.DELETE("/answers/:answer_id/comments/:comment_id", commentController.ApiDeleteOne)
+		auth.GET("/comments/:id", commentController.ApiGetOne)
+		auth.PUT("/comments/:id", commentController.ApiPutOne)
+		auth.DELETE("/comments/:id", commentController.ApiDeleteOne)
 	}
 
 	admin := r.Group("admin", middleware.ApiAuth())
 	{
-		admin.POST("/questions", questionController.AdminPostOne)
 		admin.GET("/questions", questionController.AdminGet)
+		admin.POST("/questions", questionController.AdminPostOne)
 		admin.GET("/questions/:id", questionController.AdminGetOne)
 		admin.PUT("/questions/:id", questionController.AdminPutOne)
 		admin.DELETE("/questions/:id", questionController.AdminDeleteOne)

@@ -30,7 +30,7 @@ const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
           {answers.map((answer, index) => (
             <div className={styles.answerSection} key={index}>
               <AnswerForm questionId={id} answer={answer} />
-              <Comment answerId={answer.answer_id} />
+              <Comment answerId={answer.id} />
             </div>
           ))}
           <AddAnswerButton questionId={id} />

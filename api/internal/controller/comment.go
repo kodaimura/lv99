@@ -22,14 +22,14 @@ func NewCommentController(commentService service.CommentService) *CommentControl
 
 // GET /api/answers/:answer_id/comments
 func (ctrl *CommentController) ApiGet(c *gin.Context) {
-	var uri request.AnswerPK
-	if err := helper.BindUri(c, &uri); err != nil {
+	var req request.GetComment
+	if err := helper.BindUri(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
 	comments, err := ctrl.commentService.Get(input.Comment{
-		AnswerId: uri.AnswerId,
+		AnswerId: req.AnswerId,
 	})
 	if err != nil {
 		c.Error(err)
@@ -42,21 +42,20 @@ func (ctrl *CommentController) ApiGet(c *gin.Context) {
 // POST /api/answers/:answer_id/comments
 func (ctrl *CommentController) ApiPostOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var uri request.AnswerPK
-	if err := helper.BindUri(c, &uri); err != nil {
+	var req request.PostComment
+	if err := helper.BindUri(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
-	var req request.Comment
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
 	comment, err := ctrl.commentService.CreateOne(input.Comment{
-		AnswerId:       uri.AnswerId,
-		AccountId:      accountId,
-		CommentContent: req.CommentContent,
+		AnswerId:  req.AnswerId,
+		AccountId: accountId,
+		Content:   req.Content,
 	})
 	if err != nil {
 		c.Error(err)
@@ -66,25 +65,18 @@ func (ctrl *CommentController) ApiPostOne(c *gin.Context) {
 	c.JSON(201, response.FromModelComment(comment))
 }
 
-// PUT /api/answers/:answer_id/comments/:comment_id
-func (ctrl *CommentController) ApiPutOne(c *gin.Context) {
+// GET /api/comments/:id
+func (ctrl *CommentController) ApiGetOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var uri request.PutComment
-	if err := helper.BindUri(c, &uri); err != nil {
-		c.Error(err)
-		return
-	}
-	var req request.Comment
-	if err := helper.BindJSON(c, &req); err != nil {
+	var req request.CommentPK
+	if err := helper.BindUri(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
-	comment, err := ctrl.commentService.UpdateOne(input.Comment{
-		AnswerId:       uri.AnswerId,
-		CommentId:      uri.CommentId,
-		AccountId:      accountId,
-		CommentContent: req.CommentContent,
+	comment, err := ctrl.commentService.GetOne(input.Comment{
+		Id:        req.Id,
+		AccountId: accountId,
 	})
 	if err != nil {
 		c.Error(err)
@@ -94,18 +86,43 @@ func (ctrl *CommentController) ApiPutOne(c *gin.Context) {
 	c.JSON(200, response.FromModelComment(comment))
 }
 
-// DELETE /api/answers/:answer_id/comments/:comment_id
+// PUT /api/comments/:id
+func (ctrl *CommentController) ApiPutOne(c *gin.Context) {
+	accountId := helper.GetAccountId(c)
+	var req request.PutComment
+	if err := helper.BindUri(c, &req); err != nil {
+		c.Error(err)
+		return
+	}
+	if err := helper.BindJSON(c, &req); err != nil {
+		c.Error(err)
+		return
+	}
+
+	comment, err := ctrl.commentService.UpdateOne(input.Comment{
+		Id:        req.Id,
+		AccountId: accountId,
+		Content:   req.Content,
+	})
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(200, response.FromModelComment(comment))
+}
+
+// DELETE /api/comments/:id
 func (ctrl *CommentController) ApiDeleteOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var uri request.DeleteComment
-	if err := helper.BindUri(c, &uri); err != nil {
+	var req request.CommentPK
+	if err := helper.BindUri(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
 	err := ctrl.commentService.DeleteOne(input.Comment{
-		AnswerId:  uri.AnswerId,
-		CommentId: uri.CommentId,
+		Id:        req.Id,
 		AccountId: accountId,
 	})
 	if err != nil {

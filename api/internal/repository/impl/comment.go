@@ -16,7 +16,7 @@ func NewGormCommentRepository(db *gorm.DB) *gormCommentRepository {
 
 func (rep *gormCommentRepository) Get(m *model.Comment) ([]model.Comment, error) {
 	var comments []model.Comment
-	err := rep.db.Order("comment_id ASC").Find(&comments, m).Error
+	err := rep.db.Order("id ASC").Find(&comments, m).Error
 	return comments, handleGormError(err)
 }
 
@@ -28,7 +28,7 @@ func (rep *gormCommentRepository) GetOne(m *model.Comment) (model.Comment, error
 
 func (rep *gormCommentRepository) GetAll(m *model.Comment) ([]model.Comment, error) {
 	var comments []model.Comment
-	err := rep.db.Unscoped().Order("comment_id ASC").Find(&comments, m).Error
+	err := rep.db.Unscoped().Order("id ASC").Find(&comments, m).Error
 	return comments, handleGormError(err)
 }
 

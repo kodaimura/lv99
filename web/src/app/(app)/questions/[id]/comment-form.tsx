@@ -17,7 +17,7 @@ const CommentForm: React.FC<Props> = ({ answerId, onSuccess }) => {
     e.preventDefault();
     setLoading(true);
     await api.post(`/answers/${answerId}/comments`, {
-      comment_content: content,
+      content: content,
     });
     setContent('');
     setLoading(false);
