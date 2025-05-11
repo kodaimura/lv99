@@ -7,33 +7,37 @@ import (
 	"lv99/internal/infrastructure/db"
 	"lv99/internal/infrastructure/externalapi"
 	"lv99/internal/middleware"
+	query "lv99/internal/query/impl"
 	repository "lv99/internal/repository/impl"
 	"lv99/internal/service"
 )
 
 var gorm = db.NewGormDB()
-//var sqlx = db.NewSqlxDB()
+var sqlx = db.NewSqlxDB()
 
 /* DI (Repository) */
 var accountRepository = repository.NewGormAccountRepository(gorm)
 var questionRepository = repository.NewGormQuestionRepository(gorm)
 var answerRepository = repository.NewGormAnswerRepository(gorm)
 var commentRepository = repository.NewGormCommentRepository(gorm)
+var chatRepository = repository.NewGormChatRepository(gorm)
 
 /* DI (Query) */
-//var xxxQuery = query.NewXxxQuery(sqlx)
+var chatQuery = query.NewChatQuery(sqlx)
 
 /* DI (Service) */
 var accountService = service.NewAccountService(accountRepository)
 var questionService = service.NewQuestionService(questionRepository)
 var answerService = service.NewAnswerService(questionRepository, answerRepository, externalapi.NewHttpCodeExecutor())
 var commentService = service.NewCommentService(commentRepository)
+var chatService = service.NewChatService(chatRepository, chatQuery)
 
 /* DI (Controller) */
 var accountController = controller.NewAccountController(accountService)
 var questionController = controller.NewQuestionController(questionService)
 var answerController = controller.NewAnswerController(answerService)
 var commentController = controller.NewCommentController(commentService)
+var chatController = controller.NewChatController(chatService)
 
 
 func SetApi(r *gin.RouterGroup) {
@@ -64,6 +68,8 @@ func SetApi(r *gin.RouterGroup) {
 		auth.GET("/comments/:comment_id", commentController.ApiGetOne)
 		auth.PUT("/comments/:comment_id", commentController.ApiPutOne)
 		auth.DELETE("/comments/:comment_id", commentController.ApiDeleteOne)
+
+		auth.GET("/chats/ws", chatController.WsConnect)
 	}
 
 	admin := r.Group("admin", middleware.ApiAuth())

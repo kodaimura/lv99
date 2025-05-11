@@ -94,6 +94,7 @@ export const config = {
   matcher: [
     '/dashboard',
     '/admin/:path*',
-    '/questions/:path*'
+    '/questions/:path*',
+    '/chat/:path*'
   ],
 };
