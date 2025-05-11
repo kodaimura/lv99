@@ -1,0 +1,39 @@
+package query
+
+import (
+	"lv99/internal/model"
+
+	"github.com/jmoiron/sqlx"
+)
+
+type chatQuery struct {
+	db *sqlx.DB
+}
+
+func NewChatQuery(db *sqlx.DB) *chatQuery {
+	return &chatQuery{db}
+}
+
+func (que *chatQuery) Get(accounId1 int, accountId2 int) ([]model.Chat, error) {
+	var chats []model.Chat
+
+	err := que.db.Select(&chats,
+		`SELECT
+			id,
+			from_id,
+			to_id,
+			message,
+			is_read,
+			created_at
+		 FROM chat
+		 WHERE (from_id = ? AND to_id = ?)
+			OR (from_id = ? AND to_id = ?)
+		 ORDER BY created_at`,
+		accounId1,
+		accountId2,
+		accounId1,
+		accountId2,
+	)
+
+	return chats, err
+}
