@@ -24,15 +24,16 @@ func (que *chatQuery) Get(accounId1 int, accountId2 int) ([]model.Chat, error) {
 			to_id,
 			message,
 			is_read,
-			created_at
+			created_at,
+			updated_at
 		 FROM chat
-		 WHERE (from_id = ? AND to_id = ?)
-			OR (from_id = ? AND to_id = ?)
+		 WHERE (from_id = $1 AND to_id = $2)
+			OR (from_id = $3 AND to_id = $4)
 		 ORDER BY created_at`,
 		accounId1,
 		accountId2,
-		accounId1,
 		accountId2,
+		accounId1,
 	)
 
 	return chats, err

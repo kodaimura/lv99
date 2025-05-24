@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"log"
 	"net/http"
 	"sync"
 
@@ -9,6 +8,7 @@ import (
 
 	"github.com/gorilla/websocket"
 
+	"lv99/internal/core"
 	"lv99/internal/dto/input"
 	"lv99/internal/dto/request"
 	"lv99/internal/dto/response"
@@ -26,12 +26,18 @@ func NewChatController(chatService service.ChatService) *ChatController {
 	}
 }
 
-// GET /api/chats
+// GET /api/chats/:to_id
 func (ctrl *ChatController) ApiGet(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
+	var uri request.ChatRoomUri
+	if err := helper.BindUri(c, &uri); err != nil {
+		c.Error(err)
+		return
+	}
+
 	chats, err := ctrl.chatService.Get(input.Chat{
 		FromId: accountId,
-		ToId: 1,
+		ToId: uri.ToId,
 	})
 	if err != nil {
 		c.Error(err)
@@ -159,7 +165,7 @@ func (ctrl *ChatController) WsConnect(c *gin.Context) {
 
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
-		log.Println("Upgrade error:", err)
+		core.Logger.Error("Upgrade error:", err)
 		return
 	}
 
@@ -177,17 +183,31 @@ func (ctrl *ChatController) WsConnect(c *gin.Context) {
 	for {
 		var req request.ChatBody
 		if err := conn.ReadJSON(&req); err != nil {
-			log.Println("ReadJSON error:", err)
+			core.Logger.Error("ReadJSON error:", err)
 			break
 		}
-		log.Printf("From %d to %d: %s", accountId, req.ToId, req.Message)
 
 		socketsMutex.Lock()
-		if toConn, ok := sockets[req.ToId]; ok {
-			_ = toConn.WriteJSON(gin.H{
-				"from_id": accountId,
-				"message": req.Message,
-			})
+		chat, err := ctrl.chatService.CreateOne(input.Chat{
+			FromId: accountId,
+			ToId: req.ToId,
+			Message: req.Message,
+		})
+		if err != nil {
+			core.Logger.Error(err.Error())
+			if toConn, ok := sockets[chat.FromId]; ok {
+				_ = toConn.WriteJSON(gin.H{
+					"error": "送信に失敗しました。",
+				})
+			}
+			break
+		}
+
+		if toConn, ok := sockets[chat.ToId]; ok {
+			_ = toConn.WriteJSON(response.FromModelChat(chat))
+		}
+		if toConn, ok := sockets[chat.FromId]; ok {
+			_ = toConn.WriteJSON(response.FromModelChat(chat))
 		}
 		socketsMutex.Unlock()
 	}

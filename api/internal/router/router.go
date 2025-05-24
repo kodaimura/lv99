@@ -70,6 +70,7 @@ func SetApi(r *gin.RouterGroup) {
 		auth.DELETE("/comments/:comment_id", commentController.ApiDeleteOne)
 
 		auth.GET("/chats/ws", chatController.WsConnect)
+		auth.GET("/chats/:to_id", chatController.ApiGet)
 	}
 
 	admin := r.Group("admin", middleware.ApiAuth())

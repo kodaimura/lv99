@@ -1,0 +1,39 @@
+.messageRow {
+  display: flex;
+  margin: 8px 0;
+}
+
+.me {
+  justify-content: flex-end;
+}
+
+.other {
+  justify-content: flex-start;
+}
+
+.bubble {
+  max-width: 60%;
+  padding: 12px;
+  border-radius: 16px;
+  background-color: #e0f7fa;
+  color: #333;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.me .bubble {
+  background-color: #c8e6c9;
+}
+
+.meta {
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+  color: #555;
+  display: flex;
+  justify-content: space-between;
+}
+
+.text {
+  font-size: 1rem;
+  word-wrap: break-word;
+}

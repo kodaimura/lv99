@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./chat-form.module.css";
+import { Chat } from "@/types/models";
 
 type Props = {
   toId: number;
+  onRecieve: (chat: Chat) => void
 };
 
-const ChatForm: React.FC<Props> = ({ toId }) => {
-  const [messages, setMessages] = useState<string[]>([]);
+const ChatForm: React.FC<Props> = ({ toId, onRecieve }) => {
   const [message, setMessage] = useState("");
   const socketRef = useRef<WebSocket | null>(null);
 
@@ -17,7 +18,7 @@ const ChatForm: React.FC<Props> = ({ toId }) => {
     socketRef.current = socket;
 
     socket.onmessage = (event) => {
-      setMessages((prev) => [...prev, event.data]);
+      onRecieve(JSON.parse(event.data));
     };
 
     socket.onclose = () => {
@@ -40,27 +41,17 @@ const ChatForm: React.FC<Props> = ({ toId }) => {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Chat</h1>
-      <div className={styles.chatBox}>
-        {messages.map((msg, idx) => (
-          <div key={idx} className={styles.message}>
-            {msg}
-          </div>
-        ))}
-      </div>
-      <div className={styles.inputArea}>
-        <input
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          className={styles.input}
-          placeholder="Type a message..."
-        />
-        <button onClick={sendMessage} className={styles.button}>
-          Send
-        </button>
-      </div>
+    <div className={styles.inputArea}>
+      <textarea
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        className={styles.input}
+        placeholder="Type a message..."
+        rows={3}
+      />
+      <button onClick={sendMessage} className={styles.button}>
+        Send
+      </button>
     </div>
   );
 }

@@ -37,3 +37,13 @@ export type Comment = {
   created_at: string;
   updated_at: string;
 };
+
+export type Chat = {
+  id: number;
+  from_id: number;
+  to_id: number;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+  updated_at: string;
+};

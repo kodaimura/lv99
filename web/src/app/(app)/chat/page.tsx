@@ -46,12 +46,12 @@ const ChatPage = () => {
         ))}
       </div>
       <div className={styles.inputArea}>
-        <input
+        <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           className={styles.input}
           placeholder="Type a message..."
+          rows={3}
         />
         <button onClick={sendMessage} className={styles.button}>
           Send
