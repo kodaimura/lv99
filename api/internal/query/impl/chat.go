@@ -2,6 +2,7 @@ package query
 
 import (
 	"lv99/internal/model"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -14,7 +15,7 @@ func NewChatQuery(db *sqlx.DB) *chatQuery {
 	return &chatQuery{db}
 }
 
-func (que *chatQuery) Get(accounId1 int, accountId2 int) ([]model.Chat, error) {
+func (que *chatQuery) Get(accounId1 int, accountId2 int, before time.Time, limit int) ([]model.Chat, error) {
 	var chats []model.Chat
 
 	err := que.db.Select(&chats,
@@ -27,13 +28,18 @@ func (que *chatQuery) Get(accounId1 int, accountId2 int) ([]model.Chat, error) {
 			created_at,
 			updated_at
 		 FROM chat
-		 WHERE (from_id = $1 AND to_id = $2)
-			OR (from_id = $3 AND to_id = $4)
-		 ORDER BY created_at`,
+		 WHERE ((from_id = $1 AND to_id = $2)
+			OR (from_id = $3 AND to_id = $4))
+			AND deleted_at IS NULL
+			AND created_at < $5
+		 ORDER BY created_at DESC
+		 LIMIT $6`,
 		accounId1,
 		accountId2,
 		accountId2,
 		accounId1,
+		before,
+		limit,
 	)
 
 	return chats, err

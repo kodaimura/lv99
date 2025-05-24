@@ -1,5 +1,7 @@
 package input
 
+import "time"
+
 type Chat struct {
 	Id      int
 	FromId  int
@@ -10,4 +12,11 @@ type Chat struct {
 
 type ChatPK struct {
 	Id int
+}
+
+type GetChat struct {
+	FromId  int
+	ToId    int
+	Before  time.Time
+	Limit   int
 }

@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -26,7 +27,7 @@ func NewChatController(chatService service.ChatService) *ChatController {
 	}
 }
 
-// GET /api/chats/:to_id
+// GET /api/chats/:to_id?before=timestamp
 func (ctrl *ChatController) ApiGet(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 	var uri request.ChatRoomUri
@@ -35,9 +36,24 @@ func (ctrl *ChatController) ApiGet(c *gin.Context) {
 		return
 	}
 
-	chats, err := ctrl.chatService.Get(input.Chat{
+	beforeStr := c.Query("before")
+	var before time.Time
+	if beforeStr == "" {
+		before = time.Now()
+	} else {
+		var err error
+		before, err = time.Parse(time.RFC3339Nano, beforeStr)
+		if err != nil {
+			c.Error(core.ErrBadRequest)
+			return
+		}
+	}
+
+	chats, err := ctrl.chatService.Get(input.GetChat{
 		FromId: accountId,
-		ToId: uri.ToId,
+		ToId:   uri.ToId,
+		Before: before,
+		Limit:  30,
 	})
 	if err != nil {
 		c.Error(err)
@@ -96,7 +112,7 @@ func (ctrl *ChatController) ApiGetOne(c *gin.Context) {
 
 	c.JSON(200, response.FromModelChat(chat))
 }
-	*/
+*/
 
 /*
 // PUT /api/chats/:chat_id
@@ -125,7 +141,7 @@ func (ctrl *ChatController) ApiPutOne(c *gin.Context) {
 
 	c.JSON(200, response.FromModelChat(chat))
 }
-	*/
+*/
 
 /*
 // DELETE /api/chats/:chat_id
@@ -148,11 +164,10 @@ func (ctrl *ChatController) ApiDeleteOne(c *gin.Context) {
 
 	c.JSON(200, nil)
 }
-	*/
+*/
 
 var sockets = make(map[int]*websocket.Conn)
 var socketsMutex sync.Mutex
-
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -189,8 +204,8 @@ func (ctrl *ChatController) WsConnect(c *gin.Context) {
 
 		socketsMutex.Lock()
 		chat, err := ctrl.chatService.CreateOne(input.Chat{
-			FromId: accountId,
-			ToId: req.ToId,
+			FromId:  accountId,
+			ToId:    req.ToId,
 			Message: req.Message,
 		})
 		if err != nil {

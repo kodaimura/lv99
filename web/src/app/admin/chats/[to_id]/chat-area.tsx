@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./chat-area.module.css";
 import Message from "./message";
 import { Chat } from "@/types/models";
@@ -13,18 +13,44 @@ type Props = {
 
 const ChatArea: React.FC<Props> = ({ toId }) => {
   const [chats, setChats] = useState<Chat[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const chatBoxRef = useRef<HTMLDivElement>(null);
 
   const getChats = async () => {
+    if (loading) return;
+    setLoading(true);
+
+    const box = chatBoxRef.current;
+    const prevScrollHeight = box?.scrollHeight ?? 0;
+    const prevScrollTop = box?.scrollTop ?? 0;
+
+    const oldest = chats[0];
+    const query = oldest ? `before=${oldest.created_at}` : "";
+
     try {
-      const response: Chat[] = await api.get(`chats/${toId}`);
-      setChats(response);
+      const response: Chat[] = await api.get(`chats/${toId}?${query}`);
+      if (response.length === 0) {
+        setHasMore(false);
+      } else {
+        setChats(prev => [...response.slice().reverse(), ...prev]);
+
+        requestAnimationFrame(() => {
+          const newScrollHeight = box?.scrollHeight ?? 0;
+          if (box) {
+            box.scrollTop = newScrollHeight - prevScrollHeight + prevScrollTop;
+          }
+        });
+      }
     } catch (e) {
-      console.error(e)
+      console.error(e);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   const handleRecieve = (chat: Chat) => {
-    console.log(chat)
     setChats(prev => [...prev, chat]);
   }
 
@@ -33,16 +59,33 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
   }, []);
 
   useEffect(() => {
-    console.log("chats updated:", chats);
-  }, [chats]);
+    if (chats.length <= 30) {
+      bottomRef.current?.scrollIntoView({ behavior: "auto" });
+    }
+  }, [chats.length]);
+
+  useEffect(() => {
+    const box = chatBoxRef.current;
+    if (!box) return;
+
+    const handleScroll = () => {
+      if (box.scrollTop === 0 && hasMore && !loading) {
+        getChats();
+      }
+    };
+
+    box.addEventListener("scroll", handleScroll);
+    return () => box.removeEventListener("scroll", handleScroll);
+  }, [hasMore, loading]);
 
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Chat</h1>
-      <div className={styles.chatBox}>
+      <div className={styles.chatBox} ref={chatBoxRef}>
         {chats.map((chat, i) => (
           <Message key={i} chat={chat} />
         ))}
+        <div ref={bottomRef} />
       </div>
       <div className={styles.inputArea}>
         <ChatForm toId={toId} onRecieve={handleRecieve} />

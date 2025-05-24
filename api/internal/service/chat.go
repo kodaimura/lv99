@@ -8,7 +8,7 @@ import (
 )
 
 type ChatService interface {
-	Get(in input.Chat) ([]model.Chat, error)
+	Get(in input.GetChat) ([]model.Chat, error)
 	CreateOne(in input.Chat) (model.Chat, error)
 	UpdateOne(in input.Chat) (model.Chat, error)
 	DeleteOne(in input.Chat) error
@@ -29,8 +29,8 @@ func NewChatService(
 	}
 }
 
-func (srv *chatService) Get(in input.Chat) ([]model.Chat, error) {
-	return srv.chatQuery.Get(in.FromId, in.ToId)
+func (srv *chatService) Get(in input.GetChat) ([]model.Chat, error) {
+	return srv.chatQuery.Get(in.FromId, in.ToId, in.Before, in.Limit)
 }
 
 func (srv *chatService) CreateOne(in input.Chat) (model.Chat, error) {

@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
+import { useAuth } from "@/contexts/auth-context";
 
 const ChatPage = () => {
+  const { account } = useAuth();
   const [messages, setMessages] = useState<string[]>([]);
   const [message, setMessage] = useState("");
   const socketRef = useRef<WebSocket | null>(null);
