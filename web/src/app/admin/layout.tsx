@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import Main from "@/components/layout/main";
+import Menu from "./menu";
 import LogoutButton from "@/components/features/logout-button";
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
       <Header>
         <LogoutButton />
       </Header>
+      <Menu />
       <Main>
         {children}
       </Main>
