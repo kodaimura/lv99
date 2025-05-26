@@ -7,10 +7,18 @@ const Menu: React.FC = () => {
     <aside className={styles.sidebar}>
       <nav className={styles.menu}>
         <ul>
-          <li><Link href="/home" className={styles.link}>ダッシュボード</Link></li>
-          <li><Link href="/questions" className={styles.link}>問題一覧</Link></li>
-          <li><Link href="/chat" className={styles.link}>チャット</Link></li>
-          <li><Link href="/documents" className={styles.link}>ドキュメント</Link></li>
+          <li>
+            <Link href="/home" className={styles.item}>ダッシュボード</Link>
+          </li>
+          <li>
+            <Link href="/questions" className={styles.item}>問題一覧</Link>
+          </li>
+          <li>
+            <Link href="/chat" className={styles.item}>チャット</Link>
+          </li>
+          <li>
+            <Link href="/documents" className={styles.item}>ドキュメント</Link>
+          </li>
         </ul>
       </nav>
     </aside >

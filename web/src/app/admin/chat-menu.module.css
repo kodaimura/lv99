@@ -1,0 +1,21 @@
+.chatMenu {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100vh - 400px);
+  padding: 1rem;
+}
+
+.item {
+  background: none;
+  border: none;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.item:hover {
+  background-color: #374151;
+}

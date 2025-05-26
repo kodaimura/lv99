@@ -75,6 +75,8 @@ func SetApi(r *gin.RouterGroup) {
 
 	admin := r.Group("admin", middleware.ApiAuth())
 	{
+		admin.GET("/accounts", accountController.AdminGet)
+		
 		admin.GET("/questions", questionController.AdminGet)
 		admin.POST("/questions", questionController.AdminPostOne)
 		admin.GET("/questions/:question_id", questionController.AdminGetOne)

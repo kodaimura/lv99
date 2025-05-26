@@ -21,7 +21,7 @@ export default function RootLayout({
         <LogoutButton />
       </Header>
       <Menu />
-      <Main>
+      <Main style={{ paddingLeft: "240px" }}>
         {children}
       </Main>
       <Footer />

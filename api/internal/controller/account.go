@@ -206,3 +206,14 @@ func (ctrl *AccountController) ApiDeleteOne(c *gin.Context) {
 
 	c.JSON(200, gin.H{})
 }
+
+// GET /api/admin/accounts
+func (ctrl *AccountController) AdminGet(c *gin.Context) {
+	accounts, err := ctrl.accountService.Get(input.Account{})
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(200, response.FromModelAccountList(accounts))
+}
