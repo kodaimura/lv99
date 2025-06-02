@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS account_profile (
+  account_id INTEGER PRIMARY KEY REFERENCES account(id) ON DELETE CASCADE,
+  display_name TEXT,
+  bio TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
