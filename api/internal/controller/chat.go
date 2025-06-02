@@ -221,8 +221,10 @@ func (ctrl *ChatController) WsConnect(c *gin.Context) {
 		if toConn, ok := sockets[chat.ToId]; ok {
 			_ = toConn.WriteJSON(response.FromModelChat(chat))
 		}
-		if toConn, ok := sockets[chat.FromId]; ok {
-			_ = toConn.WriteJSON(response.FromModelChat(chat))
+		if chat.FromId != chat.ToId {
+			if fromConn, ok := sockets[chat.FromId]; ok {
+				_ = fromConn.WriteJSON(response.FromModelChat(chat))
+			}
 		}
 		socketsMutex.Unlock()
 	}

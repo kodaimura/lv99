@@ -18,13 +18,18 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const chatBoxRef = useRef<HTMLDivElement>(null);
 
+  const scrollToBottom = () => {
+    requestAnimationFrame(() => {
+      const box = chatBoxRef.current;
+      if (box) {
+        box.scrollTop = box.scrollHeight;
+      }
+    });
+  }
+
   const getChats = async () => {
     if (loading) return;
     setLoading(true);
-
-    const box = chatBoxRef.current;
-    const prevScrollHeight = box?.scrollHeight ?? 0;
-    const prevScrollTop = box?.scrollTop ?? 0;
 
     const oldest = chats[0];
     const query = oldest ? `before=${oldest.created_at}` : "";
@@ -35,13 +40,7 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
         setHasMore(false);
       } else {
         setChats(prev => [...response.slice().reverse(), ...prev]);
-
-        requestAnimationFrame(() => {
-          const newScrollHeight = box?.scrollHeight ?? 0;
-          if (box) {
-            box.scrollTop = newScrollHeight - prevScrollHeight + prevScrollTop;
-          }
-        });
+        scrollToBottom();
       }
     } catch (e) {
       console.error(e);
@@ -52,6 +51,7 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
 
   const handleRecieve = (chat: Chat) => {
     setChats(prev => [...prev, chat]);
+    scrollToBottom();
   }
 
   useEffect(() => {
