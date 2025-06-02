@@ -17,6 +17,7 @@ var sqlx = db.NewSqlxDB()
 
 /* DI (Repository) */
 var accountRepository = repository.NewGormAccountRepository(gorm)
+var accountProfileRepository = repository.NewGormAccountProfileRepository(gorm)
 var questionRepository = repository.NewGormQuestionRepository(gorm)
 var answerRepository = repository.NewGormAnswerRepository(gorm)
 var commentRepository = repository.NewGormCommentRepository(gorm)
@@ -27,6 +28,7 @@ var chatQuery = query.NewChatQuery(sqlx)
 
 /* DI (Service) */
 var accountService = service.NewAccountService(accountRepository)
+var accountProfileService = service.NewAccountProfileService(accountProfileRepository)
 var questionService = service.NewQuestionService(questionRepository)
 var answerService = service.NewAnswerService(questionRepository, answerRepository, externalapi.NewHttpCodeExecutor())
 var commentService = service.NewCommentService(commentRepository)
@@ -34,6 +36,7 @@ var chatService = service.NewChatService(chatRepository, chatQuery)
 
 /* DI (Controller) */
 var accountController = controller.NewAccountController(accountService)
+var accountProfileController = controller.NewAccountProfileController(accountProfileService)
 var questionController = controller.NewQuestionController(questionService)
 var answerController = controller.NewAnswerController(answerService)
 var commentController = controller.NewCommentController(commentService)
@@ -53,6 +56,9 @@ func SetApi(r *gin.RouterGroup) {
 		auth.PUT("/accounts/me", accountController.ApiPutOne)
 		auth.PUT("/accounts/me/password", accountController.ApiPutPassword)
 		auth.DELETE("/accounts/me", accountController.ApiDeleteOne)
+
+		auth.GET("/accounts/me/profile", accountProfileController.ApiGetOne)
+		auth.PUT("/accounts/me/profile", accountProfileController.ApiPutOne)
 
 		auth.GET("/questions", questionController.ApiGet)
 		auth.GET("/questions/:question_id", questionController.ApiGetOne)
@@ -76,7 +82,7 @@ func SetApi(r *gin.RouterGroup) {
 	admin := r.Group("admin", middleware.ApiAuth())
 	{
 		admin.GET("/accounts", accountController.AdminGet)
-		
+
 		admin.GET("/questions", questionController.AdminGet)
 		admin.POST("/questions", questionController.AdminPostOne)
 		admin.GET("/questions/:question_id", questionController.AdminGetOne)

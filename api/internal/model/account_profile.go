@@ -5,7 +5,7 @@ import (
 )
 
 type AccountProfile struct {
-	AccountID   int       `db:"account_id" gorm:"column:account_id;primaryKey;autoIncrement:false"`
+	AccountId   int       `db:"account_id" gorm:"column:account_id;primaryKey;autoIncrement:false"`
 	DisplayName string    `db:"display_name" gorm:"column:display_name"`
 	Bio         string    `db:"bio" gorm:"column:bio"`
 	AvatarURL   string    `db:"avatar_url" gorm:"column:avatar_url"`
