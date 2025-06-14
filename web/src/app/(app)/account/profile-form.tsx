@@ -8,11 +8,11 @@ import { useRouter } from 'next/navigation';
 import { AccountProfile } from '@/types/models';
 
 type Props = {
-  accountProfile: AccountProfile;
+  profile: AccountProfile;
 };
 
-const ProfileForm: React.FC<Props> = ({ accountProfile }) => {
-  const [profile, setProfile] = useState<AccountProfile>(accountProfile);
+const ProfileForm: React.FC<Props> = ({ profile }) => {
+  const [profileState, setProfileState] = useState<AccountProfile>(profile);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,7 +21,7 @@ const ProfileForm: React.FC<Props> = ({ accountProfile }) => {
 
     try {
       await api.put('/accounts/me/profile', {
-        display_name: profile.display_name,
+        display_name: profileState.display_name,
       });
       alert('プロフィールを更新しました。');
     } catch (err) {
@@ -33,14 +33,14 @@ const ProfileForm: React.FC<Props> = ({ accountProfile }) => {
     <form className={styles.form} onSubmit={handleSubmit}>
       {error && <p className={styles.error}>{error}</p>}
       <div className={styles.inputGroup}>
-        <label htmlFor="display_name">表示名</label>
+        <label htmlFor="display_name" className={styles.label}>表示名</label>
         <input
           type="text"
           id="display_name"
-          value={profile.display_name}
+          value={profileState.display_name}
           className={styles.input}
           onChange={(e) => {
-            setProfile({ ...profile, display_name: e.target.value });
+            setProfileState({ ...profileState, display_name: e.target.value });
           }}
         />
       </div>

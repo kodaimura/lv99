@@ -45,7 +45,7 @@ const PasswordForm: React.FC = () => {
     <form className={styles.form} onSubmit={handleSubmit}>
       {error && <p className={styles.error}>{error}</p>}
       <div className={styles.inputGroup}>
-        <label htmlFor="current-password">現在のパスワード</label>
+        <label htmlFor="current-password" className={styles.label}>現在のパスワード</label>
         <input
           type="password"
           id="current-password"
@@ -55,7 +55,7 @@ const PasswordForm: React.FC = () => {
         />
       </div>
       <div className={styles.inputGroup}>
-        <label htmlFor='new-password'>新しいパスワード</label>
+        <label htmlFor='new-password' className={styles.label}>新しいパスワード</label>
         <input
           type="password"
           id="new-password"
@@ -65,7 +65,7 @@ const PasswordForm: React.FC = () => {
         />
       </div>
       <div className={styles.inputGroup}>
-        <label htmlFor="confirm-password">確認用パスワード</label>
+        <label htmlFor="confirm-password" className={styles.label}>確認用パスワード</label>
         <input
           type="password"
           id="confirm-password"

@@ -5,7 +5,7 @@ import QuestionList from './question-list';
 import type { Question } from "@/types/models";
 
 const QuestionsPage: React.FC = async () => {
-  const questions: Question = await api.get('questions');
+  const questions: Question[] = await api.get('questions');
 
   return (
     <div className={styles.container}>
