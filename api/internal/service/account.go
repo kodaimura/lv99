@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 
 	"lv99/internal/core"
 	"lv99/internal/dto/input"
@@ -24,12 +25,20 @@ type AccountService interface {
 }
 
 type accountService struct {
+	db *gorm.DB
 	accountRepository repository.AccountRepository
+	accountProfileRepository repository.AccountProfileRepository
 }
 
-func NewAccountService(accountRepository repository.AccountRepository) AccountService {
+func NewAccountService(
+	db *gorm.DB,
+	accountRepository repository.AccountRepository,
+	accountProfileRepository repository.AccountProfileRepository,	
+) AccountService {
 	return &accountService{
+		db: db,
 		accountRepository: accountRepository,
+		accountProfileRepository: accountProfileRepository,
 	}
 }
 
@@ -47,11 +56,26 @@ func (srv *accountService) CreateOne(in input.Account) (model.Account, error) {
 		return model.Account{}, err
 	}
 
-	return srv.accountRepository.Insert(&model.Account{
-		Name:     in.Name,
-		Password: string(hashed),
-		Role: helper.ACCOUNT_ROLE_NOMAL,
+	var account model.Account
+	err = srv.db.Transaction(func(tx *gorm.DB) error {
+		account, err = srv.accountRepository.InsertTx(&model.Account{
+			Name:     in.Name,
+			Password: string(hashed),
+			Role: helper.ACCOUNT_ROLE_NOMAL,
+		}, tx)
+		if err != nil {
+			return err
+		}
+		_, err = srv.accountProfileRepository.InsertTx(&model.AccountProfile{
+			AccountId: account.Id,
+			DisplayName: in.Name,
+		}, tx)
+		if err != nil {
+			return err
+		}
+		return nil
 	})
+	return account, err	
 }
 
 func (srv *accountService) UpdateOne(in input.Account) (model.Account, error) {

@@ -17,6 +17,9 @@ const Menu: React.FC = () => {
             <Link href="/chat" className={styles.item}>チャット</Link>
           </li>
           <li>
+            <Link href="/account" className={styles.item}>アカウント設定</Link>
+          </li>
+          <li>
             <Link href="/documents" className={styles.item}>ドキュメント</Link>
           </li>
         </ul>

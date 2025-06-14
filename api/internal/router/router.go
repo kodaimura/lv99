@@ -27,7 +27,7 @@ var chatRepository = repository.NewGormChatRepository(gorm)
 var chatQuery = query.NewChatQuery(sqlx)
 
 /* DI (Service) */
-var accountService = service.NewAccountService(accountRepository)
+var accountService = service.NewAccountService(gorm, accountRepository, accountProfileRepository)
 var accountProfileService = service.NewAccountProfileService(accountProfileRepository)
 var questionService = service.NewQuestionService(questionRepository)
 var answerService = service.NewAnswerService(questionRepository, answerRepository, externalapi.NewHttpCodeExecutor())
