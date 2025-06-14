@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import styles from './page.module.css';
 import { api } from '@/lib/api/api.server';
 import { Account } from '@/types/models';
+import PasswordForm from './password-form';
 
 export const metadata: Metadata = {
   title: "lv99 - home",
@@ -20,7 +21,15 @@ const AccountPage: React.FC = async () => {
 
   return (
     <div className={styles.container}>
-      ようこそ {account.name} さん
+      <label>ログインユーザ名</label>
+      <input type="text" disabled value={account.name} className={styles.input} />
+
+      <div>パスワード変更</div>
+      <PasswordForm />
+
+      <div>プロフィール</div>
+      <label>表示名</label>
+      <input type="text" value={profile.display_name} className={styles.input} />
     </div>
   );
 };

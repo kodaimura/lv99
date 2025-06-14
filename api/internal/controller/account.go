@@ -180,7 +180,7 @@ func (ctrl *AccountController) ApiPutPassword(c *gin.Context) {
 		Password: req.OldPassword,
 	})
 	if err != nil {
-		c.Error(err)
+		c.Error(core.NewAppError("current password is incorrect.", core.ErrCodeBadRequest))
 		return
 	}
 
