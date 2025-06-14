@@ -31,7 +31,7 @@ const PasswordForm: React.FC = () => {
         new_password: newPassword,
       });
       await api.post('/accounts/logout', {});
-      window.location.replace('/login');
+      router.push('/login');
     } catch (err) {
       if (err instanceof HttpError && err.status === 400) {
         setError('現在のパスワードが正しくありません。');

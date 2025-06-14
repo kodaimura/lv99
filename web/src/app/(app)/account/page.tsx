@@ -4,8 +4,9 @@ import React from 'react';
 import { Metadata } from 'next';
 import styles from './page.module.css';
 import { api } from '@/lib/api/api.server';
-import { Account } from '@/types/models';
+import { Account, AccountProfile } from '@/types/models';
 import PasswordForm from './password-form';
+import ProfileForm from './profile-form';
 
 export const metadata: Metadata = {
   title: "lv99 - home",
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 
 const AccountPage: React.FC = async () => {
   const account: Account = await api.get('accounts/me');
-  const profile: any = await api.get('accounts/me/profile');
+  const profile: AccountProfile = await api.get('accounts/me/profile');
 
   console.log('account', account);
   console.log('profile', profile);
@@ -26,10 +27,7 @@ const AccountPage: React.FC = async () => {
 
       <div>パスワード変更</div>
       <PasswordForm />
-
-      <div>プロフィール</div>
-      <label>表示名</label>
-      <input type="text" value={profile.display_name} className={styles.input} />
+      <ProfileForm accountProfile={profile} />
     </div>
   );
 };

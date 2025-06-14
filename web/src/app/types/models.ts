@@ -6,6 +6,15 @@ export type Account = {
   updated_at: string,
 }
 
+export type AccountProfile = {
+  account_id: number,
+  display_name: string,
+  bio: string,
+  avatar_url: string,
+  created_at: string,
+  updated_at: string,
+}
+
 export type Question = {
   id: number;
   title: string;
