@@ -95,6 +95,7 @@ export const config = {
     '/dashboard',
     '/admin/:path*',
     '/questions/:path*',
-    '/chat/:path*'
+    '/chat/:path*',
+    '/account',
   ],
 };
