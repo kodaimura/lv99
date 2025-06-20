@@ -13,7 +13,6 @@ import (
 	"lv99/internal/domain/question"
 	"lv99/internal/infrastructure/db"
 	"lv99/internal/infrastructure/externalapi"
-	"lv99/internal/middleware"
 )
 
 var gorm = db.NewGormDB()
@@ -36,7 +35,7 @@ var executorService = executor.NewService(externalapi.NewHttpCodeExecutor())
 var accountService = account.NewService(accountRepository)
 var accountProfileService = account_profile.NewService(accountProfileRepository)
 var questionService = question.NewService(questionRepository)
-var answerService = answer.NewService(answerRepository, questionService, externalapi.NewHttpCodeExecutor())
+var answerService = answer.NewService(answerRepository, questionService, executorService)
 var commentService = comment.NewService(commentRepository)
 var chatService = chat.NewService(chatRepository, chatQuery)
 
@@ -50,13 +49,13 @@ var commentController = comment.NewController(gorm, commentService)
 var chatController = chat.NewController(gorm, chatService)
 
 func SetApi(r *gin.RouterGroup) {
-	r.Use(middleware.ApiErrorHandler())
+	r.Use(ApiErrorHandler())
 	r.POST("/accounts/signup", authController.ApiSignup)
 	r.POST("/accounts/login", authController.ApiLogin)
 	r.POST("/accounts/refresh", authController.ApiRefresh)
 	r.POST("/accounts/logout", authController.ApiLogout)
 
-	auth := r.Group("", middleware.ApiAuth())
+	auth := r.Group("", ApiAuthMiddleware())
 	{
 		auth.PUT("/accounts/me/password", authController.ApiPutMePassword)
 		auth.GET("/accounts/me", accountController.ApiGetMe)
@@ -85,7 +84,7 @@ func SetApi(r *gin.RouterGroup) {
 		auth.GET("/chats/:to_id", chatController.ApiGet)
 	}
 
-	admin := r.Group("admin", middleware.ApiAuth())
+	admin := r.Group("admin", ApiAuthMiddleware())
 	{
 		admin.GET("/accounts", accountController.AdminGet)
 

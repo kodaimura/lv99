@@ -1,4 +1,4 @@
-package middleware
+package router
 
 import (
 	"errors"
@@ -13,7 +13,7 @@ import (
 
 // BasicAuth is a middleware that checks for Basic Authentication credentials.
 // If the credentials are incorrect, it returns an Unauthorized status.
-func BasicAuth() gin.HandlerFunc {
+func BasicAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user, pass, ok := c.Request.BasicAuth()
 		if !ok || user != config.BasicAuthUser || pass != config.BasicAuthPass {
@@ -27,7 +27,7 @@ func BasicAuth() gin.HandlerFunc {
 
 // ApiAuth is a middleware that validates the JWT token for API access.
 // If the token is invalid, it returns an Unauthorized error in JSON format.
-func ApiAuth() gin.HandlerFunc {
+func ApiAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := helper.GetAccessToken(c)
 		payload, err := core.Auth.VerifyAccessToken(token)
@@ -44,7 +44,7 @@ func ApiAuth() gin.HandlerFunc {
 
 // ApiAdmin is a middleware that validates the JWT token for Admin API access.
 // If the token is invalid, it returns an Unauthorized error in JSON format.
-func ApiAdmin() gin.HandlerFunc {
+func ApiAdminMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := helper.GetAccessToken(c)
 		payload, err := core.Auth.VerifyAccessToken(token)
