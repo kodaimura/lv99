@@ -3,62 +3,68 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 
-	"lv99/internal/controller"
+	"lv99/internal/domain/account"
+	"lv99/internal/domain/account_profile"
+	"lv99/internal/domain/answer"
+	"lv99/internal/domain/auth"
+	"lv99/internal/domain/chat"
+	"lv99/internal/domain/comment"
+	"lv99/internal/domain/executor"
+	"lv99/internal/domain/question"
 	"lv99/internal/infrastructure/db"
 	"lv99/internal/infrastructure/externalapi"
 	"lv99/internal/middleware"
-	query "lv99/internal/query/impl"
-	repository "lv99/internal/repository/impl"
-	"lv99/internal/service"
 )
 
 var gorm = db.NewGormDB()
 var sqlx = db.NewSqlxDB()
 
 /* DI (Repository) */
-var accountRepository = repository.NewGormAccountRepository(gorm)
-var accountProfileRepository = repository.NewGormAccountProfileRepository(gorm)
-var questionRepository = repository.NewGormQuestionRepository(gorm)
-var answerRepository = repository.NewGormAnswerRepository(gorm)
-var commentRepository = repository.NewGormCommentRepository(gorm)
-var chatRepository = repository.NewGormChatRepository(gorm)
+var accountRepository = account.NewRepository()
+var accountProfileRepository = account_profile.NewRepository()
+var questionRepository = question.NewRepository()
+var answerRepository = answer.NewRepository()
+var commentRepository = comment.NewRepository()
+var chatRepository = chat.NewRepository()
 
 /* DI (Query) */
-var chatQuery = query.NewChatQuery(sqlx)
+var chatQuery = chat.NewQuery(sqlx)
 
 /* DI (Service) */
-var accountService = service.NewAccountService(gorm, accountRepository, accountProfileRepository)
-var accountProfileService = service.NewAccountProfileService(accountProfileRepository)
-var questionService = service.NewQuestionService(questionRepository)
-var answerService = service.NewAnswerService(questionRepository, answerRepository, externalapi.NewHttpCodeExecutor())
-var commentService = service.NewCommentService(commentRepository)
-var chatService = service.NewChatService(chatRepository, chatQuery)
+var authService = auth.NewService(accountRepository, accountProfileRepository)
+var executorService = executor.NewService(externalapi.NewHttpCodeExecutor())
+var accountService = account.NewService(accountRepository)
+var accountProfileService = account_profile.NewService(accountProfileRepository)
+var questionService = question.NewService(questionRepository)
+var answerService = answer.NewService(answerRepository, questionService, externalapi.NewHttpCodeExecutor())
+var commentService = comment.NewService(commentRepository)
+var chatService = chat.NewService(chatRepository, chatQuery)
 
 /* DI (Controller) */
-var accountController = controller.NewAccountController(accountService)
-var accountProfileController = controller.NewAccountProfileController(accountProfileService)
-var questionController = controller.NewQuestionController(questionService)
-var answerController = controller.NewAnswerController(answerService)
-var commentController = controller.NewCommentController(commentService)
-var chatController = controller.NewChatController(chatService)
-
+var authController = auth.NewController(gorm, authService)
+var accountController = account.NewController(gorm, accountService)
+var accountProfileController = account_profile.NewController(gorm, accountProfileService)
+var questionController = question.NewController(gorm, questionService)
+var answerController = answer.NewController(gorm, answerService)
+var commentController = comment.NewController(gorm, commentService)
+var chatController = chat.NewController(gorm, chatService)
 
 func SetApi(r *gin.RouterGroup) {
 	r.Use(middleware.ApiErrorHandler())
-	r.POST("/accounts/signup", accountController.ApiSignup)
-	r.POST("/accounts/login", accountController.ApiLogin)
-	r.POST("/accounts/refresh", accountController.ApiRefresh)
-	r.POST("/accounts/logout", accountController.ApiLogout)
+	r.POST("/accounts/signup", authController.ApiSignup)
+	r.POST("/accounts/login", authController.ApiLogin)
+	r.POST("/accounts/refresh", authController.ApiRefresh)
+	r.POST("/accounts/logout", authController.ApiLogout)
 
 	auth := r.Group("", middleware.ApiAuth())
 	{
-		auth.GET("/accounts/me", accountController.ApiGetOne)
-		auth.PUT("/accounts/me", accountController.ApiPutOne)
-		auth.PUT("/accounts/me/password", accountController.ApiPutPassword)
-		auth.DELETE("/accounts/me", accountController.ApiDeleteOne)
+		auth.PUT("/accounts/me/password", authController.ApiPutMePassword)
+		auth.GET("/accounts/me", accountController.ApiGetMe)
+		auth.PUT("/accounts/me", accountController.ApiPutMe)
+		auth.DELETE("/accounts/me", accountController.ApiDeleteMe)
 
-		auth.GET("/accounts/me/profile", accountProfileController.ApiGetOne)
-		auth.PUT("/accounts/me/profile", accountProfileController.ApiPutOne)
+		auth.GET("/accounts/me/profile", accountProfileController.ApiGetMe)
+		auth.PUT("/accounts/me/profile", accountProfileController.ApiPutMe)
 
 		auth.GET("/questions", questionController.ApiGet)
 		auth.GET("/questions/:question_id", questionController.ApiGetOne)
