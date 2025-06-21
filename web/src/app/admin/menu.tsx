@@ -18,7 +18,7 @@ const Menu: React.FC = () => {
             <Link href="/admin/answers" className={styles.item}>回答一覧</Link>
           </li>
           <li>
-            <Link href="/account" className={styles.item}>アカウント設定</Link>
+            <Link href="/admin/account" className={styles.item}>アカウント設定</Link>
           </li>
         </ul>
       </nav>
