@@ -6,6 +6,7 @@ package auth
 
 type LoginResponse struct {
 	AccountId        int    `json:"account_id"`
+	AccountRole      int    `json:"account_role"`
 	AccessToken      string `json:"access_token"`
 	RefreshToken     string `json:"refresh_token"`
 	AccessExpiresIn  int    `json:"access_expires_in"`

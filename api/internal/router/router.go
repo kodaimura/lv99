@@ -40,7 +40,7 @@ var commentService = comment.NewService(commentRepository)
 var chatService = chat.NewService(chatRepository, chatQuery)
 
 /* DI (Controller) */
-var authController = auth.NewController(gorm, authService)
+var authController = auth.NewController(gorm, authService, accountProfileService)
 var accountController = account.NewController(gorm, accountService)
 var accountProfileController = account_profile.NewController(gorm, accountProfileService)
 var questionController = question.NewController(gorm, questionService)

@@ -27,7 +27,7 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
     });
   }
 
-  const getChats = async () => {
+  const getChats = async (isInit = false) => {
     if (loading) return;
     setLoading(true);
 
@@ -39,7 +39,11 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
       if (response.length === 0) {
         setHasMore(false);
       } else {
-        setChats(prev => [...response.slice().reverse(), ...prev]);
+        if (isInit) {
+          setChats(response.slice().reverse());
+        } else {
+          setChats(prev => [...response.slice().reverse(), ...prev]);
+        }
         scrollToBottom();
       }
     } catch (e) {
@@ -55,7 +59,7 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
   }
 
   useEffect(() => {
-    getChats();
+    getChats(true);
   }, []);
 
   useEffect(() => {

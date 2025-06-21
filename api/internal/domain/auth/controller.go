@@ -25,10 +25,11 @@ type controller struct {
 	accountProfileService profile.Service
 }
 
-func NewController(db *gorm.DB, service Service) Controller {
+func NewController(db *gorm.DB, service Service, accountProfileService profile.Service) Controller {
 	return &controller{
-		db:      db,
-		service: service,
+		db:                    db,
+		service:               service,
+		accountProfileService: accountProfileService,
 	}
 }
 
@@ -103,6 +104,7 @@ func (ctrl *controller) ApiLogin(c *gin.Context) {
 
 	c.JSON(200, LoginResponse{
 		AccountId:        acct.Id,
+		AccountRole:      acct.Role,
 		AccessToken:      accessToken,
 		RefreshToken:     refreshToken,
 		AccessExpiresIn:  config.AccessTokenExpiresSeconds,

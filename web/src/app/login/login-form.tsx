@@ -18,7 +18,7 @@ const LoginForm: React.FC = () => {
 
     try {
       const response: any = await api.post('accounts/login', { name, password });
-      if (response?.account?.role == 0) {
+      if (response?.account_role == 0) {
         router.push('/admin');
       } else {
         router.push('/home');
