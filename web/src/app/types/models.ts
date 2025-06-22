@@ -15,6 +15,18 @@ export type AccountProfile = {
   updated_at: string,
 }
 
+export type AccountWithProfile = {
+  id: number,
+  name: string,
+  role: number,
+  display_name: string,
+  bio: string,
+  avatar_url: string,
+  created_at: string,
+  updated_at: string,
+  deleted_at: string | null,
+};
+
 export type Question = {
   id: number;
   title: string;

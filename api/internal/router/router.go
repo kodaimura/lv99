@@ -27,12 +27,13 @@ var commentRepository = comment.NewRepository()
 var chatRepository = chat.NewRepository()
 
 /* DI (Query) */
+var accountQuery = account.NewQuery(sqlx)
 var chatQuery = chat.NewQuery(sqlx)
 
 /* DI (Service) */
 var authService = auth.NewService(accountRepository, accountProfileRepository)
 var executorService = executor.NewService(externalapi.NewHttpCodeExecutor())
-var accountService = account.NewService(accountRepository)
+var accountService = account.NewService(accountRepository, accountQuery)
 var accountProfileService = account_profile.NewService(accountProfileRepository)
 var questionService = question.NewService(questionRepository)
 var answerService = answer.NewService(answerRepository, questionService, executorService)
@@ -86,7 +87,7 @@ func SetApi(r *gin.RouterGroup) {
 
 	admin := r.Group("admin", ApiAuthMiddleware())
 	{
-		admin.GET("/accounts", accountController.AdminGet)
+		admin.GET("/accounts/with-profile", accountController.AdminGetWithProfile)
 
 		admin.GET("/questions", questionController.AdminGet)
 		admin.POST("/questions", questionController.AdminPostOne)

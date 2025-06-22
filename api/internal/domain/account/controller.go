@@ -11,7 +11,7 @@ type Controller interface {
 	ApiGetMe(c *gin.Context)
 	ApiPutMe(c *gin.Context)
 	ApiDeleteMe(c *gin.Context)
-	AdminGet(c *gin.Context)
+	AdminGetWithProfile(c *gin.Context)
 }
 
 type controller struct {
@@ -71,13 +71,13 @@ func (ctrl *controller) ApiDeleteMe(c *gin.Context) {
 	c.JSON(204, nil)
 }
 
-// GET /api/admin/accounts
-func (ctrl *controller) AdminGet(c *gin.Context) {
-	accounts, err := ctrl.service.Get(GetDto{}, ctrl.db)
+// GET /api/admin/accounts/with-profile
+func (ctrl *controller) AdminGetWithProfile(c *gin.Context) {
+	accounts, err := ctrl.service.GetWithProfile(GetWithProfileDto{}, ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	c.JSON(200, ToAccountResponseList(accounts))
+	c.JSON(200, accounts)
 }
