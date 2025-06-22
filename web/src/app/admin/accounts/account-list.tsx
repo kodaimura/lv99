@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './account-list.module.css';
 import type { AccountWithProfile } from "@/types/models";
+import Link from 'next/link';
 
 type Props = {
   accounts: AccountWithProfile[];
@@ -33,11 +34,11 @@ const AccountList: React.FC<Props> = ({
           </tr>
         </thead>
         <tbody className={styles.tbody}>
-          {accounts.map((q, i) => (
+          {accounts.map((a, i) => (
             <tr key={i} className={styles.tr}>
-              <td className={styles.td}>{q.id}</td>
-              <td className={styles.td}>{q.display_name}</td>
-              <td className={styles.td}>{formatDate(q.created_at)}</td>
+              <td className={styles.td}><Link href={`accounts/${a.id}`}>{a.id}</Link></td>
+              <td className={styles.td}>{a.display_name}</td>
+              <td className={styles.td}>{formatDate(a.created_at)}</td>
             </tr>
           ))}
         </tbody>

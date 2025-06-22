@@ -12,6 +12,7 @@ type Controller interface {
 	ApiPutMe(c *gin.Context)
 	ApiDeleteMe(c *gin.Context)
 	AdminGetWithProfile(c *gin.Context)
+	AdminGetOneWithProfile(c *gin.Context)
 }
 
 type controller struct {
@@ -73,11 +74,27 @@ func (ctrl *controller) ApiDeleteMe(c *gin.Context) {
 
 // GET /api/admin/accounts/with-profile
 func (ctrl *controller) AdminGetWithProfile(c *gin.Context) {
-	accounts, err := ctrl.service.GetWithProfile(GetWithProfileDto{}, ctrl.db)
+	accounts, err := ctrl.service.GetWithProfile(GetWithProfileDto{})
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	c.JSON(200, accounts)
+	c.JSON(200, ToAccountWithProfileResponseList(accounts))
+}
+
+// GET /api/admin/accounts/:account_id/with-profile
+func (ctrl *controller) AdminGetOneWithProfile(c *gin.Context) {
+	var uri AccountUri
+	if err := helper.BindUri(c, &uri); err != nil {
+		c.Error(err)
+		return
+	}
+	account, err := ctrl.service.GetOneWithProfile(GetOneWithProfileDto{Id: uri.AccountId})
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(200, ToAccountWithProfileResponse(account))
 }

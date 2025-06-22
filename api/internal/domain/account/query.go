@@ -6,6 +6,7 @@ import (
 
 type Query interface {
 	GetWithProfile() ([]AccountWithProfile, error)
+	GetOneWithProfile(accountId int) (AccountWithProfile, error)
 }
 
 type query struct {
@@ -37,4 +38,28 @@ func (que *query) GetWithProfile() ([]AccountWithProfile, error) {
 	)
 
 	return accounts, err
+}
+
+func (que *query) GetOneWithProfile(accountId int) (AccountWithProfile, error) {
+	var account AccountWithProfile
+
+	err := que.db.Get(&account,
+		`SELECT
+			a.id,
+			a.name,
+			a.account_role,
+			p.display_name,
+			p.bio,
+			p.avatar_url,
+			a.created_at,
+			p.updated_at,
+			a.deleted_at
+		 FROM account as a
+		 JOIN account_profile as p 
+		   ON a.id = p.account_id
+		 WHERE a.id = $1`,
+		accountId,
+	)
+
+	return account, err
 }

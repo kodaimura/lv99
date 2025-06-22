@@ -88,6 +88,7 @@ func SetApi(r *gin.RouterGroup) {
 	admin := r.Group("admin", ApiAuthMiddleware())
 	{
 		admin.GET("/accounts/with-profile", accountController.AdminGetWithProfile)
+		admin.GET("/accounts/:account_id/with-profile", accountController.AdminGetOneWithProfile)
 
 		admin.GET("/questions", questionController.AdminGet)
 		admin.POST("/questions", questionController.AdminPostOne)
