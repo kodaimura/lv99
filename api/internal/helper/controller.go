@@ -12,7 +12,7 @@ import (
 // BindJSON binds the JSON body to the provided request struct and handles validation errors.
 func BindJSON(c *gin.Context, req any) error {
 	if err := c.ShouldBindJSON(req); err != nil {
-		core.Logger.Warn("Failed to bind query: %v", err)
+		core.Logger.Warn("Failed to bind json: %v", err)
 		if validationErrors, ok := err.(validator.ValidationErrors); ok {
 			errs := extractValidationErrors(req, validationErrors)
 			return core.NewValidationError(errs)
@@ -38,7 +38,7 @@ func BindQuery(c *gin.Context, req any) error {
 // BindUri binds the URI parameters to the provided request struct and handles validation errors.
 func BindUri(c *gin.Context, req any) error {
 	if err := c.ShouldBindUri(req); err != nil {
-		core.Logger.Warn("Failed to bind query: %v", err)
+		core.Logger.Warn("Failed to bind uri: %v", err)
 		if validationErrors, ok := err.(validator.ValidationErrors); ok {
 			errs := extractValidationErrors(req, validationErrors)
 			return core.NewValidationError(errs)
