@@ -2,14 +2,14 @@ import styles from "./page.module.css";
 import ChatArea from "./chat-area";
 
 type Props = {
-  params: Promise<{ to_id: number }>
+  params: { to_id: string }
 };
 
 const ChatPage: React.FC<Props> = async ({ params }) => {
-  const { to_id } = await params
+  const { to_id } = params
 
   return (
-    <ChatArea toId={to_id} />
+    <ChatArea toId={parseInt(to_id)} />
   );
 }
 
