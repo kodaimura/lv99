@@ -27,16 +27,16 @@ func NewController(db *gorm.DB, service Service) Controller {
 	}
 }
 
-// GET /api/answers/:answer_id/comments
+// GET /api/comments?answer_id=:answer_id
 func (ctrl *controller) ApiGet(c *gin.Context) {
-	var uri AnswerUri
-	if err := helper.BindUri(c, &uri); err != nil {
+	var req GetRequest
+	if err := helper.BindQuery(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
 	comments, err := ctrl.service.Get(GetDto{
-		AnswerId: uri.AnswerId,
+		AnswerId: req.AnswerId,
 	}, ctrl.db)
 	if err != nil {
 		c.Error(err)
@@ -46,22 +46,17 @@ func (ctrl *controller) ApiGet(c *gin.Context) {
 	c.JSON(200, ToCommentResponseList(comments))
 }
 
-// POST /api/answers/:answer_id/comments
+// POST /api/comments
 func (ctrl *controller) ApiPostOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var uri AnswerUri
 	var req PostOneRequest
-	if err := helper.BindUri(c, &uri); err != nil {
-		c.Error(err)
-		return
-	}
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
 	comment, err := ctrl.service.CreateOne(CreateOneDto{
-		AnswerId:  uri.AnswerId,
+		AnswerId:  req.AnswerId,
 		AccountId: accountId,
 		Content:   req.Content,
 	}, ctrl.db)

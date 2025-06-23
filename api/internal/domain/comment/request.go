@@ -1,15 +1,16 @@
 package comment
 
-type AnswerUri struct {
-	AnswerId int `uri:"answer_id" binding:"required"`
-}
-
 type CommentUri struct {
 	CommentId int `uri:"comment_id" binding:"required"`
 }
 
+type GetRequest struct {
+	AnswerId int `form:"answer_id"`
+}
+
 type PostOneRequest struct {
-	Content string `json:"content" binding:"required"`
+	AnswerId int    `json:"answer_id" binding:"required"`
+	Content  string `json:"content" binding:"required"`
 }
 
 type PutOneRequest struct {

@@ -16,7 +16,9 @@ const CommentForm: React.FC<Props> = ({ answerId, onSuccess }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await api.post(`/answers/${answerId}/comments`, {
+
+    await api.post(`/comments`, {
+      answer_id: answerId,
       content: content,
     });
     setContent('');
