@@ -27,17 +27,17 @@ func NewController(db *gorm.DB, service Service) Controller {
 	}
 }
 
-// GET /api/questions/:question_id/answers
+// GET /api/answers?question_id=:question_id
 func (ctrl *controller) ApiGet(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var uri QuestionUri
-	if err := helper.BindUri(c, &uri); err != nil {
+	var req GetRequest
+	if err := helper.BindQuery(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
 	answers, err := ctrl.service.Get(GetDto{
-		QuestionId: uri.QuestionId,
+		QuestionId: req.QuestionId,
 		AccountId:  accountId,
 	}, ctrl.db)
 	if err != nil {
@@ -48,22 +48,17 @@ func (ctrl *controller) ApiGet(c *gin.Context) {
 	c.JSON(200, ToAnswerResponseList(answers))
 }
 
-// POST /api/questions/:question_id/answers
+// POST /api/answers
 func (ctrl *controller) ApiPostOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var uri QuestionUri
 	var req PostOneRequest
-	if err := helper.BindUri(c, &uri); err != nil {
-		c.Error(err)
-		return
-	}
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
 	answer, err := ctrl.service.CreateOne(CreateOneDto{
-		QuestionId: uri.QuestionId,
+		QuestionId: req.QuestionId,
 		AccountId:  accountId,
 		CodeDef:    req.CodeDef,
 		CodeCall:   req.CodeCall,

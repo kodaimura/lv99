@@ -7,13 +7,13 @@ import AddAnswerButton from './add-answer-button';
 import Comment from './comment';
 
 type Props = {
-  params: Promise<{ id: number }>
+  params: { id: string };
 };
 
 const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
-  const { id } = await params
+  const { id } = params
   const question: Question = await api.get(`questions/${id}`);
-  const answers: Answer[] = await api.get(`questions/${id}/answers`)
+  const answers: Answer[] = await api.get(`answers?question_id=${id}`);
 
   return (
     <div className={styles.container}>
@@ -29,15 +29,15 @@ const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
         <>
           {answers.map((answer, index) => (
             <div className={styles.answerSection} key={index}>
-              <AnswerForm questionId={id} answer={answer} />
+              <AnswerForm questionId={parseInt(id)} answer={answer} />
               <Comment answerId={answer.id} />
             </div>
           ))}
-          <AddAnswerButton questionId={id} />
+          <AddAnswerButton questionId={parseInt(id)} />
         </>
       ) : (
         <div className={styles.answerSection}>
-          <AnswerForm questionId={id} />
+          <AnswerForm questionId={parseInt(id)} />
         </div>
       )}
     </div>

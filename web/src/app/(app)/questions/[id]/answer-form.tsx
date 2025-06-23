@@ -29,21 +29,27 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
     setLoading(true);
 
     let response: Answer;
-    if (id) {
-      response = await api.put(`/answers/${id}`, {
-        code_def, code_call
-      });
-    } else {
-      response = await api.post(`/questions/${questionId}/answers`, {
-        code_def, code_call
-      });
-      setId(response?.id);
+    try {
+      if (id) {
+        response = await api.put(`/answers/${id}`, {
+          code_def, code_call
+        });
+      } else {
+        response = await api.post(`/answers`, {
+          question_id: questionId,
+          code_def: code_def,
+          code_call: code_call
+        });
+        setId(response?.id);
+      }
+      setIsCorrect(response.is_correct);
+      setCallOutput(response.call_output);
+      setCallError(response.call_error);
+    } catch (error) {
+      console.error('Validation error:', error);
+    } finally {
+      setLoading(false);
     }
-    setIsCorrect(response.is_correct);
-    setCallOutput(response.call_output);
-    setCallError(response.call_error);
-
-    setLoading(false);
   };
 
   const handleDelete = async () => {
