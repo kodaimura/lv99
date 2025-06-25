@@ -13,6 +13,8 @@ type Controller interface {
 	ApiGetOne(c *gin.Context)
 	ApiPutOne(c *gin.Context)
 	ApiDeleteOne(c *gin.Context)
+
+	AdminGet(c *gin.Context)
 }
 
 type controller struct {
@@ -139,4 +141,21 @@ func (ctrl *controller) ApiDeleteOne(c *gin.Context) {
 	}
 
 	c.JSON(200, nil)
+}
+
+// GET /api/answers?account_id=:account_id&question_id=:question_id
+func (ctrl *controller) AdminGet(c *gin.Context) {
+	var req AdminGetRequest
+	if err := helper.BindQuery(c, &req); err != nil {
+		c.Error(err)
+		return
+	}
+
+	answers, err := ctrl.service.Get(GetDto(req), ctrl.db)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(200, ToAnswerResponseList(answers))
 }

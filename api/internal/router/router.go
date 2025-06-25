@@ -96,5 +96,7 @@ func SetApi(r *gin.RouterGroup) {
 		admin.PUT("/questions/:question_id", questionController.AdminPutOne)
 		admin.DELETE("/questions/:question_id", questionController.AdminDeleteOne)
 		admin.PATCH("/questions/:question_id", questionController.AdminRestoreOne)
+
+		admin.GET("/answers", answerController.AdminGet)
 	}
 }

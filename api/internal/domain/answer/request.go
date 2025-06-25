@@ -23,3 +23,8 @@ type PutOneRequest struct {
 	CodeDef  string `json:"code_def" binding:"required"`
 	CodeCall string `json:"code_call" binding:"required"`
 }
+
+type AdminGetRequest struct {
+	AccountId  int `form:"account_id"`
+	QuestionId int `form:"question_id"`
+}

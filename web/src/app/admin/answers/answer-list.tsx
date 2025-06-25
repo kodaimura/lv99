@@ -1,14 +1,14 @@
 import React from 'react';
-import styles from './account-list.module.css';
-import type { AccountWithProfile } from "@/types/models";
+import styles from './answer-list.module.css';
+import type { Answer } from "@/types/models";
 import Link from 'next/link';
 
 type Props = {
-  accounts: AccountWithProfile[];
+  answers: Answer[];
 };
 
-const AccountList: React.FC<Props> = ({
-  accounts,
+const AnswerList: React.FC<Props> = ({
+  answers,
 }) => {
 
   const formatDate = (dateStr: string) => {
@@ -29,16 +29,12 @@ const AccountList: React.FC<Props> = ({
         <thead className={styles.thead}>
           <tr>
             <th className={styles.th}>#</th>
-            <th className={styles.th}>ユーザー名</th>
-            <th className={styles.th}>作成日</th>
           </tr>
         </thead>
         <tbody className={styles.tbody}>
-          {accounts.map((a, i) => (
+          {answers.map((a, i) => (
             <tr key={i} className={styles.tr}>
-              <td className={styles.td}><Link href={`accounts/${a.id}`}>{a.id}</Link></td>
-              <td className={styles.td}>{a.display_name}</td>
-              <td className={styles.td}>{formatDate(a.created_at)}</td>
+              <td className={styles.td}><Link href={`answers/${a.id}`}>{a.id}</Link></td>
             </tr>
           ))}
         </tbody>
@@ -47,4 +43,4 @@ const AccountList: React.FC<Props> = ({
   );
 };
 
-export default AccountList;
+export default AnswerList;
