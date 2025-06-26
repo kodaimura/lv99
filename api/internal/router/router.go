@@ -11,6 +11,7 @@ import (
 	"lv99/internal/domain/comment"
 	"lv99/internal/domain/executor"
 	"lv99/internal/domain/question"
+	"lv99/internal/feature/answer_search.go"
 	"lv99/internal/infrastructure/db"
 	"lv99/internal/infrastructure/externalapi"
 )
@@ -29,6 +30,7 @@ var chatRepository = chat.NewRepository()
 /* DI (Query) */
 var accountQuery = account.NewQuery(sqlx)
 var chatQuery = chat.NewQuery(sqlx)
+var answerSearchQuery = answer_search.NewQuery(sqlx)
 
 /* DI (Service) */
 var authService = auth.NewService(accountRepository, accountProfileRepository)
@@ -39,6 +41,7 @@ var questionService = question.NewService(questionRepository)
 var answerService = answer.NewService(answerRepository, questionService, executorService)
 var commentService = comment.NewService(commentRepository)
 var chatService = chat.NewService(chatRepository, chatQuery)
+var answerSearchService = answer_search.NewService(answerSearchQuery)
 
 /* DI (Controller) */
 var authController = auth.NewController(gorm, authService, accountProfileService)
@@ -48,6 +51,7 @@ var questionController = question.NewController(gorm, questionService)
 var answerController = answer.NewController(gorm, answerService)
 var commentController = comment.NewController(gorm, commentService)
 var chatController = chat.NewController(gorm, chatService)
+var answerSearchController = answer_search.NewController(gorm, answerSearchService)
 
 func SetApi(r *gin.RouterGroup) {
 	r.Use(ApiErrorHandler())
@@ -98,5 +102,6 @@ func SetApi(r *gin.RouterGroup) {
 		admin.PATCH("/questions/:question_id", questionController.AdminRestoreOne)
 
 		admin.GET("/answers", answerController.AdminGet)
+		admin.GET("/answers/search", answerSearchController.AdminSearch)
 	}
 }

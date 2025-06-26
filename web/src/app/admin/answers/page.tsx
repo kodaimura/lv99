@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 const AnswersPage: React.FC = async () => {
-  const data: Answer[] = await api.get('admin/answers');
+  const data: any[] = await api.get('admin/answers/search');
   console.log(data);
   return (
     <div className={styles.container}>
