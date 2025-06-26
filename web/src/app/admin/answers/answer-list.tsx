@@ -4,7 +4,7 @@ import type { Answer } from "@/types/models";
 import Link from 'next/link';
 
 type Props = {
-  answers: Answer[];
+  answers: any[];
 };
 
 const AnswerList: React.FC<Props> = ({
@@ -29,12 +29,26 @@ const AnswerList: React.FC<Props> = ({
         <thead className={styles.thead}>
           <tr>
             <th className={styles.th}>#</th>
+            <th className={styles.th}>回答者名</th>
+            <th className={styles.th}>問題</th>
+            <th className={styles.th}>正誤</th>
+            <th className={styles.th}>更新日</th>
+            <th className={styles.th}>コメント数</th>
+            <th className={styles.th}>最終コメント日時</th>
+            <th className={styles.th}>最終コメントユーザ</th>
           </tr>
         </thead>
         <tbody className={styles.tbody}>
           {answers.map((a, i) => (
             <tr key={i} className={styles.tr}>
-              <td className={styles.td}><Link href={`answers/${a.id}`}>{a.id}</Link></td>
+              <td className={styles.td}><Link href={`answers/${a.answer_id}`}>{a.answer_id}</Link></td>
+              <td className={styles.td}>{a.account_name}</td>
+              <td className={styles.td}>{a.question_title}</td>
+              <td className={styles.td}>{a.is_correct ? '正解' : '不正解'}</td>
+              <td className={styles.td}>{formatDate(a.updated_at)}</td>
+              <td className={styles.td}>{a.comment_count}</td>
+              <td className={styles.td}>{a.comment_at ? formatDate(a.comment_at) : '-'}</td>
+              <td className={styles.td}>{a.comment_account_name || '-'}</td>
             </tr>
           ))}
         </tbody>
