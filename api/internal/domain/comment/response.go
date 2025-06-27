@@ -7,7 +7,7 @@ import (
 )
 
 // ============================
-// Comment
+// CommentResponse
 // ============================
 
 type CommentResponse struct {

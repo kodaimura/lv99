@@ -7,7 +7,7 @@ import (
 )
 
 // ============================
-// Question
+// QuestionResponse
 // ============================
 
 type QuestionResponse struct {

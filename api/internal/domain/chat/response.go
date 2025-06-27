@@ -7,7 +7,7 @@ import (
 )
 
 // ============================
-// Chat
+// ChatResponse
 // ============================
 
 type ChatResponse struct {

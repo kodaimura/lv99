@@ -37,14 +37,14 @@ SELECT
 	q.title as question_title,
 	q.level as question_level,
 	a.account_id as account_id,
-	ac.name as account_name,
+	ap.display_name as account_name,
 	(SELECT COUNT(*) FROM comment c WHERE c.answer_id = a.id) as comment_count,
 	c.account_id as comment_account_id,
 	ca.name as comment_account_name,
 	c.created_at as comment_at
 FROM answer a
 JOIN question q ON a.question_id = q.id
-JOIN account ac ON a.account_id = ac.id
+JOIN account_profile ap ON a.account_id = ap.account_id
 LEFT JOIN LATERAL (
 	SELECT * FROM comment
 	WHERE comment.answer_id = a.id

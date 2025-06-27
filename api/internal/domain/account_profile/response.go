@@ -5,7 +5,7 @@ import (
 )
 
 // ============================
-// AccountProfile
+// AccountProfileResponse
 // ============================
 
 type AccountProfileResponse struct {

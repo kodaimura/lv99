@@ -3,7 +3,7 @@ package account_with_profile
 import "time"
 
 // ============================
-// AccountWithProfile
+// AccountWithProfileResponse
 // ============================
 
 type AccountWithProfileResponse struct {

@@ -5,7 +5,7 @@ import (
 )
 
 // ============================
-// AnswerSearch
+// AnswerSearchResponse
 // ============================
 
 type AnswerSearchResponse struct {
