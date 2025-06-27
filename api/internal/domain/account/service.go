@@ -9,19 +9,15 @@ type Service interface {
 	GetOne(in GetOneDto, db *gorm.DB) (Account, error)
 	UpdateOne(in UpdateOneDto, db *gorm.DB) (Account, error)
 	DeleteOne(in DeleteOneDto, db *gorm.DB) error
-	GetWithProfile(in GetWithProfileDto) ([]AccountWithProfile, error)
-	GetOneWithProfile(in GetOneWithProfileDto) (AccountWithProfile, error)
 }
 
 type service struct {
 	repository Repository
-	query      Query
 }
 
-func NewService(repository Repository, query Query) Service {
+func NewService(repository Repository) Service {
 	return &service{
 		repository: repository,
-		query:      query,
 	}
 }
 
@@ -44,12 +40,4 @@ func (srv *service) UpdateOne(in UpdateOneDto, db *gorm.DB) (Account, error) {
 
 func (srv *service) DeleteOne(in DeleteOneDto, db *gorm.DB) error {
 	return srv.repository.Delete(&Account{Id: in.Id}, db)
-}
-
-func (srv *service) GetWithProfile(in GetWithProfileDto) ([]AccountWithProfile, error) {
-	return srv.query.GetWithProfile()
-}
-
-func (srv *service) GetOneWithProfile(in GetOneWithProfileDto) (AccountWithProfile, error) {
-	return srv.query.GetOneWithProfile(in.Id)
 }

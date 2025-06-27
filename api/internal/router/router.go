@@ -11,6 +11,7 @@ import (
 	"lv99/internal/domain/comment"
 	"lv99/internal/domain/executor"
 	"lv99/internal/domain/question"
+	"lv99/internal/feature/account_with_profile"
 	"lv99/internal/feature/answer_search.go"
 	"lv99/internal/infrastructure/db"
 	"lv99/internal/infrastructure/externalapi"
@@ -28,20 +29,22 @@ var commentRepository = comment.NewRepository()
 var chatRepository = chat.NewRepository()
 
 /* DI (Query) */
-var accountQuery = account.NewQuery(sqlx)
+var accountWithProfileQuery = account_with_profile.NewQuery(sqlx)
 var chatQuery = chat.NewQuery(sqlx)
 var answerSearchQuery = answer_search.NewQuery(sqlx)
 
 /* DI (Service) */
 var authService = auth.NewService(accountRepository, accountProfileRepository)
 var executorService = executor.NewService(externalapi.NewHttpCodeExecutor())
-var accountService = account.NewService(accountRepository, accountQuery)
+var accountService = account.NewService(accountRepository)
 var accountProfileService = account_profile.NewService(accountProfileRepository)
 var questionService = question.NewService(questionRepository)
 var answerService = answer.NewService(answerRepository, questionService, executorService)
 var commentService = comment.NewService(commentRepository)
 var chatService = chat.NewService(chatRepository, chatQuery)
+
 var answerSearchService = answer_search.NewService(answerSearchQuery)
+var accountWithProfileService = account_with_profile.NewService(accountWithProfileQuery)
 
 /* DI (Controller) */
 var authController = auth.NewController(gorm, authService, accountProfileService)
@@ -52,6 +55,7 @@ var answerController = answer.NewController(gorm, answerService)
 var commentController = comment.NewController(gorm, commentService)
 var chatController = chat.NewController(gorm, chatService)
 var answerSearchController = answer_search.NewController(gorm, answerSearchService)
+var accountWithProfileController = account_with_profile.NewController(gorm, accountWithProfileService)
 
 func SetApi(r *gin.RouterGroup) {
 	r.Use(ApiErrorHandler())
@@ -91,8 +95,8 @@ func SetApi(r *gin.RouterGroup) {
 
 	admin := r.Group("admin", ApiAuthMiddleware())
 	{
-		admin.GET("/accounts/with-profile", accountController.AdminGetWithProfile)
-		admin.GET("/accounts/:account_id/with-profile", accountController.AdminGetOneWithProfile)
+		admin.GET("/accounts/with-profile", accountWithProfileController.AdminGet)
+		admin.GET("/accounts/:account_id/with-profile", accountWithProfileController.AdminGetOne)
 
 		admin.GET("/questions", questionController.AdminGet)
 		admin.POST("/questions", questionController.AdminPostOne)

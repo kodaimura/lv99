@@ -1,4 +1,4 @@
-package account
+package account_with_profile
 
 import (
 	"github.com/jmoiron/sqlx"
