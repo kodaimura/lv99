@@ -57,7 +57,11 @@ class Api {
     return (await response.json()) as T;
   }
 
-  async get<T>(endpoint: string): Promise<T> {
+  async get<T>(endpoint: string, params?: Record<string, any>): Promise<T> {
+    if (params && typeof params === 'object') {
+      const query = new URLSearchParams(params).toString();
+      endpoint += `?${query}`;
+    }
     return this.apiFetch<T>(endpoint, 'GET');
   }
 

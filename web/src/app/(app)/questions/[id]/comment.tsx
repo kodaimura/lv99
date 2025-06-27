@@ -19,7 +19,7 @@ const CommentCount: React.FC<Props> = ({ answerId }) => {
   }, [])
 
   const getComments = async () => {
-    const response: Comment[] = await api.get(`/comments?answer_id=${answerId}`);
+    const response: Comment[] = await api.get("/comments", { answer_id: answerId });
     setComments(response);
   }
 

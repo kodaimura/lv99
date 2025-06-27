@@ -13,7 +13,7 @@ type Props = {
 const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
   const { id } = params
   const question: Question = await api.get(`questions/${id}`);
-  const answers: Answer[] = await api.get(`answers?question_id=${id}`);
+  const answers: Answer[] = await api.get("answers", { question_id: id });
 
   return (
     <div className={styles.container}>

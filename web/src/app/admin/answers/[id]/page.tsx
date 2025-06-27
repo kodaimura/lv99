@@ -10,7 +10,7 @@ type Props = {
 const AnswerDetailPage: React.FC<Props> = async ({ params }) => {
   const { id } = await params;
   const account: AccountWithProfile = await api.get(`admin/accounts/${id}/with-profile`);
-  const answers: Answer[] = await api.get(`admin/answers?account_id=${id}`);
+  const answers: Answer[] = await api.get("admin/answers", { account_id: id });
   const questions: Question[] = await api.get(`admin/questions`);
 
   console.log(account);
