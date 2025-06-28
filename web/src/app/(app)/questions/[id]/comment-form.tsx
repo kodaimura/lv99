@@ -1,26 +1,48 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './comment-form.module.css';
 import { api } from '@/lib/api/api.client';
 
 type Props = {
   answerId: number;
+  commentId?: number;
+  initialContent?: string;
   onSuccess?: () => void;
+  onCancel?: () => void;
 };
 
-const CommentForm: React.FC<Props> = ({ answerId, onSuccess }) => {
-  const [content, setContent] = useState('');
+const CommentForm: React.FC<Props> = ({
+  answerId,
+  commentId,
+  initialContent = '',
+  onSuccess,
+  onCancel,
+}) => {
+  const [content, setContent] = useState(initialContent);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setContent(initialContent);
+  }, [initialContent]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!content.trim()) {
+      alert('コメントを入力してください。');
+      return;
+    }
     setLoading(true);
 
-    await api.post(`/comments`, {
-      answer_id: answerId,
-      content: content,
-    });
+    if (commentId) {
+      await api.put(`/comments/${commentId}`, { content });
+    } else {
+      await api.post(`/comments`, {
+        answer_id: answerId,
+        content,
+      });
+    }
+
     setContent('');
     setLoading(false);
     onSuccess?.();
@@ -31,14 +53,25 @@ const CommentForm: React.FC<Props> = ({ answerId, onSuccess }) => {
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        required
         placeholder="コメントを入力..."
         className={styles.textarea}
-        rows={3}
+        rows={7}
       />
-      <button type="submit" disabled={loading} className={styles.button}>
-        {loading ? '投稿中…' : 'コメントする'}
-      </button>
+      <div className={styles.buttonGroup}>
+        <button type="submit" disabled={loading} className={styles.button}>
+          {loading ? (commentId ? '更新中…' : '投稿中…') : (commentId ? '更新する' : 'コメントする')}
+        </button>
+        {commentId && onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className={styles.buttonCancel}
+            disabled={loading}
+          >
+            キャンセル
+          </button>
+        )}
+      </div>
     </form>
   );
 };

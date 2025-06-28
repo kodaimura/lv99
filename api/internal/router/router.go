@@ -94,6 +94,7 @@ func SetApi(r *gin.RouterGroup) {
 		auth.GET("/comments/:comment_id", commentController.ApiGetOne)
 		auth.PUT("/comments/:comment_id", commentController.ApiPutOne)
 		auth.DELETE("/comments/:comment_id", commentController.ApiDeleteOne)
+		auth.GET("/comments/with-profile", featureCommentController.AdminGetWithProfile)
 
 		auth.GET("/chats/ws", chatController.WsConnect)
 		auth.GET("/chats/:to_id", chatController.ApiGet)
@@ -114,7 +115,5 @@ func SetApi(r *gin.RouterGroup) {
 		admin.GET("/answers", answerController.AdminGet)
 		admin.GET("/answers/:answer_id", answerController.AdminGetOne)
 		admin.GET("/answers/search", featureAnswerController.AdminSearch)
-
-		auth.GET("/comments/with-profile", featureCommentController.AdminGetWithProfile)
 	}
 }

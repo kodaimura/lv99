@@ -59,6 +59,17 @@ export type Comment = {
   updated_at: string;
 };
 
+export type CommentWithProfile = {
+  id: number;
+  answer_id: number;
+  account_id: number;
+  display_name: string;
+  avatar_url: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Chat = {
   id: number;
   from_id: number;

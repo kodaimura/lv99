@@ -1,24 +1,87 @@
 .commentButton {
-  background-color: #007bff;
-  color: white;
+  background-color: #f0f0f0;
   padding: 8px 16px;
+  font-weight: bold;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-.commentButton:hover {
-  background-color: #0056b3;
 }
 
 .commentList {
   margin-top: 16px;
-  padding-left: 20px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .commentItem {
-  margin-bottom: 12px;
-  border-left: 2px solid #007bff;
-  padding-left: 10px;
+  position: relative;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
+  white-space: pre-wrap;
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 40px;
+  position: relative;
+}
+
+.commentMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.commentAuthor {
+  font-weight: bold;
+  color: #333;
+}
+
+.commentDate {
+  color: #888;
+}
+
+.menuButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  z-index: 5;
+}
+
+.menu {
+  position: absolute;
+  top: 30px;
+  right: 6px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-width: 100px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.menuItem {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background-color: #f0f0f0;
 }
