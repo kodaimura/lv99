@@ -106,6 +106,7 @@ func SetApi(r *gin.RouterGroup) {
 		admin.PATCH("/questions/:question_id", questionController.AdminRestoreOne)
 
 		admin.GET("/answers", answerController.AdminGet)
+		admin.GET("/answers/:answer_id", answerController.AdminGetOne)
 		admin.GET("/answers/search", answerSearchController.AdminSearch)
 	}
 }
