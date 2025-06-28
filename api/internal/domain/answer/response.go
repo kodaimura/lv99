@@ -19,7 +19,7 @@ type AnswerResponse struct {
 	CallOutput string         `json:"call_output"`
 	CallError  string         `json:"call_error"`
 	IsCorrect  bool           `json:"is_correct"`
-	CorrectAt  time.Time      `json:"correct_at"`
+	CorrectAt  *time.Time     `json:"correct_at"`
 	CreatedAt  time.Time      `json:"created_at"`
 	UpdatedAt  time.Time      `json:"updated_at"`
 	DeletedAt  gorm.DeletedAt `json:"deleted_at"`

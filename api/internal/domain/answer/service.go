@@ -64,10 +64,11 @@ func (srv *service) CreateOne(in CreateOneDto, db *gorm.DB) (Answer, error) {
 	}
 
 	isCorrect := false
-	var correctAt time.Time
+	var correctAt *time.Time
 	if result.Output == q.Answer {
 		isCorrect = true
-		correctAt = time.Now()
+		now := time.Now()
+		correctAt = &now
 	}
 
 	return srv.repository.Insert(&Answer{
@@ -110,7 +111,8 @@ func (srv *service) UpdateOne(in UpdateOneDto, db *gorm.DB) (Answer, error) {
 	ans.IsCorrect = result.Output == q.Answer
 
 	if ans.IsCorrect && ans.CorrectAt.IsZero() {
-		ans.CorrectAt = time.Now()
+		now := time.Now()
+		ans.CorrectAt = &now
 	}
 
 	return srv.repository.Update(&ans, db)

@@ -15,7 +15,7 @@ type Answer struct {
 	CallOutput string         `db:"call_output" gorm:"column:call_output"`
 	CallError  string         `db:"call_error" gorm:"column:call_error"`
 	IsCorrect  bool           `db:"is_correct" gorm:"column:is_correct"`
-	CorrectAt  time.Time      `db:"correct_at" gorm:"column:correct_at"`
+	CorrectAt  *time.Time     `db:"correct_at" gorm:"column:correct_at"`
 	CreatedAt  time.Time      `db:"created_at" gorm:"column:created_at"`
 	UpdatedAt  time.Time      `db:"updated_at" gorm:"column:updated_at"`
 	DeletedAt  gorm.DeletedAt `db:"deleted_at" gorm:"column:deleted_at;index"`
