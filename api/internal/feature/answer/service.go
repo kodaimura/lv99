@@ -1,4 +1,4 @@
-package answer_search
+package answer
 
 type Service interface {
 	Search(in SearchDto) ([]AnswerSearch, error)

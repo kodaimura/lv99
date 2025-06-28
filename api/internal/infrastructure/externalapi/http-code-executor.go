@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"lv99/config"
-	"lv99/internal/domain/executor"
+	"lv99/internal/module/executor"
 )
 
 type HttpCodeExecutor struct {

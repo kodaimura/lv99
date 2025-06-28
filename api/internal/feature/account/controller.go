@@ -1,4 +1,4 @@
-package account_with_profile
+package account
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,8 +8,8 @@ import (
 )
 
 type Controller interface {
-	AdminGet(c *gin.Context)
-	AdminGetOne(c *gin.Context)
+	AdminGetWithProfile(c *gin.Context)
+	AdminGetOneWithProfile(c *gin.Context)
 }
 
 type controller struct {
@@ -25,8 +25,8 @@ func NewController(db *gorm.DB, service Service) Controller {
 }
 
 // GET /api/admin/accounts/with-profile
-func (ctrl *controller) AdminGet(c *gin.Context) {
-	accounts, err := ctrl.service.Get(GetDto{})
+func (ctrl *controller) AdminGetWithProfile(c *gin.Context) {
+	accounts, err := ctrl.service.GetWithProfile(GetWithProfileDto{})
 	if err != nil {
 		c.Error(err)
 		return
@@ -36,13 +36,13 @@ func (ctrl *controller) AdminGet(c *gin.Context) {
 }
 
 // GET /api/admin/accounts/:account_id/with-profile
-func (ctrl *controller) AdminGetOne(c *gin.Context) {
+func (ctrl *controller) AdminGetOneWithProfile(c *gin.Context) {
 	var uri AccountUri
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
-	account, err := ctrl.service.GetOne(GetOneDto{Id: uri.AccountId})
+	account, err := ctrl.service.GetOneWithProfile(GetOneWithProfileDto{Id: uri.AccountId})
 	if err != nil {
 		c.Error(err)
 		return

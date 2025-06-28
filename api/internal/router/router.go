@@ -3,18 +3,18 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 
-	"lv99/internal/domain/account"
-	"lv99/internal/domain/account_profile"
-	"lv99/internal/domain/answer"
-	"lv99/internal/domain/auth"
-	"lv99/internal/domain/chat"
-	"lv99/internal/domain/comment"
-	"lv99/internal/domain/executor"
-	"lv99/internal/domain/question"
-	"lv99/internal/feature/account_with_profile"
-	"lv99/internal/feature/answer_search.go"
+	feature_account "lv99/internal/feature/account"
+	feature_answer "lv99/internal/feature/answer"
 	"lv99/internal/infrastructure/db"
 	"lv99/internal/infrastructure/externalapi"
+	"lv99/internal/module/account"
+	"lv99/internal/module/account_profile"
+	"lv99/internal/module/answer"
+	"lv99/internal/module/auth"
+	"lv99/internal/module/chat"
+	"lv99/internal/module/comment"
+	"lv99/internal/module/executor"
+	"lv99/internal/module/question"
 )
 
 var gorm = db.NewGormDB()
@@ -29,9 +29,10 @@ var commentRepository = comment.NewRepository()
 var chatRepository = chat.NewRepository()
 
 /* DI (Query) */
-var accountWithProfileQuery = account_with_profile.NewQuery(sqlx)
 var chatQuery = chat.NewQuery(sqlx)
-var answerSearchQuery = answer_search.NewQuery(sqlx)
+
+var featureAccountQuery = feature_account.NewQuery(sqlx)
+var featureAnswerQuery = feature_answer.NewQuery(sqlx)
 
 /* DI (Service) */
 var authService = auth.NewService(accountRepository, accountProfileRepository)
@@ -43,8 +44,8 @@ var answerService = answer.NewService(answerRepository, questionService, executo
 var commentService = comment.NewService(commentRepository)
 var chatService = chat.NewService(chatRepository, chatQuery)
 
-var answerSearchService = answer_search.NewService(answerSearchQuery)
-var accountWithProfileService = account_with_profile.NewService(accountWithProfileQuery)
+var featureAccountService = feature_account.NewService(featureAccountQuery)
+var featureAnswerService = feature_answer.NewService(featureAnswerQuery)
 
 /* DI (Controller) */
 var authController = auth.NewController(gorm, authService, accountProfileService)
@@ -54,8 +55,9 @@ var questionController = question.NewController(gorm, questionService)
 var answerController = answer.NewController(gorm, answerService)
 var commentController = comment.NewController(gorm, commentService)
 var chatController = chat.NewController(gorm, chatService)
-var answerSearchController = answer_search.NewController(gorm, answerSearchService)
-var accountWithProfileController = account_with_profile.NewController(gorm, accountWithProfileService)
+
+var featureAccountController = feature_account.NewController(gorm, featureAccountService)
+var featureAnswerController = feature_answer.NewController(gorm, featureAnswerService)
 
 func SetApi(r *gin.RouterGroup) {
 	r.Use(ApiErrorHandler())
@@ -95,8 +97,8 @@ func SetApi(r *gin.RouterGroup) {
 
 	admin := r.Group("admin", ApiAuthMiddleware())
 	{
-		admin.GET("/accounts/with-profile", accountWithProfileController.AdminGet)
-		admin.GET("/accounts/:account_id/with-profile", accountWithProfileController.AdminGetOne)
+		admin.GET("/accounts/with-profile", featureAccountController.AdminGetWithProfile)
+		admin.GET("/accounts/:account_id/with-profile", featureAccountController.AdminGetOneWithProfile)
 
 		admin.GET("/questions", questionController.AdminGet)
 		admin.POST("/questions", questionController.AdminPostOne)
@@ -107,6 +109,6 @@ func SetApi(r *gin.RouterGroup) {
 
 		admin.GET("/answers", answerController.AdminGet)
 		admin.GET("/answers/:answer_id", answerController.AdminGetOne)
-		admin.GET("/answers/search", answerSearchController.AdminSearch)
+		admin.GET("/answers/search", featureAnswerController.AdminSearch)
 	}
 }

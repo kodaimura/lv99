@@ -1,4 +1,4 @@
-package answer_search
+package answer
 
 import (
 	"github.com/gin-gonic/gin"

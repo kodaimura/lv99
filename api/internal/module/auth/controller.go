@@ -6,8 +6,8 @@ import (
 
 	"lv99/config"
 	"lv99/internal/core"
-	profile "lv99/internal/domain/account_profile"
 	"lv99/internal/helper"
+	profile "lv99/internal/module/account_profile"
 )
 
 type Controller interface {

@@ -2,8 +2,8 @@ package answer
 
 import (
 	"lv99/internal/core"
-	"lv99/internal/domain/executor"
-	"lv99/internal/domain/question"
+	"lv99/internal/module/executor"
+	"lv99/internal/module/question"
 	"time"
 
 	"gorm.io/gorm"

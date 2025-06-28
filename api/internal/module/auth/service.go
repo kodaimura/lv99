@@ -7,9 +7,9 @@ import (
 	"gorm.io/gorm"
 
 	"lv99/internal/core"
-	"lv99/internal/domain/account"
-	profile "lv99/internal/domain/account_profile"
 	"lv99/internal/helper"
+	"lv99/internal/module/account"
+	profile "lv99/internal/module/account_profile"
 )
 
 type Service interface {
@@ -38,7 +38,7 @@ func (srv *service) Signup(in SignupDto, db *gorm.DB) (account.Account, error) {
 	if err != nil {
 		return account.Account{}, err
 	}
-	
+
 	return srv.accountRepository.Insert(&account.Account{
 		Name:     in.Name,
 		Password: string(hashed),

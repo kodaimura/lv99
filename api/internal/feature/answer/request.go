@@ -1,6 +1,6 @@
-package answer_search
+package answer
 
-type SearchDto struct {
+type SearchRequest struct {
 	QuestionId       int   `json:"question_id"`
 	AccountId        int   `json:"account_id"`
 	IsCorrect        *bool `json:"is_correct"`
