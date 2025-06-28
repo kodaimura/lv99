@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { api } from '@/lib/api/api.client';
-import styles from './comment.module.css';
+import styles from './comment-list.module.css';
 import CommentForm from './comment-form';
 import type { Comment } from '@/types/models';
 
@@ -10,7 +10,7 @@ type Props = {
   answerId: number;
 };
 
-const CommentCount: React.FC<Props> = ({ answerId }) => {
+const CommentList: React.FC<Props> = ({ answerId }) => {
   const [comments, setComments] = useState<Comment[] | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -49,4 +49,4 @@ const CommentCount: React.FC<Props> = ({ answerId }) => {
   );
 };
 
-export default CommentCount;
+export default CommentList;

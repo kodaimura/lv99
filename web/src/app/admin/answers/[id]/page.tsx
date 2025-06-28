@@ -4,6 +4,7 @@ import { api } from '@/lib/api/api.server';
 import styles from './page.module.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import CommentList from './comment-list';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -86,6 +87,8 @@ const AnswerDetailPage: React.FC<Props> = async ({ params }) => {
       </div>
 
       <div className={styles.commentsSection}>
+        <CommentList answerId={answer.id} />
+        {/*
         <h2>コメント</h2>
         {comments.length === 0 && <p>コメントはまだありません。</p>}
         {comments.map((comment, index) => (
@@ -93,6 +96,7 @@ const AnswerDetailPage: React.FC<Props> = async ({ params }) => {
             <p>{comment.content}</p>
           </div>
         ))}
+          */}
       </div>
     </div>
   );
