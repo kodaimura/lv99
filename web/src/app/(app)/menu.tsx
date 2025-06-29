@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './menu.module.css';
 import Link from 'next/link';
+import UnreadCountMap from './unread-count';
 
 const Menu: React.FC = () => {
   return (
@@ -14,7 +15,9 @@ const Menu: React.FC = () => {
             <Link href="/questions" className={styles.item}>問題一覧</Link>
           </li>
           <li>
-            <Link href="/chat" className={styles.item}>チャット</Link>
+            <Link href="/chat" className={styles.item}>
+              チャット<UnreadCountMap />
+            </Link>
           </li>
           <li>
             <Link href="/account" className={styles.item}>アカウント設定</Link>

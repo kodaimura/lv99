@@ -23,9 +23,11 @@
 
 .item {
   color: white;
-  text-decoration: none;
   font-weight: bold;
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
   padding: 0.5rem;
   border-radius: 4px;
   transition: background-color 0.2s;
