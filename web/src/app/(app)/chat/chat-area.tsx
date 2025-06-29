@@ -26,7 +26,9 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
     socketRef.current = socket;
 
     socket.onmessage = (event) => {
-      setChats(prev => [...prev, JSON.parse(event.data)]);
+      const data = JSON.parse(event.data);
+      if (data.from_id !== toId && data.to_id !== toId) return;
+      setChats(prev => [...prev, data]);
       scrollToBottom();
     };
 

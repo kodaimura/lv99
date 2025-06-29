@@ -5,6 +5,7 @@ import (
 
 	feature_account "lv99/internal/feature/account"
 	feature_answer "lv99/internal/feature/answer"
+	feature_chat "lv99/internal/feature/chat"
 	feature_comment "lv99/internal/feature/comment"
 	"lv99/internal/infrastructure/db"
 	"lv99/internal/infrastructure/externalapi"
@@ -35,6 +36,7 @@ var chatQuery = chat.NewQuery(sqlx)
 var featureAccountQuery = feature_account.NewQuery(sqlx)
 var featureAnswerQuery = feature_answer.NewQuery(sqlx)
 var featureCommentQuery = feature_comment.NewQuery(sqlx)
+var featureChatQuery = feature_chat.NewQuery(sqlx)
 
 /* DI (Service) */
 var authService = auth.NewService(accountRepository, accountProfileRepository)
@@ -49,6 +51,7 @@ var chatService = chat.NewService(chatRepository, chatQuery)
 var featureAccountService = feature_account.NewService(featureAccountQuery)
 var featureAnswerService = feature_answer.NewService(featureAnswerQuery)
 var featureCommentService = feature_comment.NewService(featureCommentQuery)
+var featureChatService = feature_chat.NewService(featureChatQuery)
 
 /* DI (Controller) */
 var authController = auth.NewController(gorm, authService, accountProfileService)
@@ -62,6 +65,7 @@ var chatController = chat.NewController(gorm, chatService)
 var featureAccountController = feature_account.NewController(gorm, featureAccountService)
 var featureAnswerController = feature_answer.NewController(gorm, featureAnswerService)
 var featureCommentController = feature_comment.NewController(gorm, featureCommentService)
+var featureChatController = feature_chat.NewController(gorm, featureChatService)
 
 func SetApi(r *gin.RouterGroup) {
 	r.Use(ApiErrorHandler())
@@ -97,6 +101,7 @@ func SetApi(r *gin.RouterGroup) {
 		auth.GET("/comments/with-profile", featureCommentController.AdminGetWithProfile)
 
 		auth.GET("/chats/ws", chatController.WsConnect)
+		auth.GET("/chats/unread-count", featureChatController.ApiGetUnreadCount)
 		auth.GET("/chats/:to_id", chatController.ApiGet)
 
 		auth.GET("/accounts/admin/with-profile", featureAccountController.ApiGetAdminWithProfile)
