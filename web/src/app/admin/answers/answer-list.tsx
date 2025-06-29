@@ -30,11 +30,10 @@ const AnswerList: React.FC<Props> = ({
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>
-            <th className={styles.th}>#</th>
+            <th className={styles.th}>更新日時</th>
             <th className={styles.th}>回答者名</th>
             <th className={styles.th}>問題</th>
             <th className={styles.th}>正誤</th>
-            <th className={styles.th}>更新日時</th>
             <th className={styles.th}>コメント</th>
             <th className={styles.th}>コメント日時</th>
             <th className={styles.th}>コメント者名</th>
@@ -43,7 +42,7 @@ const AnswerList: React.FC<Props> = ({
         <tbody className={styles.tbody}>
           {answers.map((a, i) => (
             <tr key={i} className={styles.tr} onClick={() => { router.push(`answers/${a.answer_id}`); }}>
-              <td className={styles.td}>{a.answer_id}</td>
+              <td className={styles.td}>{formatDate(a.updated_at)}</td>
               <td className={styles.td}>{a.account_name}</td>
               <td className={styles.td}>{a.question_title}</td>
               <td className={styles.td}>
@@ -52,7 +51,6 @@ const AnswerList: React.FC<Props> = ({
                   <div className={styles.tooltipText}>{a.code_def}</div>
                 </div>
               </td>
-              <td className={styles.td}>{formatDate(a.updated_at)}</td>
               <td className={styles.td}>{a.comment_count}</td>
               <td className={styles.td}>{a.comment_at ? formatDate(a.comment_at) : '-'}</td>
               <td className={styles.td}>{a.comment_account_name || '-'}</td>

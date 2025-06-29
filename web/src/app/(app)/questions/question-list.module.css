@@ -27,7 +27,7 @@
 }
 
 .th:nth-child(1) {
-  width: 50px;
+  min-width: 80px;
 }
 
 .th:nth-child(2) {
@@ -43,18 +43,14 @@
 }
 
 .th:nth-child(5) {
-  min-width: 80px;
-}
-
-.th:nth-child(6) {
   min-width: 140px;
 }
 
-.th:nth-child(7) {
+.th:nth-child(6) {
   width: 70px;
 }
 
-.th:nth-child(8) {
+.th:nth-child(7) {
   width: 70px;
 }
 

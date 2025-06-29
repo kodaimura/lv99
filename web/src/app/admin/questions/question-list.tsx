@@ -33,11 +33,10 @@ const QuestionList: React.FC<Props> = ({
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>
-            <th className={styles.th}>#</th>
+            <th className={styles.th}>レベル</th>
             <th className={styles.th}>タイトル</th>
             <th className={styles.th}>内容</th>
             <th className={styles.th}>答え</th>
-            <th className={styles.th}>レベル</th>
             <th className={styles.th}>更新日</th>
             <th className={styles.th}>更新</th>
             <th className={styles.th}>削除</th>
@@ -45,12 +44,11 @@ const QuestionList: React.FC<Props> = ({
         </thead>
         <tbody className={styles.tbody}>
           {questions.map((q, i) => (
-            <tr key={i} className={styles.tr}>
-              <td className={styles.td}>{q.id}</td>
+            <tr key={i} className={`${styles.tr} ${q.deleted_at ? styles.deletedRow : ''}`}>
+              <td className={styles.td}>{q.level}</td>
               <td className={styles.td}>{q.title}</td>
               <td className={styles.td}>{q.content}</td>
               <td className={styles.td}>{q.answer}</td>
-              <td className={styles.td}>{q.level}</td>
               <td className={styles.td}>{formatDate(q.updated_at)}</td>
               <td className={styles.td}><button onClick={() => onClickEdit(q)}>編集</button></td>
               <td className={styles.td}>

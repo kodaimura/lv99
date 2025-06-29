@@ -55,7 +55,11 @@ const QuestionsPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <button onClick={() => setShowModal(true)} className={styles.addButton}>問題を追加</button>
+      <div className={styles.header}>
+        <button onClick={() => setShowModal(true)} className={styles.addButton}>
+          問題を追加
+        </button>
+      </div>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title='問題追加' >
         <QuestionForm onSuccess={handleSuccess} question={question} />
       </Modal>

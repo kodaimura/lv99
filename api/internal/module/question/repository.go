@@ -25,7 +25,7 @@ func NewRepository() Repository {
 
 func (rep *repository) Get(m *Question, db *gorm.DB) ([]Question, error) {
 	var accounts []Question
-	err := db.Find(&accounts, m).Error
+	err := db.Order("level ASC").Find(&accounts, m).Error
 	return accounts, helper.HandleGormError(err)
 }
 
@@ -37,7 +37,7 @@ func (rep *repository) GetOne(m *Question, db *gorm.DB) (Question, error) {
 
 func (rep *repository) GetAll(m *Question, db *gorm.DB) ([]Question, error) {
 	var accounts []Question
-	err := db.Unscoped().Find(&accounts, m).Error
+	err := db.Unscoped().Order("level ASC").Find(&accounts, m).Error
 	return accounts, helper.HandleGormError(err)
 }
 
