@@ -5,6 +5,7 @@ import styles from './chat-menu.module.css';
 import { AccountWithProfile } from '@/types/models';
 import { api } from '@/lib/api/api.client';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/auth-context';
 
 type UnreadCountMap = {
   [accountId: string]: {
@@ -16,6 +17,8 @@ type UnreadCountMap = {
 const ChatMenu: React.FC = () => {
   const [accounts, setAccounts] = useState<AccountWithProfile[]>([]);
   const [unreadCounts, setUnreadCounts] = useState<UnreadCountMap>({});
+
+  const { account } = useAuth();
 
   const getAccounts = async () => {
     try {
@@ -53,6 +56,7 @@ const ChatMenu: React.FC = () => {
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
+      if (data.from_id === account?.id) return;
       setUnreadCounts((prev) => ({
         ...prev,
         [data.from_id]: {
@@ -60,6 +64,10 @@ const ChatMenu: React.FC = () => {
           updatedAt: new Date().toISOString(),
         },
       }));
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket closed for chat menu");
     };
 
     return () => {

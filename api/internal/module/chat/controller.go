@@ -67,13 +67,38 @@ func (ctrl *controller) ApiGet(c *gin.Context) {
 	c.JSON(200, ToChatReponseList(chats))
 }
 
-var sockets = make(map[int]*websocket.Conn)
+var sockets = make(map[int][]*websocket.Conn)
 var socketsMutex sync.Mutex
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true // 開発用：CORS制限なし
 	},
+}
+
+func removeConn(accountId int, conn *websocket.Conn) {
+	socketsMutex.Lock()
+	defer socketsMutex.Unlock()
+
+	conns, ok := sockets[accountId]
+	if !ok {
+		return
+	}
+
+	newConns := make([]*websocket.Conn, 0, len(conns))
+	for _, c := range conns {
+		if c != conn {
+			newConns = append(newConns, c)
+		} else {
+			_ = c.Close()
+		}
+	}
+	if len(newConns) > 0 {
+		sockets[accountId] = newConns
+	} else {
+		delete(sockets, accountId)
+	}
+	core.Logger.Info("Removed connection for account %d, remaining: %d", accountId, len(sockets[accountId]))
 }
 
 func (ctrl *controller) WsConnect(c *gin.Context) {
@@ -86,14 +111,29 @@ func (ctrl *controller) WsConnect(c *gin.Context) {
 	}
 
 	socketsMutex.Lock()
-	sockets[accountId] = conn
+	sockets[accountId] = append(sockets[accountId], conn)
 	socketsMutex.Unlock()
 
 	defer func() {
-		socketsMutex.Lock()
-		delete(sockets, accountId)
-		socketsMutex.Unlock()
 		conn.Close()
+
+		socketsMutex.Lock()
+		defer socketsMutex.Unlock()
+
+		conns := sockets[accountId]
+		newConns := make([]*websocket.Conn, 0, len(conns))
+		for _, c := range conns {
+			if c != conn {
+				newConns = append(newConns, c)
+			}
+		}
+
+		if len(newConns) > 0 {
+			sockets[accountId] = newConns
+		} else {
+			delete(sockets, accountId)
+		}
+		core.Logger.Info("Removed connection for account %d, remaining: %d", accountId, len(sockets[accountId]))
 	}()
 
 	for {
@@ -111,22 +151,32 @@ func (ctrl *controller) WsConnect(c *gin.Context) {
 		}, ctrl.db)
 		if err != nil {
 			core.Logger.Error(err.Error())
-			if toConn, ok := sockets[chat.FromId]; ok {
-				_ = toConn.WriteJSON(gin.H{
-					"error": "送信に失敗しました。",
-				})
-			}
+			socketsMutex.Unlock()
 			break
 		}
 
-		if toConn, ok := sockets[chat.ToId]; ok {
-			_ = toConn.WriteJSON(ToChatReponse(chat))
-		}
-		if chat.FromId != chat.ToId {
-			if fromConn, ok := sockets[chat.FromId]; ok {
-				_ = fromConn.WriteJSON(ToChatReponse(chat))
+		// toId 宛のコネクションに送信、失敗時に削除
+		if toConns, ok := sockets[chat.ToId]; ok {
+			for _, toConn := range toConns {
+				if err := toConn.WriteJSON(ToChatReponse(chat)); err != nil {
+					core.Logger.Warn("Failed to send to %d: %v", chat.ToId, err)
+					removeConn(chat.ToId, toConn)
+				}
 			}
 		}
+
+		// fromId 宛のコネクションに送信（toIdと異なる場合）、失敗時に削除
+		if chat.FromId != chat.ToId {
+			if fromConns, ok := sockets[chat.FromId]; ok {
+				for _, fromConn := range fromConns {
+					if err := fromConn.WriteJSON(ToChatReponse(chat)); err != nil {
+						core.Logger.Warn("Failed to send to %d: %v", chat.FromId, err)
+						removeConn(chat.FromId, fromConn)
+					}
+				}
+			}
+		}
+
 		socketsMutex.Unlock()
 	}
 }
