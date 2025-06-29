@@ -19,7 +19,7 @@ type AccountWithProfileResponse struct {
 }
 
 func ToAccountWithProfileResponse(m AccountWithProfile) AccountWithProfileResponse {
-	return AccountWithProfileResponse(AccountWithProfileResponse(m))
+	return AccountWithProfileResponse(m)
 }
 
 func ToAccountWithProfileResponseList(models []AccountWithProfile) []AccountWithProfileResponse {

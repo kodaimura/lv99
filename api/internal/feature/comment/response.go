@@ -18,7 +18,7 @@ type CommentWithProfileResponse struct {
 }
 
 func ToCommentWithProfileResponse(m CommentWithProfile) CommentWithProfileResponse {
-	return CommentWithProfileResponse(CommentWithProfileResponse(m))
+	return CommentWithProfileResponse(m)
 }
 
 func ToCommentWithProfileResponseList(models []CommentWithProfile) []CommentWithProfileResponse {
