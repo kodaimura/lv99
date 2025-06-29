@@ -46,7 +46,7 @@ const UnreadCount: React.FC = () => {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.from_id === account.id) return;
-      if (data.to_id !== admin.id) return;
+      if (data.from_id !== admin.id) return;
       setUnreadCount((prev) => prev + 1);
     };
 
