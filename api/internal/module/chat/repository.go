@@ -13,6 +13,7 @@ type Repository interface {
 	Insert(m *Chat, db *gorm.DB) (Chat, error)
 	Update(m *Chat, db *gorm.DB) (Chat, error)
 	Delete(m *Chat, db *gorm.DB) error
+	Read(m *Chat, db *gorm.DB) error
 }
 
 type repository struct{}
@@ -51,5 +52,13 @@ func (rep *repository) Update(m *Chat, db *gorm.DB) (Chat, error) {
 
 func (rep *repository) Delete(m *Chat, db *gorm.DB) error {
 	err := db.Delete(m).Error
+	return helper.HandleGormError(err)
+}
+
+func (rep *repository) Read(m *Chat, db *gorm.DB) error {
+	err := db.Model(&Chat{}).
+		Where(&Chat{ToId: m.ToId, FromId: m.FromId, IsRead: false}).
+		Update("is_read", true).Error
+
 	return helper.HandleGormError(err)
 }

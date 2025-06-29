@@ -16,6 +16,7 @@ import (
 
 type Controller interface {
 	ApiGet(c *gin.Context)
+	ApiRead(c *gin.Context)
 	WsConnect(c *gin.Context)
 }
 
@@ -65,6 +66,28 @@ func (ctrl *controller) ApiGet(c *gin.Context) {
 	}
 
 	c.JSON(200, ToChatReponseList(chats))
+}
+
+// PUT /api/chats/read
+func (ctrl *controller) ApiRead(c *gin.Context) {
+	accountId := helper.GetAccountId(c)
+
+	var req ReadRequest
+	if err := helper.BindJSON(c, &req); err != nil {
+		c.Error(err)
+		return
+	}
+
+	err := ctrl.service.Read(ReadDto{
+		FromId: req.FromId,
+		ToId:   accountId,
+	}, ctrl.db)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(200, nil)
 }
 
 var sockets = make(map[int][]*websocket.Conn)

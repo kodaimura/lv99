@@ -26,3 +26,8 @@ type UpdateOneDto struct {
 type DeleteOneDto struct {
 	Id int
 }
+
+type ReadDto struct {
+	ToId   int
+	FromId int
+}

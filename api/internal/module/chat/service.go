@@ -9,6 +9,7 @@ type Service interface {
 	CreateOne(in CreateOneDto, db *gorm.DB) (Chat, error)
 	UpdateOne(in UpdateOneDto, db *gorm.DB) (Chat, error)
 	DeleteOne(in DeleteOneDto, db *gorm.DB) error
+	Read(in ReadDto, db *gorm.DB) error
 }
 
 type service struct {
@@ -53,4 +54,8 @@ func (srv *service) UpdateOne(in UpdateOneDto, db *gorm.DB) (Chat, error) {
 
 func (srv *service) DeleteOne(in DeleteOneDto, db *gorm.DB) error {
 	return srv.repository.Delete(&Chat{Id: in.Id}, db)
+}
+
+func (srv *service) Read(in ReadDto, db *gorm.DB) error {
+	return srv.repository.Read(&Chat{FromId: in.FromId, ToId: in.ToId}, db)
 }

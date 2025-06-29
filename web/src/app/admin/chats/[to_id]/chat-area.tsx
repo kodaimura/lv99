@@ -22,6 +22,7 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
 
   useEffect(() => {
     getChats(true);
+    readChats();
     const socket = new WebSocket("ws://localhost:8000/api/chats/ws");
     socketRef.current = socket;
 
@@ -83,6 +84,14 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
       console.error(e);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const readChats = async () => {
+    try {
+      await api.put("chats/read", { from_id: toId });
+    } catch (e) {
+      console.error("Failed to mark chats as read:", e);
     }
   };
 
