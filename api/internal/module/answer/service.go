@@ -99,7 +99,7 @@ func (srv *service) UpdateOne(in UpdateOneDto, db *gorm.DB) (Answer, error) {
 	if err != nil {
 		return Answer{}, err
 	}
-	q, err := srv.questionService.GetOne(question.GetOneDto{Id: in.QuestionId}, db)
+	q, err := srv.questionService.GetOne(question.GetOneDto{Id: ans.QuestionId}, db)
 	if err != nil {
 		return Answer{}, err
 	}

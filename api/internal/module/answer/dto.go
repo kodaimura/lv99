@@ -18,11 +18,10 @@ type CreateOneDto struct {
 }
 
 type UpdateOneDto struct {
-	Id         int
-	QuestionId int
-	AccountId  int
-	CodeDef    string
-	CodeCall   string
+	Id        int
+	AccountId int
+	CodeDef   string
+	CodeCall  string
 }
 
 type DeleteOneDto struct {
