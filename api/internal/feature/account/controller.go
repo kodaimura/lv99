@@ -10,6 +10,7 @@ import (
 type Controller interface {
 	AdminGetWithProfile(c *gin.Context)
 	AdminGetOneWithProfile(c *gin.Context)
+	ApiGetAdminWithProfile(c *gin.Context)
 }
 
 type controller struct {
@@ -43,6 +44,17 @@ func (ctrl *controller) AdminGetOneWithProfile(c *gin.Context) {
 		return
 	}
 	account, err := ctrl.service.GetOneWithProfile(GetOneWithProfileDto{Id: uri.AccountId})
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(200, ToAccountWithProfileResponse(account))
+}
+
+// GET /api/accounts/admin/with-profile
+func (ctrl *controller) ApiGetAdminWithProfile(c *gin.Context) {
+	account, err := ctrl.service.GetAdminWithProfile()
 	if err != nil {
 		c.Error(err)
 		return

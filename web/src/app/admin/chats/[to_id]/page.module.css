@@ -1,0 +1,25 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  overflow: hidden;
+}
+
+.header {
+  height: 60px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  font-weight: bold;
+  font-size: 18px;
+  background: white;
+}
+
+.chatAreaWrapper {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}

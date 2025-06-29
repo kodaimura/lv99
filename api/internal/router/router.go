@@ -98,6 +98,8 @@ func SetApi(r *gin.RouterGroup) {
 
 		auth.GET("/chats/ws", chatController.WsConnect)
 		auth.GET("/chats/:to_id", chatController.ApiGet)
+
+		auth.GET("/accounts/admin/with-profile", featureAccountController.ApiGetAdminWithProfile)
 	}
 
 	admin := r.Group("admin", ApiAuthMiddleware())
