@@ -1,6 +1,7 @@
 package answer
 
 type Service interface {
+	GetStatus(in GetStatusDto) ([]AnswerStatus, error)
 	Search(in SearchDto) ([]AnswerSearch, error)
 }
 type service struct {
@@ -12,6 +13,13 @@ func NewService(query Query) Service {
 		query: query,
 	}
 }
+
+func (srv *service) GetStatus(in GetStatusDto) ([]AnswerStatus, error) {
+	return srv.query.GetStatus(
+		in.AccountId,
+	)
+}
+
 func (srv *service) Search(in SearchDto) ([]AnswerSearch, error) {
 	return srv.query.Search(
 		in.QuestionId,

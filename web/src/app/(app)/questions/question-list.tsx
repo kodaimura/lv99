@@ -1,14 +1,27 @@
+'use client'
+
 import React from 'react';
 import styles from './question-list.module.css';
-import type { Question } from "@/types/models";
-import Link from 'next/link';
+import type { AnswerStatus, Question } from "@/types/models";
+import { useRouter } from 'next/navigation';
 
 type Props = {
   questions: Question[];
+  answerStatus: AnswerStatus[];
 };
 
-const QuestionList: React.FC<Props> = ({ questions }) => {
-  const formatDate = (dateStr: string) => {
+const QuestionList: React.FC<Props> = ({ questions, answerStatus }) => {
+  const router = useRouter();
+  const statusMap: Record<number, AnswerStatus> = {};
+  answerStatus.forEach((status) => {
+    statusMap[status.question_id] = status;
+  });
+
+  console.log('Questions:', questions);
+  console.log('Answers Status:', statusMap);
+
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return null;
     const date = new Date(dateStr);
 
     const year = date.getFullYear();
@@ -25,21 +38,27 @@ const QuestionList: React.FC<Props> = ({ questions }) => {
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>
-            <th className={styles.th}>レベル</th>
+            <th className={styles.th}>Lv.</th>
             <th className={styles.th}>タイトル</th>
-            <th className={styles.th}>内容</th>
-            <th className={styles.th}>答え</th>
-            <th className={styles.th}>更新日</th>
+            <th className={styles.th}></th>
+            <th className={styles.th}>正解数</th>
+            <th className={styles.th}>正解日時</th>
           </tr>
         </thead>
         <tbody className={styles.tbody}>
           {questions.map((q, i) => (
-            <tr key={i} className={styles.tr}>
+            <tr key={i} className={styles.tr} onClick={() => router.push(`/questions/${q.id}`)}>
               <td className={styles.td}>{q.level}</td>
-              <td className={styles.td}><Link href={`questions/${q.id}`}>{q.title}</Link></td>
-              <td className={styles.td}>{q.content}</td>
-              <td className={styles.td}>{q.answer}</td>
-              <td className={styles.td}>{formatDate(q.updated_at)}</td>
+              <td className={styles.td}>{q.title}</td>
+              <td className={styles.td}>
+                {statusMap[q.id]?.is_correct ? "✅" : "❌"}
+              </td>
+              <td className={styles.td}>
+                {statusMap[q.id]?.correct_count > 0 && statusMap[q.id].correct_count}
+              </td>
+              <td className={styles.td}>
+                {statusMap[q.id]?.correct_at ? formatDate(statusMap[q.id].correct_at) : "-"}
+              </td>
             </tr>
           ))}
         </tbody>

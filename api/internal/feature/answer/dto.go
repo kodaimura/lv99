@@ -2,6 +2,18 @@ package answer
 
 import "time"
 
+type AnswerStatus struct {
+	QuestionId   int        `db:"question_id"`
+	IsCorrect    bool       `db:"is_correct"`
+	CorrectCount int        `db:"correct_count"`
+	CorrectAt    *time.Time `db:"correct_at"`
+	UpdatedAt    time.Time  `db:"updated_at"`
+}
+
+type GetStatusDto struct {
+	AccountId int
+}
+
 type AnswerSearch struct {
 	AnswerId           int        `db:"answer_id"`
 	CodeDef            string     `db:"code_def"`

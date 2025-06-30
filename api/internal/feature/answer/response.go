@@ -38,3 +38,27 @@ func ToAnswerSearchResponseList(models []AnswerSearch) []AnswerSearchResponse {
 	}
 	return res
 }
+
+// ============================
+// AnswerStatusResponse
+// ============================
+
+type AnswerStatusResponse struct {
+	QuestionId   int        `json:"question_id"`
+	IsCorrect    bool       `json:"is_correct"`
+	CorrectCount int        `json:"correct_count"`
+	CorrectAt    *time.Time `json:"correct_at"`
+	UpdatedAt    time.Time  `json:"updated_at"`
+}
+
+func ToAnswerStatusResponse(m AnswerStatus) AnswerStatusResponse {
+	return AnswerStatusResponse(m)
+}
+
+func ToAnswerStatusResponseList(models []AnswerStatus) []AnswerStatusResponse {
+	res := make([]AnswerStatusResponse, 0, len(models))
+	for _, m := range models {
+		res = append(res, ToAnswerStatusResponse(m))
+	}
+	return res
+}

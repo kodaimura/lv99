@@ -50,6 +50,14 @@ export type Answer = {
   updated_at: string;
 };
 
+export type AnswerStatus = {
+  question_id: number;
+  is_correct: boolean;
+  correct_count: number;
+  correct_at: string | null;
+  updated_at: string;
+};
+
 export type Comment = {
   id: number;
   answer_id: number;

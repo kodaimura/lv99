@@ -8,6 +8,7 @@ import (
 )
 
 type Query interface {
+	GetStatus(accountId int) ([]AnswerStatus, error)
 	Search(accountId, questionId int, isCorrect *bool, commentAccountId int) ([]AnswerSearch, error)
 }
 
@@ -17,6 +18,26 @@ type query struct {
 
 func NewQuery(db *sqlx.DB) *query {
 	return &query{db}
+}
+
+func (que *query) GetStatus(accountId int) ([]AnswerStatus, error) {
+	var answers []AnswerStatus
+
+	baseQuery := `
+SELECT
+	question_id,
+	MAX(CASE WHEN is_correct THEN 1 ELSE 0 END) = 1 AS is_correct,
+	COUNT(*) FILTER (WHERE is_correct) AS correct_count,
+	MIN(correct_at) FILTER (WHERE is_correct) AS correct_at,
+	MAX(updated_at) AS updated_at
+FROM answer
+WHERE account_id = $1
+  AND deleted_at IS NULL
+GROUP BY question_id
+ORDER BY question_id;`
+
+	err := que.db.Select(&answers, baseQuery, accountId)
+	return answers, err
 }
 
 func (que *query) Search(accountId, questionId int, isCorrect *bool, commentAccountId int) ([]AnswerSearch, error) {

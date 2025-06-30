@@ -92,6 +92,7 @@ func SetApi(r *gin.RouterGroup) {
 		auth.GET("/answers/:answer_id", answerController.ApiGetOne)
 		auth.PUT("/answers/:answer_id", answerController.ApiPutOne)
 		auth.DELETE("/answers/:answer_id", answerController.ApiDeleteOne)
+		auth.GET("/answers/status", featureAnswerController.ApiGetStatus)
 
 		auth.GET("/comments", commentController.ApiGet)
 		auth.POST("/comments", commentController.ApiPostOne)

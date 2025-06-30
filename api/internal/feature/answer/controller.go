@@ -8,6 +8,7 @@ import (
 )
 
 type Controller interface {
+	ApiGetStatus(c *gin.Context)
 	AdminSearch(c *gin.Context)
 }
 
@@ -21,6 +22,18 @@ func NewController(db *gorm.DB, service Service) Controller {
 		db:      db,
 		service: service,
 	}
+}
+
+// GET /api/answers/status
+func (ctrl *controller) ApiGetStatus(c *gin.Context) {
+	accountId := helper.GetAccountId(c)
+	status, err := ctrl.service.GetStatus(GetStatusDto{AccountId: accountId})
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(200, ToAnswerStatusResponseList(status))
 }
 
 // GET /api/admin/answers/search?...
