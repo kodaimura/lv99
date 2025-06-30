@@ -51,13 +51,13 @@ const QuestionList: React.FC<Props> = ({ questions, answerStatus }) => {
               <td className={styles.td}>{q.level}</td>
               <td className={styles.td}>{q.title}</td>
               <td className={styles.td}>
-                {statusMap[q.id]?.is_correct ? "✅" : "❌"}
+                {statusMap[q.id] && (statusMap[q.id].is_correct ? "✅" : "❌")}
               </td>
               <td className={styles.td}>
-                {statusMap[q.id]?.correct_count > 0 ? statusMap[q.id].correct_count : "-"}
+                {statusMap[q.id] && (statusMap[q.id].correct_count > 0 ? statusMap[q.id].correct_count : "-")}
               </td>
               <td className={styles.td}>
-                {statusMap[q.id]?.correct_at ? formatDate(statusMap[q.id].correct_at) : "-"}
+                {statusMap[q.id] && (statusMap[q.id].correct_at ? formatDate(statusMap[q.id].correct_at) : "-")}
               </td>
             </tr>
           ))}
