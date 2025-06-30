@@ -6,6 +6,18 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api/api.client';
 import { Answer } from '@/types/models';
 import { Trash2 } from 'lucide-react';
+import { EditorView } from '@codemirror/view';
+import CodeMirror from '@uiw/react-codemirror';
+import { python } from '@codemirror/lang-python';
+import { Play } from 'lucide-react';
+
+const customTheme = EditorView.theme({
+  '&': {
+    fontSize: '19px',
+    fontFamily: 'Fira Code, monospace',
+    backgroundColor: '#f9fafb',
+  },
+});
 
 type Props = {
   questionId: number;
@@ -13,48 +25,45 @@ type Props = {
 };
 
 const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
-  const [id, setId] = useState<number | null>(answer?.id ?? null);
-  const [code_def, setCodeDef] = useState<string>(answer?.code_def ?? '');
-  const [code_call, setCodeCall] = useState<string>(answer?.code_call ?? '');
-  const [is_correct, setIsCorrect] = useState<null | boolean>(answer?.is_correct ?? null);
-  const [correct_at, setCorrectAt] = useState<null | string>(answer?.correct_at ?? null);
-  const [call_output, setCallOutput] = useState<string>(answer?.call_output ?? '');
-  const [call_error, setCallError] = useState<string>(answer?.call_error ?? '');
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
+  const [id, setId] = useState<number | null>(answer?.id ?? null);
+  const [codeDef, setCodeDef] = useState<string>(answer?.code_def ?? '');
+  const [codeCall, setCodeCall] = useState<string>(answer?.code_call ?? '');
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(answer?.is_correct ?? null);
+  const [callOutput, setCallOutput] = useState<string>(answer?.call_output ?? '');
+  const [callError, setCallError] = useState<string>(answer?.call_error ?? '');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setIsCorrect(null);
+    setCallOutput('');
+    setCallError('');
 
-    let response: Answer;
     try {
-      if (id) {
-        response = await api.put(`/answers/${id}`, {
-          code_def, code_call
-        });
-      } else {
-        response = await api.post(`/answers`, {
+      const response: Answer = id
+        ? await api.put(`/answers/${id}`, { code_def: codeDef, code_call: codeCall })
+        : await api.post(`/answers`, {
           question_id: questionId,
-          code_def: code_def,
-          code_call: code_call
+          code_def: codeDef,
+          code_call: codeCall,
         });
-        setId(response?.id);
-      }
+
+      setId(response.id);
       setIsCorrect(response.is_correct);
       setCallOutput(response.call_output);
       setCallError(response.call_error);
-    } catch (error) {
-      console.error('Validation error:', error);
+    } catch (err) {
+      console.error('Answer submission error:', err);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!id) return;
-    if (!confirm('この回答を削除しますか？')) return;
+    if (!id || !confirm('この回答を削除しますか？')) return;
     await api.delete(`/answers/${id}`);
     router.refresh();
   };
@@ -69,54 +78,49 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
           className={styles.deleteButton}
           aria-label="削除"
         >
-          <Trash2 size={23} />
+          <Trash2 size={20} />
         </button>
       )}
+
       <h2 className={styles.heading}>関数定義</h2>
-      <textarea
-        value={code_def}
-        onChange={(e) => setCodeDef(e.target.value)}
-        placeholder={`def add(a, b):\n    return a + b`}
-        required
-        className={styles.textarea}
-        rows={23}
+      <CodeMirror
+        value={codeDef}
+        extensions={[python(), customTheme]}
+        onChange={(val) => setCodeDef(val)}
       />
 
       <h2 className={styles.heading}>関数呼出</h2>
-      <input
-        type="text"
-        value={code_call}
-        onChange={(e) => setCodeCall(e.target.value)}
-        placeholder="add(1, 2)"
-        required
-        className={styles.input}
+      <CodeMirror
+        value={codeCall}
+        extensions={[python(), customTheme]}
+        onChange={(val) => setCodeCall(val)}
       />
 
-      <button
-        type="submit"
-        disabled={loading}
-        className={styles.button}
-      >
-        {loading ? '実行中…' : '解答する'}
+      <button type="submit" disabled={loading || !codeCall} className={styles.button}>
+        <Play size={18} className={styles.icon} />
+        {loading ? '実行中…' : '実行する'}
       </button>
 
-      {call_output && (
+      {(callOutput || callError) && (
         <div className={styles.outputSection}>
-          <h3 className={styles.subheading}>出力</h3>
-          <pre className={styles.output}>{call_output}</pre>
+          {callOutput && (
+            <>
+              <h3 className={styles.subheading}>出力</h3>
+              <pre className={styles.output}>{callOutput}</pre>
+            </>
+          )}
+          {callError && (
+            <>
+              <h3 className={styles.subheading}>エラー</h3>
+              <pre className={styles.error}>{callError}</pre>
+            </>
+          )}
         </div>
       )}
 
-      {call_error && (
-        <div className={styles.errorSection}>
-          <h3 className={styles.subheading}>エラー</h3>
-          <pre className={styles.error}>{call_error}</pre>
-        </div>
-      )}
-
-      {is_correct !== null && (
-        <p className={`${styles.result} ${is_correct ? styles.correct : styles.incorrect}`}>
-          {is_correct ? '✅ 正解です！' : '❌ 不正解です'}
+      {isCorrect !== null && (
+        <p className={`${styles.result} ${isCorrect ? styles.correct : styles.incorrect}`}>
+          {isCorrect ? '✅ 正解です！' : '❌ 不正解です'}
         </p>
       )}
     </form>
