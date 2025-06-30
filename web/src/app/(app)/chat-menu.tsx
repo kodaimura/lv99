@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AccountWithProfile } from '@/types/models';
 import { api } from '@/lib/api/api.client';
-import styles from './unread-count.module.css';
+import styles from './chat-menu.module.css';
 import { useAuth } from '@/contexts/auth-context';
 
-const UnreadCount: React.FC = () => {
+const ChatMenu: React.FC = () => {
+  const router = useRouter();
   const [unreadCount, setUnreadCount] = useState(0);
   const [admin, setAdmin] = useState<AccountWithProfile | null>(null);
   const { account } = useAuth();
@@ -59,15 +61,20 @@ const UnreadCount: React.FC = () => {
     };
   }, [admin, account]);
 
+  const handleClickChat = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setUnreadCount(0);
+    router.push('/chat');
+  };
+
   return (
     <>
-      {unreadCount > 0 && (
-        <span className={styles.badge}>
-          {unreadCount}
-        </span>
-      )}
+      <a className={styles.item} onClick={handleClickChat}>
+        チャット {unreadCount > 0 && (<span className={styles.badge}>{unreadCount}</span>)}
+      </a>
+
     </>
   );
 };
 
-export default UnreadCount;
+export default ChatMenu;

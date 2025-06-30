@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './chat-menu.module.css';
 import { AccountWithProfile } from '@/types/models';
 import { api } from '@/lib/api/api.client';
-import Link from 'next/link';
 import { useAuth } from '@/contexts/auth-context';
 
 type UnreadCountMap = {
@@ -15,6 +15,7 @@ type UnreadCountMap = {
 };
 
 const ChatMenu: React.FC = () => {
+  const router = useRouter();
   const [accounts, setAccounts] = useState<AccountWithProfile[]>([]);
   const [unreadCounts, setUnreadCounts] = useState<UnreadCountMap>({});
 
@@ -81,13 +82,24 @@ const ChatMenu: React.FC = () => {
     return new Date(updatedB).getTime() - new Date(updatedA).getTime();
   });
 
+  const handleClickChat = (accountId: number) => {
+    setUnreadCounts((prev) => ({
+      ...prev,
+      [accountId]: { ...prev[accountId], count: 0, },
+    }));
+    router.push(`/admin/chats/${accountId}`);
+  }
+
   return (
     <div className={styles.chatMenu}>
       {sortedAccounts.map((account) => (
-        <Link
+        <a
           key={account.id}
           className={styles.item}
-          href={`/admin/chats/${account.id}`}
+          onClick={(e) => {
+            e.preventDefault();
+            handleClickChat(account.id);
+          }}
         >
           <span className={styles.name}>{account.display_name}</span>
           {unreadCounts[account.id]?.count > 0 && (
@@ -95,7 +107,7 @@ const ChatMenu: React.FC = () => {
               {unreadCounts[account.id].count}
             </span>
           )}
-        </Link>
+        </a>
       ))}
     </div>
   );

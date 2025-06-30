@@ -1,24 +1,9 @@
-.sidebar {
-  width: 240px;
-  height: 100vh;
-  background-color: #1f2937;
+.badge {
+  background: red;
   color: white;
-  padding: 1rem;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  top: 0;
-  left: 0;
-  padding-top: 70px;
-}
-
-.menu ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.menu li {
-  margin: 1rem 0;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 12px;
 }
 
 .item {
