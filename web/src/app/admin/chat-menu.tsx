@@ -65,6 +65,9 @@ const ChatMenu: React.FC = () => {
           updatedAt: new Date().toISOString(),
         },
       }));
+
+      const audio = new Audio('/message.mp3');
+      audio.play();
     };
 
     socket.onclose = () => {

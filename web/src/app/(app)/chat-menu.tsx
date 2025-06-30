@@ -50,6 +50,9 @@ const ChatMenu: React.FC = () => {
       if (data.from_id === account.id) return;
       if (data.from_id !== admin.id) return;
       setUnreadCount((prev) => prev + 1);
+
+      const audio = new Audio('/message.mp3');
+      audio.play();
     };
 
     socket.onclose = () => {
