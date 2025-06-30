@@ -54,7 +54,7 @@ const QuestionList: React.FC<Props> = ({ questions, answerStatus }) => {
                 {statusMap[q.id]?.is_correct ? "✅" : "❌"}
               </td>
               <td className={styles.td}>
-                {statusMap[q.id]?.correct_count > 0 && statusMap[q.id].correct_count}
+                {statusMap[q.id]?.correct_count > 0 ? statusMap[q.id].correct_count : "-"}
               </td>
               <td className={styles.td}>
                 {statusMap[q.id]?.correct_at ? formatDate(statusMap[q.id].correct_at) : "-"}

@@ -69,7 +69,7 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
           className={styles.deleteButton}
           aria-label="削除"
         >
-          <Trash2 size={20} />
+          <Trash2 size={23} />
         </button>
       )}
       <h2 className={styles.heading}>関数定義</h2>
@@ -79,7 +79,7 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
         placeholder={`def add(a, b):\n    return a + b`}
         required
         className={styles.textarea}
-        rows={15}
+        rows={23}
       />
 
       <h2 className={styles.heading}>関数呼出</h2>
@@ -97,7 +97,7 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
         disabled={loading}
         className={styles.button}
       >
-        {loading ? '採点中…' : '解答する'}
+        {loading ? '実行中…' : '解答する'}
       </button>
 
       {call_output && (

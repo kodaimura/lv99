@@ -20,17 +20,18 @@ const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
       <div className={styles.header}>
         <span className={styles.levelBadge}>Lv {question.level}</span>
         <h1 className={styles.title}>{question.title}</h1>
-      </div>
-
-      <div className={styles.content}>
-        <p>{question.content}</p>
+        <div className={styles.content}>
+          <p>{question.content}</p>
+        </div>
       </div>
       {answers.length > 0 ? (
         <>
           {answers.map((answer, index) => (
             <div className={styles.answerSection} key={index}>
               <AnswerForm questionId={parseInt(id)} answer={answer} />
-              <CommentList answerId={answer.id} />
+              <div className={styles.commentSection}>
+                <CommentList answerId={answer.id} />
+              </div>
             </div>
           ))}
           <AddAnswerButton questionId={parseInt(id)} />
