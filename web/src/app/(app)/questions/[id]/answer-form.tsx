@@ -34,11 +34,14 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(answer?.is_correct ?? null);
   const [callOutput, setCallOutput] = useState<string>(answer?.call_output ?? '');
   const [callError, setCallError] = useState<string>(answer?.call_error ?? '');
+  const [correctAt, setCorrectAt] = useState<string | null>(answer?.correct_at ?? null);
+  const [updatedAt, setUpdatedAt] = useState<string | null>(answer?.updated_at ?? null);
+  const [isCorrectTmp, setIsCorrectTmp] = useState<boolean | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setIsCorrect(null);
+    setIsCorrectTmp(null);
     setCallOutput('');
     setCallError('');
 
@@ -53,8 +56,11 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
 
       setId(response.id);
       setIsCorrect(response.is_correct);
+      setIsCorrectTmp(response.is_correct);
       setCallOutput(response.call_output);
       setCallError(response.call_error);
+      setCorrectAt(response.correct_at);
+      setUpdatedAt(response.updated_at);
     } catch (err) {
       console.error('Answer submission error:', err);
     } finally {
@@ -66,6 +72,20 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
     if (!id || !confirm('この回答を削除しますか？')) return;
     await api.delete(`/answers/${id}`);
     router.refresh();
+  };
+
+  const formatDate = (dateStr: string) => {
+    console.log('formatDate called with:', dateStr);
+    if (!dateStr) return '—';
+    const date = new Date(dateStr);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
   return (
@@ -81,6 +101,21 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
           <Trash2 size={20} />
         </button>
       )}
+
+      <div className={styles.metaRow}>
+        <span className={styles.label}>判定:</span>
+        <span className={answer && (isCorrect ? styles.correct : styles.incorrect)}>
+          {id ? (isCorrect ? "✅ 正解" : "❌不正解") : "—"}
+        </span>
+      </div>
+      <div className={styles.metaRow}>
+        <span className={styles.label}>正解日時:</span>
+        <span>{id && correctAt ? formatDate(correctAt) : "—"}</span>
+      </div>
+      <div className={styles.metaRow}>
+        <span className={styles.label}>更新日時:</span>
+        <span>{id && updatedAt ? formatDate(updatedAt) : "—"}</span>
+      </div>
 
       <h2 className={styles.heading}>関数定義</h2>
       <CodeMirror
@@ -105,22 +140,22 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
         <div className={styles.outputSection}>
           {callOutput && (
             <>
-              <h3 className={styles.subheading}>出力</h3>
-              <pre className={styles.output}>{callOutput}</pre>
+              <h3 className={styles.heading}>出力</h3>
+              <pre className={styles.callOutput}>{callOutput}</pre>
             </>
           )}
           {callError && (
             <>
-              <h3 className={styles.subheading}>エラー</h3>
-              <pre className={styles.error}>{callError}</pre>
+              <h3 className={styles.heading}>エラー</h3>
+              <pre className={styles.callError}>{callError}</pre>
             </>
           )}
         </div>
       )}
 
-      {isCorrect !== null && (
-        <p className={`${styles.result} ${isCorrect ? styles.correct : styles.incorrect}`}>
-          {isCorrect ? '✅ 正解です！' : '❌ 不正解です'}
+      {isCorrectTmp !== null && (
+        <p className={`${styles.result} ${isCorrectTmp ? styles.correct2 : styles.incorrect2}`}>
+          {isCorrectTmp ? '✅ 正解です！' : '❌ 不正解です'}
         </p>
       )}
     </form>

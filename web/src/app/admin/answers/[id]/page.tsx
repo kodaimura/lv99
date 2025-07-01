@@ -88,15 +88,6 @@ const AnswerDetailPage: React.FC<Props> = async ({ params }) => {
 
       <div className={styles.commentsSection}>
         <CommentList answerId={answer.id} />
-        {/*
-        <h2>コメント</h2>
-        {comments.length === 0 && <p>コメントはまだありません。</p>}
-        {comments.map((comment, index) => (
-          <div key={index} className={styles.commentItem}>
-            <p>{comment.content}</p>
-          </div>
-        ))}
-          */}
       </div>
     </div>
   );
