@@ -3,8 +3,59 @@
   margin: 0 auto;
   box-sizing: border-box;
   padding-top: 30px;
-  padding-bottom: 30px;
+  padding-bottom: 100px;
 
   display: flex;
   justify-content: center;
+  flex-direction: column;
+}
+
+.countItem {
+  overflow: hidden;
+}
+
+.countItem:hover {
+  background-color: #f3f4f6;
+  border-bottom-left-radius: 8px;
+}
+
+.countContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  border-bottom-left-radius: 8px;
+}
+
+.levelTag {
+  display: inline-block;
+  background-color: #e0e7ff;
+  color: #3730a3;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.title {
+  max-width: 200px;
+  min-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.commentCount {
+  font-weight: bold;
+  color: #333;
+  white-space: nowrap;
+}
+
+.date {
+  font-size: 0.8rem;
+  color: #888;
+  white-space: nowrap;
 }

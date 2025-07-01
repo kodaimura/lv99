@@ -99,7 +99,8 @@ func SetApi(r *gin.RouterGroup) {
 		auth.GET("/comments/:comment_id", commentController.ApiGetOne)
 		auth.PUT("/comments/:comment_id", commentController.ApiPutOne)
 		auth.DELETE("/comments/:comment_id", commentController.ApiDeleteOne)
-		auth.GET("/comments/with-profile", featureCommentController.AdminGetWithProfile)
+		auth.GET("/comments/with-profile", featureCommentController.ApiGetWithProfile)
+		auth.GET("/comments/count", featureCommentController.ApiGetRecentCount)
 
 		auth.GET("/chats/ws", chatController.WsConnect)
 		auth.GET("/chats/unread-count", featureChatController.ApiGetUnreadCount)

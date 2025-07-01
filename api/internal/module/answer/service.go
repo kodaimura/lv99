@@ -110,7 +110,7 @@ func (srv *service) UpdateOne(in UpdateOneDto, db *gorm.DB) (Answer, error) {
 	ans.CallError = result.Error
 	ans.IsCorrect = result.Output == q.Answer
 
-	if ans.IsCorrect && ans.CorrectAt.IsZero() {
+	if ans.IsCorrect && (ans.CorrectAt == nil || ans.CorrectAt.IsZero()) {
 		now := time.Now()
 		ans.CorrectAt = &now
 	}

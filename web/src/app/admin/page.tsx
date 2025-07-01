@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 
 const AdminPage: React.FC = async () => {
   const data: Account = await api.get('accounts/me');
+  const counts: any[] = await api.get('comments/count');
+  console.log('counts', counts);
   return (
     <div className={styles.container}>
       ようこそ {data.name} さん

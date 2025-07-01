@@ -8,7 +8,8 @@ import (
 )
 
 type Controller interface {
-	AdminGetWithProfile(c *gin.Context)
+	ApiGetWithProfile(c *gin.Context)
+	ApiGetRecentCount(c *gin.Context)
 }
 
 type controller struct {
@@ -23,8 +24,8 @@ func NewController(db *gorm.DB, service Service) Controller {
 	}
 }
 
-// GET /api/admin/comments/with-profile?answer_id=:answer_id
-func (ctrl *controller) AdminGetWithProfile(c *gin.Context) {
+// GET /api/api/comments/with-profile?answer_id=:answer_id
+func (ctrl *controller) ApiGetWithProfile(c *gin.Context) {
 	var req GetWithProfileRequest
 	if err := helper.BindQuery(c, &req); err != nil {
 		c.Error(err)
@@ -37,4 +38,24 @@ func (ctrl *controller) AdminGetWithProfile(c *gin.Context) {
 	}
 
 	c.JSON(200, ToCommentWithProfileResponseList(comments))
+}
+
+// GET /api/comments/count?since=:since
+func (ctrl *controller) ApiGetRecentCount(c *gin.Context) {
+	accountId := helper.GetAccountId(c)
+	var req GetCountRequest
+	if err := helper.BindQuery(c, &req); err != nil {
+		c.Error(err)
+		return
+	}
+
+	counts, err := ctrl.service.GetCount(GetCountDto{
+		AccountId: accountId,
+		Since:     req.Since,
+	})
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	c.JSON(200, ToCommentCountResponseList(counts))
 }

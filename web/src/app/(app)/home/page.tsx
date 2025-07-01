@@ -4,7 +4,16 @@ import React from 'react';
 import { Metadata } from 'next';
 import styles from './page.module.css';
 import { api } from '@/lib/api/api.server';
-import { Account } from '@/types/models';
+import Link from 'next/link';
+
+type CommentCount = {
+  question_id: number;
+  question_title: string;
+  question_level: number;
+  answer_id: number;
+  comment_count: number;
+  created_at: string;
+};
 
 export const metadata: Metadata = {
   title: "lv99 - home",
@@ -12,10 +21,41 @@ export const metadata: Metadata = {
 };
 
 const HomePage: React.FC = async () => {
-  const data: Account = await api.get('accounts/me');
+  const since = new Date();
+  since.setDate(since.getDate() - 7);
+
+  const counts: CommentCount[] = await api.get('comments/count', { since: since.toISOString().slice(0, 10) });
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  };
+
   return (
     <div className={styles.container}>
-      ようこそ {data.name} さん
+      {counts.length > 0 && (
+        <ul className={styles.countList}>
+          {counts.map((count) => (
+            <li key={count.answer_id} className={styles.countItem}>
+              <Link href={`questions/${count.question_id}`} className={styles.link}>
+                <div className={styles.countContent}>
+                  <span className={styles.levelTag}>Lv {count.question_level}</span>
+                  <span className={styles.title}>{count.question_title}</span>
+                  <span className={styles.commentCount}>{count.comment_count} 件のコメント</span>
+                  <span className={styles.date}>{formatDate(count.created_at)}</span>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

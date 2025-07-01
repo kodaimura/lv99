@@ -17,9 +17,6 @@ const QuestionList: React.FC<Props> = ({ questions, answerStatus }) => {
     statusMap[status.question_id] = status;
   });
 
-  console.log('Questions:', questions);
-  console.log('Answers Status:', statusMap);
-
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return null;
     const date = new Date(dateStr);

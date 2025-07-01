@@ -28,3 +28,28 @@ func ToCommentWithProfileResponseList(models []CommentWithProfile) []CommentWith
 	}
 	return res
 }
+
+// ============================
+// CommentCountResponse
+// ============================
+
+type CommentCountResponse struct {
+	QuestionId    int       `json:"question_id"`
+	QuestionTitle string    `json:"question_title"`
+	QuestionLevel int       `json:"question_level"`
+	AnswerId      int       `json:"answer_id"`
+	CommentCount  int       `json:"comment_count"`
+	CreatedAt     time.Time `json:"created_at"`
+}
+
+func ToCommentCountResponse(m CommentCount) CommentCountResponse {
+	return CommentCountResponse(m)
+}
+
+func ToCommentCountResponseList(models []CommentCount) []CommentCountResponse {
+	res := make([]CommentCountResponse, 0, len(models))
+	for _, m := range models {
+		res = append(res, ToCommentCountResponse(m))
+	}
+	return res
+}
