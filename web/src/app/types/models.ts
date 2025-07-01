@@ -78,6 +78,15 @@ export type CommentWithProfile = {
   updated_at: string;
 };
 
+export type CommentCount = {
+  question_id: number;
+  question_title: string;
+  question_level: number;
+  answer_id: number;
+  comment_count: number;
+  created_at: string;
+};
+
 export type Chat = {
   id: number;
   from_id: number;

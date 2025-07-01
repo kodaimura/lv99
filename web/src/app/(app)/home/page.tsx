@@ -5,15 +5,7 @@ import { Metadata } from 'next';
 import styles from './page.module.css';
 import { api } from '@/lib/api/api.server';
 import Link from 'next/link';
-
-type CommentCount = {
-  question_id: number;
-  question_title: string;
-  question_level: number;
-  answer_id: number;
-  comment_count: number;
-  created_at: string;
-};
+import { CommentCount } from '@/types/models';
 
 export const metadata: Metadata = {
   title: "lv99 - home",

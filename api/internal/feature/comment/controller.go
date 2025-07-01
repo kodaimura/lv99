@@ -10,6 +10,7 @@ import (
 type Controller interface {
 	ApiGetWithProfile(c *gin.Context)
 	ApiGetRecentCount(c *gin.Context)
+	AdminGetRecentCount(c *gin.Context)
 }
 
 type controller struct {
@@ -50,6 +51,26 @@ func (ctrl *controller) ApiGetRecentCount(c *gin.Context) {
 	}
 
 	counts, err := ctrl.service.GetCount(GetCountDto{
+		AccountId: accountId,
+		Since:     req.Since,
+	})
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	c.JSON(200, ToCommentCountResponseList(counts))
+}
+
+// GET /api/admin/comments/count?since=:since
+func (ctrl *controller) AdminGetRecentCount(c *gin.Context) {
+	accountId := helper.GetAccountId(c)
+	var req GetCountRequest
+	if err := helper.BindQuery(c, &req); err != nil {
+		c.Error(err)
+		return
+	}
+
+	counts, err := ctrl.service.GetCountForAdmin(GetCountDto{
 		AccountId: accountId,
 		Since:     req.Since,
 	})
