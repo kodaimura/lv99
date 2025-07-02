@@ -1,0 +1,44 @@
+.container {
+  width: 90%;
+  margin: 0 auto;
+  padding-top: 30px;
+  padding-bottom: 100px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.heading {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.text {
+  margin-bottom: 0.5rem;
+}
+
+.code {
+  background: #f4f4f4;
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.list {
+  padding-left: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.listItem {
+  margin-bottom: 0.3rem;
+}

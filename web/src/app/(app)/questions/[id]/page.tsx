@@ -7,11 +7,11 @@ import AddAnswerButton from './add-answer-button';
 import CommentList from './comment-list';
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
-  const { id } = params
+  const { id } = await params;
   const question: Question = await api.get(`questions/${id}`);
   const answers: Answer[] = await api.get("answers", { question_id: id });
 
