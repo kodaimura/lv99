@@ -3,7 +3,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import Main from "@/components/layout/main";
 import Menu from "./menu";
-import LogoutButton from "@/components/features/logout-button";
+import Settings from "./settings";
 
 export const metadata: Metadata = {
   title: "lv99",
@@ -17,12 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <Header>
-        <LogoutButton />
-      </Header>
+      <Header><></></Header>
       <Menu />
       <Main style={{ paddingLeft: "240px" }}>
         {children}
+        <Settings />
       </Main>
       <Footer />
     </>

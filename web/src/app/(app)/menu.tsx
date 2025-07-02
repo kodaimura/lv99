@@ -15,13 +15,10 @@ const Menu: React.FC = () => {
             <Link href="/questions" className={styles.item}>問題一覧</Link>
           </li>
           <li>
-            <ChatMenu />
-          </li>
-          <li>
-            <Link href="/account" className={styles.item}>アカウント設定</Link>
-          </li>
-          <li>
             <Link href="/documents" className={styles.item}>ドキュメント</Link>
+          </li>
+          <li>
+            <ChatMenu />
           </li>
         </ul>
       </nav>
