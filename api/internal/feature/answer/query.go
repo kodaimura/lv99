@@ -9,7 +9,7 @@ import (
 
 type Query interface {
 	GetStatus(accountId int) ([]AnswerStatus, error)
-	Search(accountId, questionId int, isCorrect *bool, commentAccountId int) ([]AnswerSearch, error)
+	Search(accountId, questionId int, level int, isCorrect *bool, commentAccountId int) ([]AnswerSearch, error)
 }
 
 type query struct {
@@ -40,7 +40,7 @@ func (que *query) GetStatus(accountId int) ([]AnswerStatus, error) {
 	return answers, err
 }
 
-func (que *query) Search(accountId, questionId int, isCorrect *bool, commentAccountId int) ([]AnswerSearch, error) {
+func (que *query) Search(accountId, questionId int, level int, isCorrect *bool, commentAccountId int) ([]AnswerSearch, error) {
 	var answers []AnswerSearch
 	var args []any
 	var conditions []string
@@ -83,6 +83,10 @@ func (que *query) Search(accountId, questionId int, isCorrect *bool, commentAcco
 	if questionId != 0 {
 		conditions = append(conditions, fmt.Sprintf("q.id = $%d", len(args)+1))
 		args = append(args, questionId)
+	}
+	if level != 0 {
+		conditions = append(conditions, fmt.Sprintf("q.level = $%d", len(args)+1))
+		args = append(args, level)
 	}
 	if isCorrect != nil {
 		conditions = append(conditions, fmt.Sprintf("a.is_correct = $%d", len(args)+1))

@@ -22,8 +22,9 @@ func (srv *service) GetStatus(in GetStatusDto) ([]AnswerStatus, error) {
 
 func (srv *service) Search(in SearchDto) ([]AnswerSearch, error) {
 	return srv.query.Search(
-		in.QuestionId,
 		in.AccountId,
+		in.QuestionId,
+		in.Level,
 		in.IsCorrect,
 		in.CommentAccountId,
 	)

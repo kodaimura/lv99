@@ -29,7 +29,11 @@ const AccountDetailPage: React.FC<Props> = async ({ params }) => {
     <div className={styles.container}>
       <section className={styles.section}>
         <h2 className={styles.heading}>回答状況</h2>
-        <AnswerMatrix answerStatus={answerStatus} questions={questions} />
+        <AnswerMatrix
+          accountId={parseInt(id)}
+          answerStatus={answerStatus}
+          questions={questions}
+        />
       </section>
     </div>
   );

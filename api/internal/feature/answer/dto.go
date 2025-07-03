@@ -36,6 +36,7 @@ type AnswerSearch struct {
 type SearchDto struct {
 	QuestionId       int   `json:"question_id"`
 	AccountId        int   `json:"account_id"`
+	Level            int   `json:"level"`
 	IsCorrect        *bool `json:"is_correct"`
 	CommentAccountId int   `json:"comment_account_id"`
 }

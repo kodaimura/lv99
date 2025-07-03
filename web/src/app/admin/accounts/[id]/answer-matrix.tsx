@@ -6,11 +6,12 @@ import type { AnswerStatus, Question } from '@/types/models';
 import Link from 'next/link';
 
 type Props = {
+  accountId: number;
   questions: Question[];
   answerStatus: AnswerStatus[];
 };
 
-const AnswerMatrix: React.FC<Props> = ({ questions, answerStatus }) => {
+const AnswerMatrix: React.FC<Props> = ({ accountId, questions, answerStatus }) => {
   const levelMap: Record<number, number> = {};
   const levelToQuestionIdMap: Record<number, number> = {};
   const questionToLevelMap: Record<number, number> = {};
@@ -55,7 +56,7 @@ const AnswerMatrix: React.FC<Props> = ({ questions, answerStatus }) => {
         );
 
         return questionId ? (
-          <Link key={level} href={`/questions/${questionId}`} className={styles.link}>
+          <Link key={level} href={`/admin/answers/?account_id=${accountId}&level=${level}`} className={styles.link}>
             {cell}
           </Link>
         ) : (

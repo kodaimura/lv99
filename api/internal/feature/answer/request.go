@@ -1,10 +1,11 @@
 package answer
 
 type SearchRequest struct {
-	QuestionId       int   `json:"question_id"`
-	AccountId        int   `json:"account_id"`
-	IsCorrect        *bool `json:"is_correct"`
-	CommentAccountId int   `json:"comment_account_id"`
+	QuestionId       int   `form:"question_id"`
+	AccountId        int   `form:"account_id"`
+	Level            int   `form:"level"`
+	IsCorrect        *bool `form:"is_correct"`
+	CommentAccountId int   `form:"comment_account_id"`
 }
 
 type GetStatusRequest struct {
