@@ -1,0 +1,21 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 4px;
+  margin: 16px 0;
+}
+
+.cell {
+  padding: 6px;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 4px;
+  color: #333;
+  font-weight: bold;
+  border: 1px solid #ccc;
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+}

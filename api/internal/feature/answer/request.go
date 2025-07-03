@@ -6,3 +6,7 @@ type SearchRequest struct {
 	IsCorrect        *bool `json:"is_correct"`
 	CommentAccountId int   `json:"comment_account_id"`
 }
+
+type GetStatusRequest struct {
+	AccountId int `form:"account_id"`
+}

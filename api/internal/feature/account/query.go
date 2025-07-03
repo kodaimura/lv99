@@ -37,7 +37,7 @@ func (que *query) GetWithProfile() ([]AccountWithProfile, error) {
 		 FROM account as a
 		 JOIN account_profile as p 
 		   ON a.id = p.account_id
-		 ORDER BY a.id DESC`,
+		 ORDER BY a.id ASC`,
 	)
 
 	return accounts, err

@@ -125,6 +125,7 @@ func SetApi(r *gin.RouterGroup) {
 		admin.GET("/answers", answerController.AdminGet)
 		admin.GET("/answers/:answer_id", answerController.AdminGetOne)
 		admin.GET("/answers/search", featureAnswerController.AdminSearch)
+		admin.GET("/answers/status", featureAnswerController.AdminGetStatus)
 
 		admin.GET("/comments/count", featureCommentController.AdminGetRecentCount)
 	}
