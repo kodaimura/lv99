@@ -69,7 +69,7 @@ var featureChatController = feature_chat.NewController(gorm, featureChatService)
 
 func SetApi(r *gin.RouterGroup) {
 	r.Use(ApiErrorHandler())
-	r.POST("/accounts/signup", authController.ApiSignup)
+	//r.POST("/accounts/signup", authController.ApiSignup)
 	r.POST("/accounts/login", authController.ApiLogin)
 	r.POST("/accounts/refresh", authController.ApiRefresh)
 	r.POST("/accounts/logout", authController.ApiLogout)
@@ -112,6 +112,7 @@ func SetApi(r *gin.RouterGroup) {
 
 	admin := r.Group("admin", ApiAuthMiddleware())
 	{
+		admin.POST("/accounts/signup", authController.ApiSignup)
 		admin.GET("/accounts/with-profile", featureAccountController.AdminGetWithProfile)
 		admin.GET("/accounts/:account_id/with-profile", featureAccountController.AdminGetOneWithProfile)
 

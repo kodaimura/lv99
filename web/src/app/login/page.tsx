@@ -15,9 +15,7 @@ export const metadata: Metadata = {
 const LoginPage: React.FC = () => {
   return (
     <>
-      <Header>
-        <Link href="/signup" className={styles.signupLink}>サインアップ</Link>
-      </Header>
+      <Header><></></Header>
       <Main>
         <div className={styles.container}>
           <LoginForm />

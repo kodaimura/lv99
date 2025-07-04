@@ -30,7 +30,7 @@ const AccountForm: React.FC<Props> = ({ onSuccess }) => {
     }
 
     try {
-      await api.post('accounts/signup', {
+      await api.post('admin/accounts/signup', {
         name,
         password,
       });

@@ -9,7 +9,6 @@ export default function Home() {
     <>
       <Header>
         <Link href="/login" className={styles.loginLink}>ログイン</Link>
-        <Link href="/signup" className={styles.signupLink}>サインアップ</Link>
       </Header>
       <Main>
         <div className={styles.container}>
