@@ -5,6 +5,7 @@ import styles from './page.module.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import CommentList from './comment-list';
+import LocalDate from '@/components/features/local-date';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -18,18 +19,6 @@ const AnswerDetailPage: React.FC<Props> = async ({ params }) => {
     api.get<Question>(`questions/${answer.question_id}`),
     api.get<Comment[]>("comments", { answer_id: id }),
   ]);
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
-  };
 
   return (
     <div className={styles.container}>
@@ -50,11 +39,11 @@ const AnswerDetailPage: React.FC<Props> = async ({ params }) => {
         </div>
         <div className={styles.metaRow}>
           <span className={styles.label}>正解日時:</span>
-          <span>{answer.correct_at ? formatDate(answer.correct_at) : "—"}</span>
+          <span>{answer.correct_at ? <LocalDate isoString={answer.correct_at} /> : "—"}</span>
         </div>
         <div className={styles.metaRow}>
           <span className={styles.label}>更新日時:</span>
-          <span>{formatDate(answer.updated_at)}</span>
+          <span><LocalDate isoString={answer.updated_at} /></span>
         </div>
 
         <div className={styles.codeSection}>

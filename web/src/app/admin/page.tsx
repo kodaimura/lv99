@@ -6,6 +6,7 @@ import styles from './page.module.css';
 import { api } from '@/lib/api/api.server';
 import Link from 'next/link';
 import { CommentCount } from '@/types/models';
+import LocalDate from '@/components/features/local-date';
 
 export const metadata: Metadata = {
   title: "lv99 - dashboard",
@@ -18,18 +19,6 @@ const AdminPage: React.FC = async () => {
 
   const counts: CommentCount[] = await api.get('admin/comments/count', { since: since.toISOString().slice(0, 10) });
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
-  };
-
   return (
     <div className={styles.container}>
       {counts.length > 0 && (
@@ -41,7 +30,9 @@ const AdminPage: React.FC = async () => {
                   <span className={styles.levelTag}>Lv {count.question_level}</span>
                   <span className={styles.title}>{count.question_title}</span>
                   <span className={styles.commentCount}>{count.comment_count} 件のコメント</span>
-                  <span className={styles.date}>{formatDate(count.created_at)}</span>
+                  <span className={styles.date}>
+                    <LocalDate isoString={count.created_at} />
+                  </span>
                 </div>
               </Link>
             </li>

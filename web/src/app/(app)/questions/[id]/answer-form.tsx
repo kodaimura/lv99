@@ -10,6 +10,7 @@ import { EditorView } from '@codemirror/view';
 import CodeMirror from '@uiw/react-codemirror';
 import { python } from '@codemirror/lang-python';
 import { Play } from 'lucide-react';
+import LocalDate from '@/components/features/local-date';
 
 const customTheme = EditorView.theme({
   '&': {
@@ -74,19 +75,6 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
     router.refresh();
   };
 
-  const formatDate = (dateStr: string) => {
-    if (!dateStr) return '—';
-    const date = new Date(dateStr);
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
-  };
-
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       {id && (
@@ -109,11 +97,11 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
       </div>
       <div className={styles.metaRow}>
         <span className={styles.label}>正解日時:</span>
-        <span>{id && correctAt ? formatDate(correctAt) : "—"}</span>
+        <span>{id && correctAt ? <LocalDate isoString={correctAt} /> : "—"}</span>
       </div>
       <div className={styles.metaRow}>
         <span className={styles.label}>更新日時:</span>
-        <span>{id && updatedAt ? formatDate(updatedAt) : "—"}</span>
+        <span>{id && updatedAt ? <LocalDate isoString={updatedAt} /> : "—"}</span>
       </div>
 
       <h2 className={styles.heading}>関数定義</h2>

@@ -7,6 +7,7 @@ import { api } from '@/lib/api/api.client';
 import Link from 'next/link';
 import Modal from '@/components/ui/modal';
 import AccountForm from './account-form';
+import LocalDate from '@/components/features/local-date';
 
 const AccountsPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -19,19 +20,6 @@ const AccountsPage: React.FC = () => {
     } catch (error) {
       console.error('Failed to fetch accounts:', error);
     }
-  };
-
-  const formatDate = (dateStr: string | null) => {
-    if (!dateStr) return null;
-    const date = new Date(dateStr);
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
   const handleSuccess = () => {
@@ -70,7 +58,7 @@ const AccountsPage: React.FC = () => {
                 <td className={styles.td}>{account.id}</td>
                 <td className={styles.td}>{account.name}</td>
                 <td className={styles.td}>{account.display_name}</td>
-                <td className={styles.td}>{formatDate(account.created_at)}</td>
+                <td className={styles.td}><LocalDate isoString={account.created_at} /></td>
                 <td className={styles.td}>
                   <Link href={`/admin/accounts/${account.id}`}>回答状況</Link>
                 </td>

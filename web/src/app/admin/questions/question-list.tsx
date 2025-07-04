@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './question-list.module.css';
 import type { Question } from "@/types/models";
+import LocalDate from '@/components/features/local-date';
 
 type Props = {
   questions: Question[];
@@ -15,18 +16,6 @@ const QuestionList: React.FC<Props> = ({
   onClickDelete,
   onClickRestore
 }) => {
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
-  };
 
   return (
     <div className={styles.tableContainer}>
@@ -49,7 +38,7 @@ const QuestionList: React.FC<Props> = ({
               <td className={styles.td}>{q.title}</td>
               <td className={styles.td}>{q.content}</td>
               <td className={styles.td}>{q.answer}</td>
-              <td className={styles.td}>{formatDate(q.updated_at)}</td>
+              <td className={styles.td}><LocalDate isoString={q.updated_at} /></td>
               <td className={styles.td}><button onClick={() => onClickEdit(q)}>編集</button></td>
               <td className={styles.td}>
                 {

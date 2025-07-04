@@ -4,6 +4,7 @@ import React from 'react';
 import styles from './question-list.module.css';
 import type { AnswerStatus, Question } from "@/types/models";
 import { useRouter } from 'next/navigation';
+import LocalDate from '@/components/features/local-date';
 
 type Props = {
   questions: Question[];
@@ -16,19 +17,6 @@ const QuestionList: React.FC<Props> = ({ questions, answerStatus }) => {
   answerStatus.forEach((status) => {
     statusMap[status.question_id] = status;
   });
-
-  const formatDate = (dateStr: string | null) => {
-    if (!dateStr) return null;
-    const date = new Date(dateStr);
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
-  };
 
   return (
     <div className={styles.tableContainer}>
@@ -54,7 +42,7 @@ const QuestionList: React.FC<Props> = ({ questions, answerStatus }) => {
                 {statusMap[q.id] && (statusMap[q.id].correct_count > 0 ? statusMap[q.id].correct_count : "-")}
               </td>
               <td className={styles.td}>
-                {statusMap[q.id] && (statusMap[q.id].correct_at ? formatDate(statusMap[q.id].correct_at) : "-")}
+                {statusMap[q.id] && (statusMap[q.id].correct_at ? (<LocalDate isoString={statusMap[q.id].correct_at} />) : "-")}
               </td>
             </tr>
           ))}
