@@ -1,11 +1,25 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import styles from './page.module.css';
 import { AccountWithProfile } from '@/types/models';
-import { api } from '@/lib/api/api.server';
+import { api } from '@/lib/api/api.client';
 import Link from 'next/link';
+import Modal from '@/components/ui/modal';
+import AccountForm from './account-form';
 
-const AccountsPage: React.FC = async () => {
-  const accounts: AccountWithProfile[] = await api.get('admin/accounts/with-profile');
+const AccountsPage: React.FC = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [accounts, setAccounts] = useState<AccountWithProfile[]>([]);
+
+  const getAccounts = async () => {
+    try {
+      const response: AccountWithProfile[] = await api.get('admin/accounts/with-profile');
+      setAccounts(response);
+    } catch (error) {
+      console.error('Failed to fetch accounts:', error);
+    }
+  };
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return null;
@@ -20,8 +34,25 @@ const AccountsPage: React.FC = async () => {
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
+  const handleSuccess = () => {
+    setShowModal(false);
+    getAccounts();
+  };
+
+  useEffect(() => {
+    getAccounts();
+  }, [])
+
   return (
     <div className={styles.container}>
+      <div className={styles.header}>
+        <button onClick={() => setShowModal(true)} className={styles.addButton}>
+          アカウント追加
+        </button>
+      </div>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title='アカウント追加' >
+        <AccountForm onSuccess={handleSuccess} />
+      </Modal>
       <div className={styles.tableContainer}>
         <table className={styles.table}>
           <thead className={styles.thead}>

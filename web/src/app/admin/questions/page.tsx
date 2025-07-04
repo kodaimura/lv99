@@ -39,7 +39,8 @@ const QuestionsPage: React.FC = () => {
       await api.delete(`admin/questions/${questionId}`);
       getQuestions();
     } catch (err) {
-
+      console.error('Error deleting question:', err);
+      alert('問題の削除に失敗しました。');
     }
   }
 
@@ -49,7 +50,8 @@ const QuestionsPage: React.FC = () => {
       await api.patch(`admin/questions/${questionId}`);
       getQuestions();
     } catch (err) {
-
+      console.error('Error restoring question:', err);
+      alert('問題の復元に失敗しました。');
     }
   }
 
@@ -57,7 +59,7 @@ const QuestionsPage: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <button onClick={() => setShowModal(true)} className={styles.addButton}>
-          問題を追加
+          問題追加
         </button>
       </div>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title='問題追加' >

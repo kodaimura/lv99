@@ -35,7 +35,6 @@ const AnswersPage = async ({
   }
 
   const data: any[] = await api.get('admin/answers/search', params);
-  console.log(data);
   return (
     <div className={styles.container}>
       <AnswerList answers={data} />

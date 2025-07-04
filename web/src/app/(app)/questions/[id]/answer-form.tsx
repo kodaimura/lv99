@@ -75,7 +75,6 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
   };
 
   const formatDate = (dateStr: string) => {
-    console.log('formatDate called with:', dateStr);
     if (!dateStr) return '—';
     const date = new Date(dateStr);
 
