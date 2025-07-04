@@ -53,7 +53,7 @@ const ChatMenu: React.FC = () => {
     getAccounts();
     getUnreadCounts();
 
-    const socket = new WebSocket("ws://localhost:8000/api/chats/ws");
+    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/api/chats/ws`);
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
