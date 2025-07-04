@@ -2,6 +2,11 @@ import styles from "./page.module.css";
 import ChatArea from "./chat-area";
 import { api } from "@/lib/api/api.server";
 import { AccountWithProfile } from "@/types/models";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "lv99 - チャット",
+};
 
 const ChatPage: React.FC = async () => {
   const account: AccountWithProfile = await api.get("/accounts/admin/with-profile");

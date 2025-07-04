@@ -5,6 +5,11 @@ import styles from './page.module.css';
 import AnswerForm from './answer-form';
 import AddAnswerButton from './add-answer-button';
 import CommentList from './comment-list';
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "lv99 - 回答",
+};
 
 type Props = {
   params: Promise<{ id: string }>;

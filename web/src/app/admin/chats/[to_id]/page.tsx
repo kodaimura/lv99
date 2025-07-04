@@ -2,6 +2,11 @@ import styles from "./page.module.css";
 import ChatArea from "./chat-area";
 import { api } from "@/lib/api/api.server";
 import { AccountWithProfile } from "@/types/models";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "lv99 - チャット",
+};
 
 type Props = {
   params: Promise<{ to_id: string }>

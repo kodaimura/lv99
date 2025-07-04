@@ -6,6 +6,11 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import CommentList from './comment-list';
 import LocalDate from '@/components/features/local-date';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "lv99 - 回答詳細",
+};
 
 type Props = {
   params: Promise<{ id: string }>;

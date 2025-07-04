@@ -1,5 +1,10 @@
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import styles from "./page.module.css";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "lv99 - ドキュメント",
+};
 
 const Code = ({ children }: { children: string }) => (
   <SyntaxHighlighter language="python" className={styles.code}>
