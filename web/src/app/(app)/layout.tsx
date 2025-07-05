@@ -7,7 +7,6 @@ import Settings from "./settings";
 
 export const metadata: Metadata = {
   title: "lv99",
-  description: "lv99は、問題を解きながらプログラミングスキルをレベルアップできる学習サービスです。",
 };
 
 export default function RootLayout({

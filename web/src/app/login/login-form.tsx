@@ -5,8 +5,11 @@ import { useRouter } from 'next/navigation';
 import { HttpError } from '@/lib/api/common';
 import { api } from '@/lib/api/api.client';
 import styles from './login-form.module.css';
+import { useAuth } from '@/contexts/auth-context';
+import { Account } from '@/types/models';
 
 const LoginForm: React.FC = () => {
+  const { setAccount } = useAuth();
   const [name, setName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -17,8 +20,11 @@ const LoginForm: React.FC = () => {
     setError('');
 
     try {
-      const response: any = await api.post('accounts/login', { name, password });
-      if (response?.account_role == 0) {
+      await api.post('accounts/login', { name, password });
+      const me: Account = await api.get('accounts/me');
+
+      setAccount(me);
+      if (me.role == 0) {
         router.push('/admin');
       } else {
         router.push('/home');

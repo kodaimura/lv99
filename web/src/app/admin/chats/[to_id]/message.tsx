@@ -12,7 +12,8 @@ type Props = {
 
 const Message: React.FC<Props> = ({ chat }) => {
   const { account } = useAuth();
-  const isMe = chat.from_id === account?.id;
+  if (!account) return null;
+  const isMe = chat.from_id === account.id;
 
   return (
     <div className={`${styles.messageRow} ${isMe ? styles.me : styles.other}`}>
