@@ -37,22 +37,24 @@
 }
 
 .input:focus {
-  border-color: #6a11cb;
+  border-color: #475569;
   outline: none;
+  box-shadow: 0 0 5px 2px rgba(71, 85, 105, 0.4);
 }
 
 .submitButton {
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  background: linear-gradient(135deg, #475569, #64748b);
   color: white;
-  padding: 10px;
+  padding: 10px 20px;
   font-size: 1.2rem;
-  font-weight: bold;
+  font-weight: 700;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: 0.3s;
+  box-shadow: 0 3px 8px rgba(71, 85, 105, 0.3);
 }
 
 .submitButton:hover {
-  background: linear-gradient(135deg, #5a0dbb, #1f5ae0);
+  background: linear-gradient(135deg, #64748b, #94a3b8);
+  box-shadow: 0 6px 15px rgba(100, 116, 139, 0.6);
 }

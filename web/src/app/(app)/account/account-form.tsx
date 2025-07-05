@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import styles from './password-form.module.css';
+import styles from './form.module.css';
 import { Account } from '@/types/models';
 
 type Props = {

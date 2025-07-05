@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { api } from '@/lib/api/api.client';
-import styles from './password-form.module.css';
+import styles from './form.module.css';
 import { AccountProfile } from '@/types/models';
 
 type Props = {

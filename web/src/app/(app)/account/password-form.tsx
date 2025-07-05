@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { HttpError } from '@/lib/api/common';
 import { api } from '@/lib/api/api.client';
-import styles from './password-form.module.css';
+import styles from './form.module.css';
 import { useRouter } from 'next/navigation';
 
 const PasswordForm: React.FC = () => {
