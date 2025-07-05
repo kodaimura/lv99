@@ -1,5 +1,5 @@
 import React from 'react';
-import { Answer, Question, Comment, AccountWithProfile } from '@/types/models';
+import { Answer, Question, AccountWithProfile } from '@/types/models';
 import { api } from '@/lib/api/api.server';
 import styles from './page.module.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';

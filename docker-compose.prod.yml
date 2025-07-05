@@ -19,6 +19,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/web/Dockerfile
+    volumes:
+      - ./web:/app
     ports:
       - "3000:3000"
     environment:
