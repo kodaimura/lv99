@@ -41,7 +41,7 @@ class Api {
       let errorData = { message: 'Unknown error', details: {} };
       try {
         errorData = await response.json();
-      } catch (_) {
+      } catch {
         // ignore parse error
       }
 

@@ -22,7 +22,7 @@ const ProfileForm: React.FC<Props> = ({ profile }) => {
         display_name: profileState.display_name,
       });
       alert('プロフィールを更新しました。');
-    } catch (err) {
+    } catch {
       setError('更新に失敗しました。\nもう一度お試しください。');
     }
   };

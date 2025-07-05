@@ -52,7 +52,7 @@ export default async function RootLayout({
   let account: Account | null = null;
   try {
     account = await getAccount();
-  } catch (e) { }
+  } catch { }
 
   return (
     <html lang="en">

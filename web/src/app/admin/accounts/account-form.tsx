@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { HttpError } from '@/lib/api/common';
 import { api } from '@/lib/api/api.client';
 import styles from './account-form.module.css';
@@ -15,7 +14,6 @@ const AccountForm: React.FC<Props> = ({ onSuccess }) => {
   const [password, setPassword] = useState<string>('');
   const [confirm_password, setConfirmPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
-  const router = useRouter();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();

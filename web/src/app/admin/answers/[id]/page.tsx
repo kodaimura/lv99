@@ -1,5 +1,5 @@
 import React from 'react';
-import { Answer, Question, Comment, Account, AccountWithProfile } from '@/types/models';
+import { Answer, Question, Comment, AccountWithProfile } from '@/types/models';
 import { api } from '@/lib/api/api.server';
 import styles from './page.module.css';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -19,10 +19,9 @@ type Props = {
 const AnswerDetailPage: React.FC<Props> = async ({ params }) => {
   const { id } = await params;
   const answer: Answer = await api.get(`admin/answers/${id}`);
-  const [account, question, comments]: [AccountWithProfile, Question, Comment[]] = await Promise.all([
+  const [account, question]: [AccountWithProfile, Question] = await Promise.all([
     api.get<AccountWithProfile>(`admin/accounts/${answer.account_id}/with-profile`),
     api.get<Question>(`questions/${answer.question_id}`),
-    api.get<Comment[]>("comments", { answer_id: id }),
   ]);
 
   return (

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api/api.client';
 import styles from './question-form.module.css';
 import type { Question } from "@/types/models";
@@ -18,7 +17,6 @@ const QuestionForm: React.FC<Props> = ({ onSuccess, question }) => {
   const [answer, setAnswer] = useState<string>('');
   const [level, setLevel] = useState<number>(0);
   const [error, setError] = useState<string>('');
-  const router = useRouter();
 
   useEffect(() => {
     if (question) {
@@ -48,7 +46,7 @@ const QuestionForm: React.FC<Props> = ({ onSuccess, question }) => {
         await api.post('admin/questions', body);
       }
       onSuccess();
-    } catch (err) {
+    } catch {
       setError('登録に失敗しました。\nもう一度お試しください。');
     }
   };
