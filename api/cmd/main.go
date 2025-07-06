@@ -37,5 +37,6 @@ func main() {
 	}))
 
 	router.SetApi(r.Group("/api"))
+	router.SetWs(r.Group("/ws"))
 	r.Run(":" + config.AppPort)
 }

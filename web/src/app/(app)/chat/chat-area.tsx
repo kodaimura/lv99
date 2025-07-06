@@ -23,7 +23,7 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
   useEffect(() => {
     getChats(true);
     readChats();
-    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/api/chats/ws`);
+    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
     socketRef.current = socket;
 
     socket.onmessage = (event) => {

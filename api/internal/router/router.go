@@ -102,7 +102,6 @@ func SetApi(r *gin.RouterGroup) {
 		auth.GET("/comments/with-profile", featureCommentController.ApiGetWithProfile)
 		auth.GET("/comments/count", featureCommentController.ApiGetRecentCount)
 
-		auth.GET("/chats/ws", chatController.WsConnect)
 		auth.GET("/chats/unread-count", featureChatController.ApiGetUnreadCount)
 		auth.GET("/chats/:to_id", chatController.ApiGet)
 		auth.PUT("/chats/read", chatController.ApiRead)
@@ -129,5 +128,12 @@ func SetApi(r *gin.RouterGroup) {
 		admin.GET("/answers/status", featureAnswerController.AdminGetStatus)
 
 		admin.GET("/comments/count", featureCommentController.AdminGetRecentCount)
+	}
+}
+
+func SetWs(r *gin.RouterGroup) {
+	auth := r.Group("", ApiAuthMiddleware())
+	{
+		auth.GET("/chats", chatController.WsConnect)
 	}
 }
