@@ -18,6 +18,12 @@ const isAdminAccount = async (access_token: string): Promise<boolean> => {
   }
 }
 
+const getCookieDomain = (host: string | null): string | undefined => {
+  if (!host) return undefined;
+  if (host === 'localhost' || host.endsWith('.localhost')) return undefined;
+  return host.startsWith('.') ? host : `.${host}`;
+}
+
 export async function middleware(request: NextRequest) {
   const accessToken = request.cookies.get('access_token')?.value;
   const accessTokenExpiresAt = request.cookies.get('access_token_expires_at')?.value;
@@ -36,6 +42,9 @@ export async function middleware(request: NextRequest) {
   if (!refreshToken) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
+
+  const host = request.headers.get('host');
+  const domain = getCookieDomain(host);
 
   // refresh
   const res = await fetch(`${process.env.API_HOST}/api/accounts/refresh`, {
@@ -63,6 +72,7 @@ export async function middleware(request: NextRequest) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
+      ...(domain ? { domain } : {}),
     });
   }
 
@@ -74,6 +84,7 @@ export async function middleware(request: NextRequest) {
       process.env.NODE_ENV === 'production' ? 'Secure' : '',
       'SameSite=Lax',
       'Path=/',
+      !(host === 'localhost' || host?.endsWith('.localhost')) && host ? `Domain=.${host}` : ''
     ].filter(Boolean).join('; '));
   }
 

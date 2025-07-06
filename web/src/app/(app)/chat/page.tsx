@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import styles from "./page.module.css";
 import ChatArea from "./chat-area";
 import { api } from "@/lib/api/api.server";

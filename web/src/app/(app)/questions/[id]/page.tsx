@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import React from 'react';
 import { Answer, Question } from '@/types/models';
 import { api } from '@/lib/api/api.server';
