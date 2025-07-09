@@ -1,7 +1,6 @@
 export const dynamic = 'force-dynamic';
 
 import React from 'react';
-import { api } from '@/lib/api/api.server';
 import styles from './page.module.css';
 import QuestionList from './question-list';
 import type { Metadata } from "next";

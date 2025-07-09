@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { api } from '@/lib/api/api.client';
 import styles from './comment-list.module.css';
 import CommentForm from './comment-form';
@@ -18,14 +18,10 @@ const CommentList: React.FC<Props> = ({ answerId }) => {
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    getComments();
-  }, []);
-
-  const getComments = async () => {
+  const getComments = useCallback(async () => {
     const response: CommentWithProfile[] = await api.get("/comments/with-profile", { answer_id: answerId });
     setComments(response);
-  };
+  }, [answerId]);
 
   const handleToggleComments = () => {
     setIsOpen(prev => !prev);
@@ -65,6 +61,10 @@ const CommentList: React.FC<Props> = ({ answerId }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    getComments();
+  }, [getComments]);
 
   return (
     <div>

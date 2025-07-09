@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Answer } from '@/types/models';
 import { api } from '@/lib/api/api.client';
 import styles from './answer-list.module.css';
@@ -15,7 +15,7 @@ const AnswerList: React.FC<Props> = ({ questionId }) => {
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [showForm, setShowForm] = useState(false);
 
-  const getAnswers = async () => {
+  const getAnswers = useCallback(async () => {
     try {
       const response: Answer[] = await api.get("answers", { question_id: questionId });
       setAnswers(response);
@@ -24,11 +24,11 @@ const AnswerList: React.FC<Props> = ({ questionId }) => {
       console.error('Error fetching question or answers:', error);
       setAnswers([]);
     }
-  };
+  }, [questionId]);
 
   useEffect(() => {
     getAnswers();
-  }, [questionId]);
+  }, [getAnswers]);
 
   return (
     <>
@@ -37,14 +37,14 @@ const AnswerList: React.FC<Props> = ({ questionId }) => {
           <>
             {answers.map((answer) => (
               <div className={styles.answerSection} key={answer.id}>
-                <AnswerForm questionId={questionId} answer={answer} onDelete={() => getAnswers()} />
+                <AnswerForm questionId={questionId} answer={answer} onDelete={getAnswers} />
                 <div className={styles.commentSection}>
                   <CommentList answerId={answer.id} />
                 </div>
               </div>
             ))}
             <div className={styles.addAnswerButton}>
-              {showForm && <AnswerForm questionId={questionId} onSubmit={() => getAnswers()} />}
+              {showForm && <AnswerForm questionId={questionId} onSubmit={getAnswers} />}
             </div>
             <button onClick={() => setShowForm(true)} className={styles.button}>
               回答を追加する
@@ -52,7 +52,7 @@ const AnswerList: React.FC<Props> = ({ questionId }) => {
           </>
         ) : (
           <div className={styles.answerSection}>
-            <AnswerForm questionId={questionId} onSubmit={() => getAnswers()} />
+            <AnswerForm questionId={questionId} onSubmit={getAnswers} />
           </div>
         )
       }

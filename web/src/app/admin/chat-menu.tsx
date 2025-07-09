@@ -50,6 +50,8 @@ const ChatMenu: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!account?.id) return;
+
     getAccounts();
     getUnreadCounts();
 
@@ -57,7 +59,8 @@ const ChatMenu: React.FC = () => {
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.from_id === account?.id) return;
+      if (data.from_id === account.id) return;
+
       setUnreadCounts((prev) => ({
         ...prev,
         [data.from_id]: {
@@ -77,7 +80,7 @@ const ChatMenu: React.FC = () => {
     return () => {
       socket.close();
     };
-  }, []);
+  }, [account?.id]);
 
   const sortedAccounts = [...accounts].sort((a, b) => {
     const updatedA = unreadCounts[a.id]?.updatedAt ?? '1970-01-01T00:00:00Z';
