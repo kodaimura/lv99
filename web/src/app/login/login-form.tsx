@@ -34,7 +34,7 @@ const LoginForm: React.FC = () => {
         setError('ユーザ名又はパスワードが異なります。');
       } else {
         if (err instanceof Error) {
-          console.error('ログインエラー:', err.message);
+          console.error('Login error:', err.message);
         }
         setError('ログインに失敗しました。');
       }

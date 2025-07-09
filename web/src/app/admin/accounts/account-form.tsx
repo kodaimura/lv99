@@ -38,7 +38,7 @@ const AccountForm: React.FC<Props> = ({ onSuccess }) => {
         setError('ユーザ名が既に使われています。');
       } else {
         if (err instanceof Error) {
-          console.error('登録失敗', err);
+          console.error('Signup error:', err.message);
         }
         setError('アカウント作成に失敗しました。\nもう一度お試しください。');
       }
