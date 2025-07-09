@@ -118,7 +118,7 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
         onChange={(val) => setCodeCall(val)}
       />
 
-      <button type="submit" disabled={loading || !codeCall} className={styles.button}>
+      <button type="submit" disabled={loading || !codeDef || !codeCall} className={styles.button}>
         <Play size={18} className={styles.icon} />
         {loading ? '実行中…' : '実行する'}
       </button>

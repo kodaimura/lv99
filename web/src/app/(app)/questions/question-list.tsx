@@ -1,22 +1,44 @@
 'use client'
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './question-list.module.css';
-import type { AnswerStatus, Question } from "@/types/models";
 import { useRouter } from 'next/navigation';
+import type { Question, AnswerStatus } from "@/types/models";
 import LocalDate from '@/components/features/local-date';
+import { api } from '@/lib/api/api.client';
 
-type Props = {
-  questions: Question[];
-  answerStatus: AnswerStatus[];
-};
+const QuestionList: React.FC = () => {
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [statusMap, setStatusMap] = useState<Record<number, AnswerStatus>>([]);
 
-const QuestionList: React.FC<Props> = ({ questions, answerStatus }) => {
   const router = useRouter();
-  const statusMap: Record<number, AnswerStatus> = {};
-  answerStatus.forEach((status) => {
-    statusMap[status.question_id] = status;
-  });
+  const getQuestions = async () => {
+    try {
+      const response: Question[] = await api.get('questions');
+      setQuestions(response);
+    } catch (error) {
+      console.error("Failed to fetch questions:", error);
+    }
+  };
+
+  const getAnswerStatus = async () => {
+    try {
+      const answerStatus: AnswerStatus[] = await api.get('answers/status');
+      answerStatus.forEach((status) => {
+        setStatusMap((prev) => ({
+          ...prev,
+          [status.question_id]: status,
+        }));
+      });
+    } catch (error) {
+      console.error("Failed to fetch questions:", error);
+    }
+  };
+
+  useEffect(() => {
+    getQuestions();
+    getAnswerStatus();
+  }, []);
 
   return (
     <div className={styles.tableContainer}>

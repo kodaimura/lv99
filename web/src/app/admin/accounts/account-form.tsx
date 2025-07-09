@@ -38,7 +38,7 @@ const AccountForm: React.FC<Props> = ({ onSuccess }) => {
         setError('ユーザ名が既に使われています。');
       } else {
         if (err instanceof Error) {
-          console.error('サインアップ失敗', err);
+          console.error('登録失敗', err);
         }
         setError('アカウント作成に失敗しました。\nもう一度お試しください。');
       }
@@ -89,7 +89,7 @@ const AccountForm: React.FC<Props> = ({ onSuccess }) => {
           />
         </div>
         <button type='submit' className={styles.submitButton}>
-          サインアップ
+          登録
         </button>
       </form>
     </>
