@@ -1,3 +1,15 @@
+.answerSection {
+  overflow-x: auto;
+}
+
+.commentSection {
+  margin-top: 15px;
+  padding: 24px;
+  background-color: #f9fafb;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+}
+
 .addAnswerButton {
   padding-top: 1rem;
 }

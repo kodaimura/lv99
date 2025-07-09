@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import styles from './answer-form.module.css';
-import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api/api.client';
 import { Answer } from '@/types/models';
 import { Trash2 } from 'lucide-react';
@@ -23,10 +22,11 @@ const customTheme = EditorView.theme({
 type Props = {
   questionId: number;
   answer?: Answer;
+  onSubmit?: () => void;
+  onDelete?: () => void;
 };
 
-const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
-  const router = useRouter();
+const AnswerForm: React.FC<Props> = ({ questionId, answer, onSubmit, onDelete }) => {
   const [loading, setLoading] = useState(false);
 
   const [id, setId] = useState<number | null>(answer?.id ?? null);
@@ -62,6 +62,7 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
       setCallError(response.call_error);
       setCorrectAt(response.correct_at);
       setUpdatedAt(response.updated_at);
+      onSubmit?.();
     } catch (err) {
       console.error('Answer submission error:', err);
     } finally {
@@ -72,7 +73,7 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer }) => {
   const handleDelete = async () => {
     if (!id || !confirm('この回答を削除しますか？')) return;
     await api.delete(`/answers/${id}`);
-    router.refresh();
+    onDelete?.();
   };
 
   return (
