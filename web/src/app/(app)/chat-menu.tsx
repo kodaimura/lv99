@@ -7,7 +7,11 @@ import { api } from '@/lib/api/api.client';
 import styles from './chat-menu.module.css';
 import { useAuth } from '@/contexts/auth-context';
 
-const ChatMenu: React.FC = () => {
+type Props = {
+  onClick?: () => void;
+};
+
+const ChatMenu: React.FC<Props> = ({ onClick }) => {
   const router = useRouter();
   const [unreadCount, setUnreadCount] = useState(0);
   const [admin, setAdmin] = useState<AccountWithProfile | null>(null);
@@ -68,6 +72,7 @@ const ChatMenu: React.FC = () => {
     e.preventDefault();
     setUnreadCount(0);
     router.push('/chat');
+    onClick?.();
   };
 
   return (

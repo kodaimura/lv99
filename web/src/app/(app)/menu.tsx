@@ -22,16 +22,16 @@ const Menu: React.FC = () => {
         <nav className={styles.menu}>
           <ul>
             <li>
-              <Link href="/home" className={styles.item}>ダッシュボード</Link>
+              <Link href="/home" onClick={closeSidebar} className={styles.item}>ダッシュボード</Link>
             </li>
             <li>
-              <Link href="/questions" className={styles.item}>問題一覧</Link>
+              <Link href="/questions" onClick={closeSidebar} className={styles.item}>問題一覧</Link>
             </li>
             <li>
-              <Link href="/documents" className={styles.item}>ドキュメント</Link>
+              <Link href="/documents" onClick={closeSidebar} className={styles.item}>ドキュメント</Link>
             </li>
             <li>
-              <ChatMenu />
+              <ChatMenu onClick={closeSidebar} />
             </li>
           </ul>
         </nav>

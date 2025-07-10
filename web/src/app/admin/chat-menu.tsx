@@ -7,6 +7,10 @@ import { AccountWithProfile } from '@/types/models';
 import { api } from '@/lib/api/api.client';
 import { useAuth } from '@/contexts/auth-context';
 
+type Props = {
+  onClick?: () => void;
+};
+
 type UnreadCountMap = {
   [accountId: string]: {
     count: number;
@@ -14,7 +18,7 @@ type UnreadCountMap = {
   };
 };
 
-const ChatMenu: React.FC = () => {
+const ChatMenu: React.FC<Props> = ({ onClick }) => {
   const router = useRouter();
   const [accounts, setAccounts] = useState<AccountWithProfile[]>([]);
   const [unreadCounts, setUnreadCounts] = useState<UnreadCountMap>({});
@@ -94,6 +98,7 @@ const ChatMenu: React.FC = () => {
       [accountId]: { ...prev[accountId], count: 0, },
     }));
     router.push(`/admin/chats/${accountId}`);
+    onClick?.();
   }
 
   return (

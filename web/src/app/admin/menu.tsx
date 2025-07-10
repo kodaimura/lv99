@@ -23,21 +23,21 @@ const Menu: React.FC = () => {
         <nav className={styles.menu}>
           <ul>
             <li>
-              <Link href="/admin" className={styles.item}>ダッシュボード</Link>
+              <Link href="/admin" onClick={closeSidebar} className={styles.item}>ダッシュボード</Link>
             </li>
             <li>
-              <Link href="/admin/questions" className={styles.item}>問題登録</Link>
+              <Link href="/admin/questions" onClick={closeSidebar} className={styles.item}>問題登録</Link>
             </li>
             <li>
-              <Link href="/admin/answers" className={styles.item}>回答一覧</Link>
+              <Link href="/admin/answers" onClick={closeSidebar} className={styles.item}>回答一覧</Link>
             </li>
             <li>
-              <Link href="/admin/accounts" className={styles.item}>アカウント一覧</Link>
+              <Link href="/admin/accounts" onClick={closeSidebar} className={styles.item}>アカウント一覧</Link>
             </li>
           </ul>
         </nav>
         <hr />
-        <ChatMenu />
+        <ChatMenu onClick={closeSidebar} />
       </aside>
     </>
   );
