@@ -9,6 +9,18 @@
   top: 0;
   left: 0;
   padding-top: 70px;
+  transition: left 0.3s ease-in-out;
+  z-index: 500;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    left: -100%;
+  }
+
+  .open {
+    left: 0;
+  }
 }
 
 .menu ul {
@@ -23,17 +35,40 @@
 
 .item {
   color: white;
-  font-weight: bold;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   text-decoration: none;
+  font-weight: bold;
+  display: block;
   padding: 0.5rem;
   border-radius: 4px;
   transition: background-color 0.2s;
-  cursor: pointer;
 }
 
 .item:hover {
   background-color: #374151;
+}
+
+.menuButton {
+  display: none;
+  position: fixed;
+  top: 0.5rem;
+  left: 1rem;
+  z-index: 1100;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .menuButton {
+    display: block;
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 400;
 }

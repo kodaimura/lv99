@@ -38,7 +38,7 @@ const HomePage: React.FC = async () => {
                   <div className={styles.countContent}>
                     <span className={styles.levelTag}>Lv {count.question_level}</span>
                     <span className={styles.title}>{count.question_title}</span>
-                    <span className={styles.commentCount}>{count.comment_count} 件のコメント</span>
+                    <span className={styles.commentCount}>{count.comment_count} 件</span>
                     <span className={styles.date}>
                       <LocalDate isoString={count.created_at} />
                     </span>

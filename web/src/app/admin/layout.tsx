@@ -4,6 +4,7 @@ import Footer from "@/components/layout/footer";
 import Main from "@/components/layout/main";
 import Menu from "./menu";
 import Settings from "./settings";
+import styles from "./layout.module.css";
 
 export const metadata: Metadata = {
   title: "lv99",
@@ -19,7 +20,7 @@ export default function RootLayout({
     <>
       <Header><></></Header>
       <Menu />
-      <Main style={{ paddingLeft: "240px" }}>
+      <Main className={styles.main}>
         {children}
         <Settings />
       </Main>

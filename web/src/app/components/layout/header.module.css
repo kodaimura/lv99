@@ -5,7 +5,7 @@
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: left;
   background: linear-gradient(to right, #334155, #475569, #64748b);
   color: #f8fafc;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -23,4 +23,10 @@
 .childrenWrapper {
   display: flex;
   gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .header {
+    justify-content: center;
+  }
 }

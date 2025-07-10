@@ -37,6 +37,7 @@
   font-weight: 500;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
+  white-space: nowrap;
 }
 
 .title {
