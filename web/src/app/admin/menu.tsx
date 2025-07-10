@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import styles from './menu.module.css';
 import Link from 'next/link';
 import ChatMenu from './chat-menu';
+import Settings from './settings';
 
 const Menu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,6 +39,7 @@ const Menu: React.FC = () => {
         </nav>
         <hr />
         <ChatMenu onClick={closeSidebar} />
+        <Settings />
       </aside>
     </>
   );
