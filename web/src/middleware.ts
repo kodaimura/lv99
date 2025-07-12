@@ -1,30 +1,12 @@
 import { NextResponse, NextRequest } from 'next/server';
 
-const isAdminPath = (pathname: string) => pathname.startsWith('/admin');
-
-const isAdminAccount = async (access_token: string): Promise<boolean> => {
-  try {
-    const res = await fetch(`${process.env.API_HOST}/api/accounts/me`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Cookie: `access_token=${access_token}`,
-      },
-      credentials: 'include',
-    });
-    return (await res.json())?.role === 0
-  } catch {
-    return false;
-  }
-}
-
-const getCookieDomain = (host: string | null): string | undefined => {
-  if (!host) return undefined;
-  if (host === 'localhost' || host.endsWith('.localhost')) return undefined;
-  return host.startsWith('.') ? host : `.${host}`;
-}
-
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  if (isExcludedPath(pathname)) {
+    return NextResponse.next();
+  }
+
   const accessToken = request.cookies.get('access_token')?.value;
   const accessTokenExpiresAt = request.cookies.get('access_token_expires_at')?.value;
   const refreshToken = request.cookies.get('refresh_token')?.value;
@@ -101,12 +83,42 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
+const isAdminPath = (pathname: string) => pathname.startsWith('/admin');
+
+const isAdminAccount = async (access_token: string): Promise<boolean> => {
+  try {
+    const res = await fetch(`${process.env.API_HOST}/api/accounts/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: `access_token=${access_token}`,
+      },
+      credentials: 'include',
+    });
+    return (await res.json())?.role === 0
+  } catch {
+    return false;
+  }
+}
+
+const getCookieDomain = (host: string | null): string | undefined => {
+  if (!host) return undefined;
+  if (host === 'localhost' || host.endsWith('.localhost')) return undefined;
+  return host.startsWith('.') ? host : `.${host}`;
+}
+
+const isExcludedPath = (pathname: string): boolean => {
+  return [
+    '/',
+    '/login',
+    '/signup',
+    '/api/accounts/login',
+    '/api/accounts/signup',
+    '/api/accounts/refresh',
+    '/api/accounts/logout',
+  ].some((path) => pathname.startsWith(path));
+};
+
 export const config = {
-  matcher: [
-    '/dashboard',
-    '/admin/:path*',
-    '/questions/:path*',
-    '/chat/:path*',
-    '/account',
-  ],
+  matcher: ['/:path*'],
 };
