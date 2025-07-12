@@ -1,4 +1,4 @@
-package auth
+package handler
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,9 +8,10 @@ import (
 	"lv99/internal/core"
 	"lv99/internal/helper"
 	profile "lv99/internal/module/account_profile"
+	auth "lv99/internal/module/auth"
 )
 
-type Controller interface {
+type AuthHandler interface {
 	ApiSignup(c *gin.Context)
 	ApiLogin(c *gin.Context)
 	ApiRefresh(c *gin.Context)
@@ -19,14 +20,14 @@ type Controller interface {
 	ApiPutMePassword(c *gin.Context)
 }
 
-type controller struct {
+type authHandler struct {
 	db                    *gorm.DB
-	service               Service
+	service               auth.Service
 	accountProfileService profile.Service
 }
 
-func NewController(db *gorm.DB, service Service, accountProfileService profile.Service) Controller {
-	return &controller{
+func NewAuthHandler(db *gorm.DB, service auth.Service, accountProfileService profile.Service) AuthHandler {
+	return &authHandler{
 		db:                    db,
 		service:               service,
 		accountProfileService: accountProfileService,
@@ -34,15 +35,15 @@ func NewController(db *gorm.DB, service Service, accountProfileService profile.S
 }
 
 // POST /api/accounts/signup
-func (ctrl *controller) ApiSignup(c *gin.Context) {
-	var req SignupRequest
+func (ctrl *authHandler) ApiSignup(c *gin.Context) {
+	var req auth.SignupRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
 	err := ctrl.db.Transaction(func(tx *gorm.DB) error {
-		acct, err := ctrl.service.Signup(SignupDto(req), tx)
+		acct, err := ctrl.service.Signup(auth.SignupDto(req), tx)
 		if err != nil {
 			return err
 		}
@@ -64,14 +65,14 @@ func (ctrl *controller) ApiSignup(c *gin.Context) {
 }
 
 // POST /api/accounts/login
-func (ctrl *controller) ApiLogin(c *gin.Context) {
-	var req LoginRequest
+func (ctrl *authHandler) ApiLogin(c *gin.Context) {
+	var req auth.LoginRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
-	acct, err := ctrl.service.Login(LoginDto(req), ctrl.db)
+	acct, err := ctrl.service.Login(auth.LoginDto(req), ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return
@@ -102,7 +103,7 @@ func (ctrl *controller) ApiLogin(c *gin.Context) {
 
 	core.Logger.Info("account login: id=%d name=%s", acct.Id, acct.Name)
 
-	c.JSON(200, LoginResponse{
+	c.JSON(200, auth.LoginResponse{
 		AccountId:        acct.Id,
 		AccountRole:      acct.Role,
 		AccessToken:      accessToken,
@@ -113,7 +114,7 @@ func (ctrl *controller) ApiLogin(c *gin.Context) {
 }
 
 // POST /api/accounts/refresh
-func (ctrl *controller) ApiRefresh(c *gin.Context) {
+func (ctrl *authHandler) ApiRefresh(c *gin.Context) {
 	refreshToken := helper.GetRefreshToken(c)
 
 	payload, err := core.Auth.VerifyRefreshToken(refreshToken)
@@ -136,14 +137,14 @@ func (ctrl *controller) ApiRefresh(c *gin.Context) {
 
 	core.Logger.Info("access token refreshed: id=%d name=%s", payload.AccountId, payload.AccountName)
 
-	c.JSON(200, RefreshResponse{
+	c.JSON(200, auth.RefreshResponse{
 		AccessToken: accessToken,
 		ExpiresIn:   config.AccessTokenExpiresSeconds,
 	})
 }
 
 // POST /api/accounts/logout
-func (ctrl *controller) ApiLogout(c *gin.Context) {
+func (ctrl *authHandler) ApiLogout(c *gin.Context) {
 	core.Auth.RevokeRefreshToken(helper.GetRefreshToken(c))
 	helper.SetAccessTokenCookie(c, "")
 	helper.SetRefreshTokenCookie(c, "")
@@ -151,16 +152,16 @@ func (ctrl *controller) ApiLogout(c *gin.Context) {
 }
 
 // PUT /api/accounts/me/password
-func (ctrl *controller) ApiPutMePassword(c *gin.Context) {
+func (ctrl *authHandler) ApiPutMePassword(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 
-	var req PutMePasswordRequest
+	var req auth.PutMePasswordRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
-	err := ctrl.service.UpdatePassword(UpdatePasswordDto{
+	err := ctrl.service.UpdatePassword(auth.UpdatePasswordDto{
 		Id:          accountId,
 		OldPassword: req.OldPassword,
 		NewPassword: req.NewPassword,

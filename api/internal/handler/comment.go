@@ -1,13 +1,14 @@
-package comment
+package handler
 
 import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
 	"lv99/internal/helper"
+	module "lv99/internal/module/comment"
 )
 
-type Controller interface {
+type CommentHandler interface {
 	ApiGet(c *gin.Context)
 	ApiPostOne(c *gin.Context)
 	ApiGetOne(c *gin.Context)
@@ -15,27 +16,27 @@ type Controller interface {
 	ApiDeleteOne(c *gin.Context)
 }
 
-type controller struct {
+type commentHandler struct {
 	db      *gorm.DB
-	service Service
+	service module.Service
 }
 
-func NewController(db *gorm.DB, service Service) Controller {
-	return &controller{
+func NewCommentHandler(db *gorm.DB, service module.Service) CommentHandler {
+	return &commentHandler{
 		db:      db,
 		service: service,
 	}
 }
 
 // GET /api/comments?answer_id=:answer_id
-func (ctrl *controller) ApiGet(c *gin.Context) {
-	var req GetRequest
+func (ctrl *commentHandler) ApiGet(c *gin.Context) {
+	var req module.GetRequest
 	if err := helper.BindQuery(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
-	comments, err := ctrl.service.Get(GetDto{
+	comments, err := ctrl.service.Get(module.GetDto{
 		AnswerId: req.AnswerId,
 	}, ctrl.db)
 	if err != nil {
@@ -43,19 +44,19 @@ func (ctrl *controller) ApiGet(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, ToCommentResponseList(comments))
+	c.JSON(200, module.ToCommentResponseList(comments))
 }
 
 // POST /api/comments
-func (ctrl *controller) ApiPostOne(c *gin.Context) {
+func (ctrl *commentHandler) ApiPostOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req PostOneRequest
+	var req module.PostOneRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
-	comment, err := ctrl.service.CreateOne(CreateOneDto{
+	comment, err := ctrl.service.CreateOne(module.CreateOneDto{
 		AnswerId:  req.AnswerId,
 		AccountId: accountId,
 		Content:   req.Content,
@@ -65,19 +66,19 @@ func (ctrl *controller) ApiPostOne(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, ToCommentResponse(comment))
+	c.JSON(201, module.ToCommentResponse(comment))
 }
 
 // GET /api/comments/:comment_id
-func (ctrl *controller) ApiGetOne(c *gin.Context) {
+func (ctrl *commentHandler) ApiGetOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var uri CommentUri
+	var uri module.CommentUri
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
-	comment, err := ctrl.service.GetOne(GetOneDto{
+	comment, err := ctrl.service.GetOne(module.GetOneDto{
 		Id:        uri.CommentId,
 		AccountId: accountId,
 	}, ctrl.db)
@@ -86,14 +87,14 @@ func (ctrl *controller) ApiGetOne(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, ToCommentResponse(comment))
+	c.JSON(200, module.ToCommentResponse(comment))
 }
 
 // PUT /api/comments/:comment_id
-func (ctrl *controller) ApiPutOne(c *gin.Context) {
+func (ctrl *commentHandler) ApiPutOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var uri CommentUri
-	var req PutOneRequest
+	var uri module.CommentUri
+	var req module.PutOneRequest
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
@@ -103,7 +104,7 @@ func (ctrl *controller) ApiPutOne(c *gin.Context) {
 		return
 	}
 
-	comment, err := ctrl.service.UpdateOne(UpdateOneDto{
+	comment, err := ctrl.service.UpdateOne(module.UpdateOneDto{
 		Id:        uri.CommentId,
 		AccountId: accountId,
 		Content:   req.Content,
@@ -113,19 +114,19 @@ func (ctrl *controller) ApiPutOne(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, ToCommentResponse(comment))
+	c.JSON(200, module.ToCommentResponse(comment))
 }
 
 // DELETE /api/comments/:comment_id
-func (ctrl *controller) ApiDeleteOne(c *gin.Context) {
+func (ctrl *commentHandler) ApiDeleteOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var uri CommentUri
+	var uri module.CommentUri
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
-	err := ctrl.service.DeleteOne(DeleteOneDto{
+	err := ctrl.service.DeleteOne(module.DeleteOneDto{
 		Id:        uri.CommentId,
 		AccountId: accountId,
 	}, ctrl.db)

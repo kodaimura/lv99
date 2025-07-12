@@ -1,13 +1,14 @@
-package answer
+package handler
 
 import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
 	"lv99/internal/helper"
+	module "lv99/internal/module/answer"
 )
 
-type Controller interface {
+type AnswerHandler interface {
 	ApiGet(c *gin.Context)
 	ApiPostOne(c *gin.Context)
 	ApiGetOne(c *gin.Context)
@@ -18,28 +19,28 @@ type Controller interface {
 	AdminGetOne(c *gin.Context)
 }
 
-type controller struct {
+type answerHandler struct {
 	db      *gorm.DB
-	service Service
+	service module.Service
 }
 
-func NewController(db *gorm.DB, service Service) Controller {
-	return &controller{
+func NewAnswerHandler(db *gorm.DB, service module.Service) AnswerHandler {
+	return &answerHandler{
 		db:      db,
 		service: service,
 	}
 }
 
 // GET /api/answers?question_id=:question_id
-func (ctrl *controller) ApiGet(c *gin.Context) {
+func (ctrl *answerHandler) ApiGet(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req GetRequest
+	var req module.GetRequest
 	if err := helper.BindQuery(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
-	answers, err := ctrl.service.Get(GetDto{
+	answers, err := ctrl.service.Get(module.GetDto{
 		QuestionId: req.QuestionId,
 		AccountId:  accountId,
 	}, ctrl.db)
@@ -48,19 +49,19 @@ func (ctrl *controller) ApiGet(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, ToAnswerResponseList(answers))
+	c.JSON(200, module.ToAnswerResponseList(answers))
 }
 
 // POST /api/answers
-func (ctrl *controller) ApiPostOne(c *gin.Context) {
+func (ctrl *answerHandler) ApiPostOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req PostOneRequest
+	var req module.PostOneRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
-	answer, err := ctrl.service.CreateOne(CreateOneDto{
+	ans, err := ctrl.service.CreateOne(module.CreateOneDto{
 		QuestionId: req.QuestionId,
 		AccountId:  accountId,
 		CodeDef:    req.CodeDef,
@@ -71,19 +72,19 @@ func (ctrl *controller) ApiPostOne(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, ToAnswerResponse(answer))
+	c.JSON(201, module.ToAnswerResponse(ans))
 }
 
 // GET /api/answers/:answer_id
-func (ctrl *controller) ApiGetOne(c *gin.Context) {
+func (ctrl *answerHandler) ApiGetOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var uri AnswerUri
+	var uri module.AnswerUri
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
-	answer, err := ctrl.service.GetOne(GetOneDto{
+	ans, err := ctrl.service.GetOne(module.GetOneDto{
 		Id:        uri.AnswerId,
 		AccountId: accountId,
 	}, ctrl.db)
@@ -92,14 +93,14 @@ func (ctrl *controller) ApiGetOne(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, ToAnswerResponse(answer))
+	c.JSON(200, module.ToAnswerResponse(ans))
 }
 
 // PUT /api/answers/:answer_id
-func (ctrl *controller) ApiPutOne(c *gin.Context) {
+func (ctrl *answerHandler) ApiPutOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var uri AnswerUri
-	var req PutOneRequest
+	var uri module.AnswerUri
+	var req module.PutOneRequest
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
@@ -109,7 +110,7 @@ func (ctrl *controller) ApiPutOne(c *gin.Context) {
 		return
 	}
 
-	answer, err := ctrl.service.UpdateOne(UpdateOneDto{
+	ans, err := ctrl.service.UpdateOne(module.UpdateOneDto{
 		Id:        uri.AnswerId,
 		AccountId: accountId,
 		CodeDef:   req.CodeDef,
@@ -120,19 +121,19 @@ func (ctrl *controller) ApiPutOne(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, ToAnswerResponse(answer))
+	c.JSON(200, module.ToAnswerResponse(ans))
 }
 
 // DELETE /api/answers/:answer_id
-func (ctrl *controller) ApiDeleteOne(c *gin.Context) {
+func (ctrl *answerHandler) ApiDeleteOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var uri AnswerUri
+	var uri module.AnswerUri
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
-	err := ctrl.service.DeleteOne(DeleteOneDto{
+	err := ctrl.service.DeleteOne(module.DeleteOneDto{
 		Id:        uri.AnswerId,
 		AccountId: accountId,
 	}, ctrl.db)
@@ -145,31 +146,31 @@ func (ctrl *controller) ApiDeleteOne(c *gin.Context) {
 }
 
 // GET /api/admin/answers?account_id=:account_id&question_id=:question_id
-func (ctrl *controller) AdminGet(c *gin.Context) {
-	var req AdminGetRequest
+func (ctrl *answerHandler) AdminGet(c *gin.Context) {
+	var req module.AdminGetRequest
 	if err := helper.BindQuery(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
-	answers, err := ctrl.service.Get(GetDto(req), ctrl.db)
+	answers, err := ctrl.service.Get(module.GetDto(req), ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	c.JSON(200, ToAnswerResponseList(answers))
+	c.JSON(200, module.ToAnswerResponseList(answers))
 }
 
 // GET /api/admin/answers/:answer_id
-func (ctrl *controller) AdminGetOne(c *gin.Context) {
-	var uri AnswerUri
+func (ctrl *answerHandler) AdminGetOne(c *gin.Context) {
+	var uri module.AnswerUri
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
-	answer, err := ctrl.service.GetOne(GetOneDto{
+	ans, err := ctrl.service.GetOne(module.GetOneDto{
 		Id: uri.AnswerId,
 	}, ctrl.db)
 	if err != nil {
@@ -177,5 +178,5 @@ func (ctrl *controller) AdminGetOne(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, ToAnswerResponse(answer))
+	c.JSON(200, module.ToAnswerResponse(ans))
 }

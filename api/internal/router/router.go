@@ -7,6 +7,7 @@ import (
 	feature_answer "lv99/internal/feature/answer"
 	feature_chat "lv99/internal/feature/chat"
 	feature_comment "lv99/internal/feature/comment"
+	"lv99/internal/handler"
 	"lv99/internal/infrastructure/db"
 	"lv99/internal/infrastructure/externalapi"
 	"lv99/internal/module/account"
@@ -54,13 +55,13 @@ var featureCommentService = feature_comment.NewService(featureCommentQuery)
 var featureChatService = feature_chat.NewService(featureChatQuery)
 
 /* DI (Controller) */
-var authController = auth.NewController(gorm, authService, accountProfileService)
-var accountController = account.NewController(gorm, accountService)
-var accountProfileController = account_profile.NewController(gorm, accountProfileService)
-var questionController = question.NewController(gorm, questionService)
-var answerController = answer.NewController(gorm, answerService)
-var commentController = comment.NewController(gorm, commentService)
-var chatController = chat.NewController(gorm, chatService)
+var authController = handler.NewAuthHandler(gorm, authService, accountProfileService)
+var accountController = handler.NewAccountHandler(gorm, accountService)
+var accountProfileController = handler.NewAccountProfileHandler(gorm, accountProfileService)
+var questionController = handler.NewQuestionHandler(gorm, questionService)
+var answerController = handler.NewAnswerHandler(gorm, answerService)
+var commentController = handler.NewCommentHandler(gorm, commentService)
+var chatController = handler.NewChatHandler(gorm, chatService)
 
 var featureAccountController = feature_account.NewController(gorm, featureAccountService)
 var featureAnswerController = feature_answer.NewController(gorm, featureAnswerService)
