@@ -76,13 +76,11 @@ type QuestionHandler interface {
 }
 
 type questionHandler struct {
-	db      *gorm.DB
 	usecase usecase.Usecase
 }
 
-func NewQuestionHandler(db *gorm.DB, usecase usecase.Usecase) QuestionHandler {
+func NewQuestionHandler(usecase usecase.Usecase) QuestionHandler {
 	return &questionHandler{
-		db:      db,
 		usecase: usecase,
 	}
 }
@@ -93,7 +91,7 @@ func NewQuestionHandler(db *gorm.DB, usecase usecase.Usecase) QuestionHandler {
 
 // GET /api/questions
 func (ctrl *questionHandler) ApiGet(c *gin.Context) {
-	questions, err := ctrl.usecase.Get(usecase.GetDto{}, ctrl.db)
+	questions, err := ctrl.usecase.Get(usecase.GetDto{})
 	if err != nil {
 		c.Error(err)
 		return
@@ -109,7 +107,7 @@ func (ctrl *questionHandler) ApiGetOne(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-	question, err := ctrl.usecase.GetOne(usecase.GetOneDto{Id: uri.QuestionId}, ctrl.db)
+	question, err := ctrl.usecase.GetOne(usecase.GetOneDto{Id: uri.QuestionId})
 	if err != nil {
 		c.Error(err)
 		return
@@ -120,7 +118,7 @@ func (ctrl *questionHandler) ApiGetOne(c *gin.Context) {
 
 // GET /api/admin/questions
 func (ctrl *questionHandler) AdminGet(c *gin.Context) {
-	questions, err := ctrl.usecase.GetAll(usecase.GetAllDto{}, ctrl.db)
+	questions, err := ctrl.usecase.GetAll(usecase.GetAllDto{})
 	if err != nil {
 		c.Error(err)
 		return
@@ -136,7 +134,7 @@ func (ctrl *questionHandler) AdminGetOne(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-	question, err := ctrl.usecase.GetOne(usecase.GetOneDto{Id: uri.QuestionId}, ctrl.db)
+	question, err := ctrl.usecase.GetOne(usecase.GetOneDto{Id: uri.QuestionId})
 	if err != nil {
 		c.Error(err)
 		return
@@ -153,7 +151,7 @@ func (ctrl *questionHandler) AdminPostOne(c *gin.Context) {
 		return
 	}
 
-	question, err := ctrl.usecase.CreateOne(usecase.CreateOneDto(req), ctrl.db)
+	question, err := ctrl.usecase.CreateOne(usecase.CreateOneDto(req))
 	if err != nil {
 		c.Error(err)
 		return
@@ -181,7 +179,7 @@ func (ctrl *questionHandler) AdminPutOne(c *gin.Context) {
 		Content: req.Content,
 		Answer:  req.Answer,
 		Level:   req.Level,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -197,7 +195,7 @@ func (ctrl *questionHandler) AdminDeleteOne(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-	if err := ctrl.usecase.DeleteOne(usecase.DeleteOneDto{Id: uri.QuestionId}, ctrl.db); err != nil {
+	if err := ctrl.usecase.DeleteOne(usecase.DeleteOneDto{Id: uri.QuestionId}); err != nil {
 		c.Error(err)
 		return
 	}
@@ -213,7 +211,7 @@ func (ctrl *questionHandler) AdminRestoreOne(c *gin.Context) {
 		return
 	}
 
-	err := ctrl.usecase.RestoreOne(usecase.RestoreOneDto{Id: uri.QuestionId}, ctrl.db)
+	err := ctrl.usecase.RestoreOne(usecase.RestoreOneDto{Id: uri.QuestionId})
 	if err != nil {
 		c.Error(err)
 		return

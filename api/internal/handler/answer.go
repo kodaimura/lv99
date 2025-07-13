@@ -103,13 +103,11 @@ type AnswerHandler interface {
 }
 
 type answerHandler struct {
-	db      *gorm.DB
 	usecase usecase.Usecase
 }
 
 func NewAnswerHandler(db *gorm.DB, usecase usecase.Usecase) AnswerHandler {
 	return &answerHandler{
-		db:      db,
 		usecase: usecase,
 	}
 }
@@ -130,7 +128,7 @@ func (ctrl *answerHandler) ApiGet(c *gin.Context) {
 	answers, err := ctrl.usecase.Get(usecase.GetDto{
 		QuestionId: req.QuestionId,
 		AccountId:  accountId,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -153,7 +151,7 @@ func (ctrl *answerHandler) ApiPostOne(c *gin.Context) {
 		AccountId:  accountId,
 		CodeDef:    req.CodeDef,
 		CodeCall:   req.CodeCall,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -174,7 +172,7 @@ func (ctrl *answerHandler) ApiGetOne(c *gin.Context) {
 	answer, err := ctrl.usecase.GetOne(usecase.GetOneDto{
 		Id:        uri.AnswerId,
 		AccountId: accountId,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -202,7 +200,7 @@ func (ctrl *answerHandler) ApiPutOne(c *gin.Context) {
 		AccountId: accountId,
 		CodeDef:   req.CodeDef,
 		CodeCall:  req.CodeCall,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -223,7 +221,7 @@ func (ctrl *answerHandler) ApiDeleteOne(c *gin.Context) {
 	err := ctrl.usecase.DeleteOne(usecase.DeleteOneDto{
 		Id:        uri.AnswerId,
 		AccountId: accountId,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -240,7 +238,7 @@ func (ctrl *answerHandler) AdminGet(c *gin.Context) {
 		return
 	}
 
-	answers, err := ctrl.usecase.Get(usecase.GetDto(req), ctrl.db)
+	answers, err := ctrl.usecase.Get(usecase.GetDto(req))
 	if err != nil {
 		c.Error(err)
 		return
@@ -259,7 +257,7 @@ func (ctrl *answerHandler) AdminGetOne(c *gin.Context) {
 
 	ans, err := ctrl.usecase.GetOne(usecase.GetOneDto{
 		Id: uri.AnswerId,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return

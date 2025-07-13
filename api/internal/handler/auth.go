@@ -2,12 +2,10 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 
 	"lv99/config"
 	"lv99/internal/core"
 	"lv99/internal/helper"
-	"lv99/internal/module/auth"
 	usecase "lv99/internal/usecase/auth"
 )
 
@@ -62,13 +60,11 @@ type AuthHandler interface {
 }
 
 type authHandler struct {
-	db      *gorm.DB
 	usecase usecase.Usecase
 }
 
-func NewAuthHandler(db *gorm.DB, usecase usecase.Usecase) AuthHandler {
+func NewAuthHandler(usecase usecase.Usecase) AuthHandler {
 	return &authHandler{
-		db:      db,
 		usecase: usecase,
 	}
 }
@@ -79,13 +75,13 @@ func NewAuthHandler(db *gorm.DB, usecase usecase.Usecase) AuthHandler {
 
 // POST /api/accounts/signup
 func (ctrl *authHandler) ApiSignup(c *gin.Context) {
-	var req auth.SignupRequest
+	var req SignupRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
-	_, err := ctrl.usecase.Signup(usecase.SignupDto(req), ctrl.db)
+	_, err := ctrl.usecase.Signup(usecase.SignupDto(req))
 	if err != nil {
 		c.Error(err)
 		return
@@ -96,13 +92,13 @@ func (ctrl *authHandler) ApiSignup(c *gin.Context) {
 
 // POST /api/accounts/login
 func (ctrl *authHandler) ApiLogin(c *gin.Context) {
-	var req auth.LoginRequest
+	var req LoginRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
-	acct, accessToken, refreshToken, err := ctrl.usecase.Login(usecase.LoginDto(req), ctrl.db)
+	acct, accessToken, refreshToken, err := ctrl.usecase.Login(usecase.LoginDto(req))
 	if err != nil {
 		c.Error(err)
 		return
@@ -112,7 +108,7 @@ func (ctrl *authHandler) ApiLogin(c *gin.Context) {
 	helper.SetRefreshTokenCookie(c, refreshToken)
 	core.Logger.Info("account login: id=%d name=%s", acct.Id, acct.Name)
 
-	c.JSON(200, auth.LoginResponse{
+	c.JSON(200, LoginResponse{
 		AccountId:        acct.Id,
 		AccountRole:      acct.Role,
 		AccessToken:      accessToken,
@@ -126,7 +122,7 @@ func (ctrl *authHandler) ApiLogin(c *gin.Context) {
 func (ctrl *authHandler) ApiRefresh(c *gin.Context) {
 	refreshToken := helper.GetRefreshToken(c)
 
-	payload, accessToken, err := ctrl.usecase.Refresh(refreshToken, ctrl.db)
+	payload, accessToken, err := ctrl.usecase.Refresh(refreshToken)
 	if err != nil {
 		c.Error(err)
 		return
@@ -135,7 +131,7 @@ func (ctrl *authHandler) ApiRefresh(c *gin.Context) {
 	helper.SetAccessTokenCookie(c, accessToken)
 	core.Logger.Info("access token refreshed: id=%d name=%s", payload.AccountId, payload.AccountName)
 
-	c.JSON(200, auth.RefreshResponse{
+	c.JSON(200, RefreshResponse{
 		AccessToken: accessToken,
 		ExpiresIn:   config.AccessTokenExpiresSeconds,
 	})
@@ -153,7 +149,7 @@ func (ctrl *authHandler) ApiLogout(c *gin.Context) {
 func (ctrl *authHandler) ApiPutMePassword(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 
-	var req auth.PutMePasswordRequest
+	var req PutMePasswordRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
@@ -163,7 +159,7 @@ func (ctrl *authHandler) ApiPutMePassword(c *gin.Context) {
 		Id:          accountId,
 		OldPassword: req.OldPassword,
 		NewPassword: req.NewPassword,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return

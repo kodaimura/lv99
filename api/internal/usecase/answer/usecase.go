@@ -12,54 +12,57 @@ import (
 )
 
 type Usecase interface {
-	Get(in GetDto, db *gorm.DB) ([]answerModule.Answer, error)
-	GetOne(in GetOneDto, db *gorm.DB) (answerModule.Answer, error)
-	CreateOne(in CreateOneDto, db *gorm.DB) (answerModule.Answer, error)
-	UpdateOne(in UpdateOneDto, db *gorm.DB) (answerModule.Answer, error)
-	DeleteOne(in DeleteOneDto, db *gorm.DB) error
+	Get(in GetDto) ([]answerModule.Answer, error)
+	GetOne(in GetOneDto) (answerModule.Answer, error)
+	CreateOne(in CreateOneDto) (answerModule.Answer, error)
+	UpdateOne(in UpdateOneDto) (answerModule.Answer, error)
+	DeleteOne(in DeleteOneDto) error
 }
 
 type usecase struct {
+	db              *gorm.DB
 	answerService   answerModule.Service
 	questionService questionModule.Service
 	executorService executor.Service
 }
 
 func NewUsecase(
+	db *gorm.DB,
 	answerService answerModule.Service,
 	questionService questionModule.Service,
 	executorService executor.Service,
 ) Usecase {
 	return &usecase{
+		db:              db,
 		answerService:   answerService,
 		questionService: questionService,
 		executorService: executorService,
 	}
 }
 
-func (srv *usecase) Get(in GetDto, db *gorm.DB) ([]answerModule.Answer, error) {
-	return srv.answerService.Get(answerModule.Answer{
+func (uc *usecase) Get(in GetDto) ([]answerModule.Answer, error) {
+	return uc.answerService.Get(answerModule.Answer{
 		QuestionId: in.QuestionId,
 		AccountId:  in.AccountId,
-	}, db)
+	}, uc.db)
 }
 
-func (srv *usecase) GetOne(in GetOneDto, db *gorm.DB) (answerModule.Answer, error) {
-	return srv.answerService.GetOne(answerModule.Answer{
+func (uc *usecase) GetOne(in GetOneDto) (answerModule.Answer, error) {
+	return uc.answerService.GetOne(answerModule.Answer{
 		Id:        in.Id,
 		AccountId: in.AccountId,
-	}, db)
+	}, uc.db)
 }
 
-func (srv *usecase) CreateOne(in CreateOneDto, db *gorm.DB) (answerModule.Answer, error) {
-	result, err := srv.executorService.Execute(executor.CodeExecRequest{
+func (uc *usecase) CreateOne(in CreateOneDto) (answerModule.Answer, error) {
+	result, err := uc.executorService.Execute(executor.CodeExecRequest{
 		CodeDef:  in.CodeDef,
 		CodeCall: in.CodeCall,
 	})
 	if err != nil {
 		return answerModule.Answer{}, err
 	}
-	q, err := srv.questionService.GetOne(questionModule.Question{Id: in.QuestionId}, db)
+	q, err := uc.questionService.GetOne(questionModule.Question{Id: in.QuestionId}, uc.db)
 	if err != nil {
 		core.Logger.Error(err.Error())
 		return answerModule.Answer{}, core.ErrBadRequest
@@ -73,7 +76,7 @@ func (srv *usecase) CreateOne(in CreateOneDto, db *gorm.DB) (answerModule.Answer
 		correctAt = &now
 	}
 
-	return srv.answerService.CreateOne(answerModule.Answer{
+	return uc.answerService.CreateOne(answerModule.Answer{
 		QuestionId: in.QuestionId,
 		AccountId:  in.AccountId,
 		CodeDef:    in.CodeDef,
@@ -82,26 +85,26 @@ func (srv *usecase) CreateOne(in CreateOneDto, db *gorm.DB) (answerModule.Answer
 		CallError:  result.Error,
 		IsCorrect:  isCorrect,
 		CorrectAt:  correctAt,
-	}, db)
+	}, uc.db)
 }
 
-func (srv *usecase) UpdateOne(in UpdateOneDto, db *gorm.DB) (answerModule.Answer, error) {
-	ans, err := srv.answerService.GetOne(answerModule.Answer{
+func (uc *usecase) UpdateOne(in UpdateOneDto) (answerModule.Answer, error) {
+	ans, err := uc.answerService.GetOne(answerModule.Answer{
 		Id:        in.Id,
 		AccountId: in.AccountId,
-	}, db)
+	}, uc.db)
 	if err != nil {
 		return answerModule.Answer{}, err
 	}
 
-	result, err := srv.executorService.Execute(executor.CodeExecRequest{
+	result, err := uc.executorService.Execute(executor.CodeExecRequest{
 		CodeDef:  in.CodeDef,
 		CodeCall: in.CodeCall,
 	})
 	if err != nil {
 		return answerModule.Answer{}, err
 	}
-	q, err := srv.questionService.GetOne(questionModule.Question{Id: ans.QuestionId}, db)
+	q, err := uc.questionService.GetOne(questionModule.Question{Id: ans.QuestionId}, uc.db)
 	if err != nil {
 		return answerModule.Answer{}, err
 	}
@@ -117,12 +120,12 @@ func (srv *usecase) UpdateOne(in UpdateOneDto, db *gorm.DB) (answerModule.Answer
 		ans.CorrectAt = &now
 	}
 
-	return srv.answerService.UpdateOne(ans, db)
+	return uc.answerService.UpdateOne(ans, uc.db)
 }
 
-func (srv *usecase) DeleteOne(in DeleteOneDto, db *gorm.DB) error {
-	return srv.answerService.DeleteOne(answerModule.Answer{
+func (uc *usecase) DeleteOne(in DeleteOneDto) error {
+	return uc.answerService.DeleteOne(answerModule.Answer{
 		Id:        in.Id,
 		AccountId: in.AccountId,
-	}, db)
+	}, uc.db)
 }

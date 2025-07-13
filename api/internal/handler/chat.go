@@ -83,13 +83,11 @@ type ChatHandler interface {
 }
 
 type chatHandler struct {
-	db      *gorm.DB
 	usecase usecase.Usecase
 }
 
-func NewChatHandler(db *gorm.DB, usecase usecase.Usecase) ChatHandler {
+func NewChatHandler(usecase usecase.Usecase) ChatHandler {
 	return &chatHandler{
-		db:      db,
 		usecase: usecase,
 	}
 }
@@ -125,7 +123,7 @@ func (ctrl *chatHandler) ApiGet(c *gin.Context) {
 		ToId:   uri.ToId,
 		Before: before,
 		Limit:  30,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -147,7 +145,7 @@ func (ctrl *chatHandler) ApiRead(c *gin.Context) {
 	err := ctrl.usecase.Read(usecase.ReadDto{
 		FromId: req.FromId,
 		ToId:   accountId,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -237,7 +235,7 @@ func (ctrl *chatHandler) WsConnect(c *gin.Context) {
 			FromId:  accountId,
 			ToId:    req.ToId,
 			Message: req.Message,
-		}, ctrl.db)
+		})
 		if err != nil {
 			core.Logger.Error(err.Error())
 			socketsMutex.Unlock()

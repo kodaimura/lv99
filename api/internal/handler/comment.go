@@ -71,13 +71,11 @@ type CommentHandler interface {
 }
 
 type commentHandler struct {
-	db      *gorm.DB
 	usecase usecase.Usecase
 }
 
-func NewCommentHandler(db *gorm.DB, usecase usecase.Usecase) CommentHandler {
+func NewCommentHandler(usecase usecase.Usecase) CommentHandler {
 	return &commentHandler{
-		db:      db,
 		usecase: usecase,
 	}
 }
@@ -96,7 +94,7 @@ func (ctrl *commentHandler) ApiGet(c *gin.Context) {
 
 	comments, err := ctrl.usecase.Get(usecase.GetDto{
 		AnswerId: req.AnswerId,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -118,7 +116,7 @@ func (ctrl *commentHandler) ApiPostOne(c *gin.Context) {
 		AnswerId:  req.AnswerId,
 		AccountId: accountId,
 		Content:   req.Content,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -139,7 +137,7 @@ func (ctrl *commentHandler) ApiGetOne(c *gin.Context) {
 	comment, err := ctrl.usecase.GetOne(usecase.GetOneDto{
 		Id:        uri.CommentId,
 		AccountId: accountId,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -166,7 +164,7 @@ func (ctrl *commentHandler) ApiPutOne(c *gin.Context) {
 		Id:        uri.CommentId,
 		AccountId: accountId,
 		Content:   req.Content,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -187,7 +185,7 @@ func (ctrl *commentHandler) ApiDeleteOne(c *gin.Context) {
 	err := ctrl.usecase.DeleteOne(usecase.DeleteOneDto{
 		Id:        uri.CommentId,
 		AccountId: accountId,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return

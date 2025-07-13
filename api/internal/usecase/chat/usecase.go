@@ -8,41 +8,49 @@ import (
 )
 
 type Usecase interface {
-	Get(in GetDto, db *gorm.DB) ([]chatModule.Chat, error)
-	CreateOne(in CreateOneDto, db *gorm.DB) (chatModule.Chat, error)
-	UpdateOne(in UpdateOneDto, db *gorm.DB) (chatModule.Chat, error)
-	DeleteOne(in DeleteOneDto, db *gorm.DB) error
-	Read(in ReadDto, db *gorm.DB) error
-	Paginate(in PaginateDto, db *sqlx.DB) ([]chatModule.Chat, error)
+	Get(in GetDto) ([]chatModule.Chat, error)
+	CreateOne(in CreateOneDto) (chatModule.Chat, error)
+	UpdateOne(in UpdateOneDto) (chatModule.Chat, error)
+	DeleteOne(in DeleteOneDto) error
+	Read(in ReadDto) error
+	Paginate(in PaginateDto) ([]chatModule.Chat, error)
 }
 
 type usecase struct {
+	db          *gorm.DB
+	dbx         *sqlx.DB
 	chatService chatModule.Service
 }
 
-func NewUsecase(chatService chatModule.Service) Usecase {
+func NewUsecase(
+	db *gorm.DB,
+	dbx *sqlx.DB,
+	chatService chatModule.Service,
+) Usecase {
 	return &usecase{
+		db:          db,
+		dbx:         dbx,
 		chatService: chatService,
 	}
 }
 
-func (srv *usecase) Get(in GetDto, db *gorm.DB) ([]chatModule.Chat, error) {
-	return srv.chatService.Get(chatModule.Chat{
+func (uc *usecase) Get(in GetDto) ([]chatModule.Chat, error) {
+	return uc.chatService.Get(chatModule.Chat{
 		FromId: in.FromId,
 		ToId:   in.ToId,
-	}, db)
+	}, uc.db)
 }
 
-func (srv *usecase) CreateOne(in CreateOneDto, db *gorm.DB) (chatModule.Chat, error) {
-	return srv.chatService.CreateOne(chatModule.Chat{
+func (uc *usecase) CreateOne(in CreateOneDto) (chatModule.Chat, error) {
+	return uc.chatService.CreateOne(chatModule.Chat{
 		FromId:  in.FromId,
 		ToId:    in.ToId,
 		Message: in.Message,
-	}, db)
+	}, uc.db)
 }
 
-func (srv *usecase) UpdateOne(in UpdateOneDto, db *gorm.DB) (chatModule.Chat, error) {
-	chat, err := srv.chatService.GetOne(chatModule.Chat{Id: in.Id}, db)
+func (uc *usecase) UpdateOne(in UpdateOneDto) (chatModule.Chat, error) {
+	chat, err := uc.chatService.GetOne(chatModule.Chat{Id: in.Id}, uc.db)
 	if err != nil {
 		return chatModule.Chat{}, err
 	}
@@ -51,17 +59,17 @@ func (srv *usecase) UpdateOne(in UpdateOneDto, db *gorm.DB) (chatModule.Chat, er
 	if in.IsRead {
 		chat.IsRead = in.IsRead
 	}
-	return srv.chatService.UpdateOne(chat, db)
+	return uc.chatService.UpdateOne(chat, uc.db)
 }
 
-func (srv *usecase) DeleteOne(in DeleteOneDto, db *gorm.DB) error {
-	return srv.chatService.DeleteOne(chatModule.Chat{Id: in.Id}, db)
+func (uc *usecase) DeleteOne(in DeleteOneDto) error {
+	return uc.chatService.DeleteOne(chatModule.Chat{Id: in.Id}, uc.db)
 }
 
-func (srv *usecase) Read(in ReadDto, db *gorm.DB) error {
-	return srv.chatService.Read(chatModule.Chat{FromId: in.FromId, ToId: in.ToId}, db)
+func (uc *usecase) Read(in ReadDto) error {
+	return uc.chatService.Read(chatModule.Chat{FromId: in.FromId, ToId: in.ToId}, uc.db)
 }
 
-func (srv *usecase) Paginate(in PaginateDto, db *sqlx.DB) ([]chatModule.Chat, error) {
-	return srv.chatService.Paginate(in.FromId, in.ToId, in.Before, in.Limit, db)
+func (uc *usecase) Paginate(in PaginateDto) ([]chatModule.Chat, error) {
+	return uc.chatService.Paginate(in.FromId, in.ToId, in.Before, in.Limit, uc.dbx)
 }

@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 
 	"lv99/internal/helper"
 	profileModule "lv99/internal/module/account_profile"
@@ -63,13 +62,11 @@ type AccountProfileHandler interface {
 }
 
 type accountProfileHandler struct {
-	db      *gorm.DB
 	usecase usecase.Usecase
 }
 
-func NewAccountProfileHandler(db *gorm.DB, usecase usecase.Usecase) AccountProfileHandler {
+func NewAccountProfileHandler(usecase usecase.Usecase) AccountProfileHandler {
 	return &accountProfileHandler{
-		db:      db,
 		usecase: usecase,
 	}
 }
@@ -82,7 +79,7 @@ func NewAccountProfileHandler(db *gorm.DB, usecase usecase.Usecase) AccountProfi
 func (ctrl *accountProfileHandler) ApiGetMe(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 
-	profile, err := ctrl.usecase.GetOne(usecase.GetOneDto{AccountId: accountId}, ctrl.db)
+	profile, err := ctrl.usecase.GetOne(usecase.GetOneDto{AccountId: accountId})
 	if err != nil {
 		c.Error(err)
 		return
@@ -106,7 +103,7 @@ func (ctrl *accountProfileHandler) ApiPutMe(c *gin.Context) {
 		DisplayName: req.DisplayName,
 		Bio:         req.Bio,
 		AvatarURL:   req.AvatarURL,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return

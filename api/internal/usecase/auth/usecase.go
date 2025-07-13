@@ -13,36 +13,39 @@ import (
 )
 
 type Usecase interface {
-	Signup(in SignupDto, db *gorm.DB) (accountModule.Account, error)
-	Login(in LoginDto, db *gorm.DB) (accountModule.Account, string, string, error)
-	Refresh(refreshToken string, db *gorm.DB) (core.AuthPayload, string, error)
-	UpdatePassword(in UpdatePasswordDto, db *gorm.DB) error
+	Signup(in SignupDto) (accountModule.Account, error)
+	Login(in LoginDto) (accountModule.Account, string, string, error)
+	Refresh(refreshToken string) (core.AuthPayload, string, error)
+	UpdatePassword(in UpdatePasswordDto) error
 }
 
 type usecase struct {
+	db                    *gorm.DB
 	accountService        accountModule.Service
 	accountProfileService profileModule.Service
 }
 
 func NewUsecase(
+	db *gorm.DB,
 	accountService accountModule.Service,
 	accountProfileService profileModule.Service,
 ) Usecase {
 	return &usecase{
+		db:                    db,
 		accountService:        accountService,
 		accountProfileService: accountProfileService,
 	}
 }
 
-func (srv *usecase) Signup(in SignupDto, db *gorm.DB) (accountModule.Account, error) {
+func (uc *usecase) Signup(in SignupDto) (accountModule.Account, error) {
 	var account accountModule.Account
-	err := db.Transaction(func(tx *gorm.DB) error {
+	err := uc.db.Transaction(func(tx *gorm.DB) error {
 		hashed, err := hashPassword(in.Password)
 		if err != nil {
 			return err
 		}
 
-		account, err = srv.accountService.CreateOne(accountModule.Account{
+		account, err = uc.accountService.CreateOne(accountModule.Account{
 			Name:     in.Name,
 			Password: string(hashed),
 			Role:     helper.ACCOUNT_ROLE_NOMAL,
@@ -52,7 +55,7 @@ func (srv *usecase) Signup(in SignupDto, db *gorm.DB) (accountModule.Account, er
 			return err
 		}
 
-		_, err = srv.accountProfileService.CreateOne(profileModule.AccountProfile{
+		_, err = uc.accountProfileService.CreateOne(profileModule.AccountProfile{
 			AccountId:   account.Id,
 			DisplayName: account.Name,
 			Bio:         "",
@@ -64,8 +67,8 @@ func (srv *usecase) Signup(in SignupDto, db *gorm.DB) (accountModule.Account, er
 	return account, err
 }
 
-func (srv *usecase) Login(in LoginDto, db *gorm.DB) (accountModule.Account, string, string, error) {
-	acct, err := srv.accountService.GetOne(accountModule.Account{Name: in.Name}, db)
+func (uc *usecase) Login(in LoginDto) (accountModule.Account, string, string, error) {
+	acct, err := uc.accountService.GetOne(accountModule.Account{Name: in.Name}, uc.db)
 	if err != nil {
 		if errors.Is(err, core.ErrNotFound) {
 			return accountModule.Account{}, "", "", core.ErrUnauthorized
@@ -97,7 +100,7 @@ func (srv *usecase) Login(in LoginDto, db *gorm.DB) (accountModule.Account, stri
 	return acct, accessToken, refreshToken, nil
 }
 
-func (srv *usecase) Refresh(refreshToken string, db *gorm.DB) (core.AuthPayload, string, error) {
+func (uc *usecase) Refresh(refreshToken string) (core.AuthPayload, string, error) {
 	payload, err := core.Auth.VerifyRefreshToken(refreshToken)
 	if err != nil {
 		return core.AuthPayload{}, "", core.NewAppError("invalid or expired refresh token", core.ErrCodeUnauthorized)
@@ -112,8 +115,8 @@ func (srv *usecase) Refresh(refreshToken string, db *gorm.DB) (core.AuthPayload,
 	return payload, accessToken, err
 }
 
-func (srv *usecase) UpdatePassword(in UpdatePasswordDto, db *gorm.DB) error {
-	acct, err := srv.accountService.GetOne(accountModule.Account{Id: in.Id}, db)
+func (uc *usecase) UpdatePassword(in UpdatePasswordDto) error {
+	acct, err := uc.accountService.GetOne(accountModule.Account{Id: in.Id}, uc.db)
 	if err != nil {
 		return err
 	}
@@ -126,7 +129,7 @@ func (srv *usecase) UpdatePassword(in UpdatePasswordDto, db *gorm.DB) error {
 		return err
 	}
 	acct.Password = string(hashed)
-	_, err = srv.accountService.UpdateOne(acct, db)
+	_, err = uc.accountService.UpdateOne(acct, uc.db)
 	return err
 }
 

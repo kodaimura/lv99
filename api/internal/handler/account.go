@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 
 	"lv99/internal/helper"
 	accountModule "lv99/internal/module/account"
@@ -60,13 +59,11 @@ type AccountHandler interface {
 }
 
 type accountHandler struct {
-	db      *gorm.DB
 	usecase usecase.Usecase
 }
 
-func NewAccountHandler(db *gorm.DB, usecase usecase.Usecase) AccountHandler {
+func NewAccountHandler(usecase usecase.Usecase) AccountHandler {
 	return &accountHandler{
-		db:      db,
 		usecase: usecase,
 	}
 }
@@ -78,7 +75,7 @@ func NewAccountHandler(db *gorm.DB, usecase usecase.Usecase) AccountHandler {
 // GET /api/accounts/me
 func (ctrl *accountHandler) ApiGetMe(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	account, err := ctrl.usecase.GetOne(usecase.GetOneDto{Id: accountId}, ctrl.db)
+	account, err := ctrl.usecase.GetOne(usecase.GetOneDto{Id: accountId})
 	if err != nil {
 		c.Error(err)
 		return
@@ -100,7 +97,7 @@ func (ctrl *accountHandler) ApiPutMe(c *gin.Context) {
 	account, err := ctrl.usecase.UpdateOne(usecase.UpdateOneDto{
 		Id:   accountId,
 		Name: req.Name,
-	}, ctrl.db)
+	})
 	if err != nil {
 		c.Error(err)
 		return
@@ -112,7 +109,7 @@ func (ctrl *accountHandler) ApiPutMe(c *gin.Context) {
 // DELETE /api/accounts/me
 func (ctrl *accountHandler) ApiDeleteMe(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	if err := ctrl.usecase.DeleteOne(usecase.DeleteOneDto{Id: accountId}, ctrl.db); err != nil {
+	if err := ctrl.usecase.DeleteOne(usecase.DeleteOneDto{Id: accountId}); err != nil {
 		c.Error(err)
 		return
 	}

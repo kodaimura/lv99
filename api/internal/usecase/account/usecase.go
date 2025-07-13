@@ -7,34 +7,39 @@ import (
 )
 
 type Usecase interface {
-	Get(in GetDto, db *gorm.DB) ([]accountModule.Account, error)
-	GetOne(in GetOneDto, db *gorm.DB) (accountModule.Account, error)
-	UpdateOne(in UpdateOneDto, db *gorm.DB) (accountModule.Account, error)
-	DeleteOne(in DeleteOneDto, db *gorm.DB) error
+	Get(in GetDto) ([]accountModule.Account, error)
+	GetOne(in GetOneDto) (accountModule.Account, error)
+	UpdateOne(in UpdateOneDto) (accountModule.Account, error)
+	DeleteOne(in DeleteOneDto) error
 }
 
 type usecase struct {
+	db             *gorm.DB
 	accountService accountModule.Service
 }
 
-func NewUsecase(accountService accountModule.Service) Usecase {
+func NewUsecase(
+	db *gorm.DB,
+	accountService accountModule.Service,
+) Usecase {
 	return &usecase{
+		db:             db,
 		accountService: accountService,
 	}
 }
 
-func (uc *usecase) Get(in GetDto, db *gorm.DB) ([]accountModule.Account, error) {
-	return uc.accountService.Get(accountModule.Account{}, db)
+func (uc *usecase) Get(in GetDto) ([]accountModule.Account, error) {
+	return uc.accountService.Get(accountModule.Account{}, uc.db)
 }
 
-func (uc *usecase) GetOne(in GetOneDto, db *gorm.DB) (accountModule.Account, error) {
-	return uc.accountService.GetOne(accountModule.Account{Id: in.Id}, db)
+func (uc *usecase) GetOne(in GetOneDto) (accountModule.Account, error) {
+	return uc.accountService.GetOne(accountModule.Account{Id: in.Id}, uc.db)
 }
 
-func (uc *usecase) UpdateOne(in UpdateOneDto, db *gorm.DB) (accountModule.Account, error) {
-	return uc.accountService.UpdateOne(accountModule.Account{Id: in.Id, Name: in.Name}, db)
+func (uc *usecase) UpdateOne(in UpdateOneDto) (accountModule.Account, error) {
+	return uc.accountService.UpdateOne(accountModule.Account{Id: in.Id, Name: in.Name}, uc.db)
 }
 
-func (uc *usecase) DeleteOne(in DeleteOneDto, db *gorm.DB) error {
-	return uc.accountService.DeleteOne(accountModule.Account{Id: in.Id}, db)
+func (uc *usecase) DeleteOne(in DeleteOneDto) error {
+	return uc.accountService.DeleteOne(accountModule.Account{Id: in.Id}, uc.db)
 }
