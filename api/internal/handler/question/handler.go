@@ -92,7 +92,7 @@ func (h *handler) AdminGetOne(c *gin.Context) {
 
 // POST /api/admin/questions
 func (h *handler) AdminPostOne(c *gin.Context) {
-	var req PostQuestionRequest
+	var req PostOneRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
@@ -110,7 +110,7 @@ func (h *handler) AdminPostOne(c *gin.Context) {
 // PUT /api/admin/questions/:question_id
 func (h *handler) AdminPutOne(c *gin.Context) {
 	var uri QuestionUri
-	var req PutQuestionRequest
+	var req PutOneRequest
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return

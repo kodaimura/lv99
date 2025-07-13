@@ -43,45 +43,46 @@ var sqlx = db.NewSqlxDB()
 /* DI (Repository) */
 var accountRepository = account.NewRepository()
 var accountProfileRepository = account_profile.NewRepository()
-var questionRepository = question.NewRepository()
 var answerRepository = answer.NewRepository()
-var commentRepository = comment.NewRepository()
 var chatRepository = chat.NewRepository()
+var commentRepository = comment.NewRepository()
+var questionRepository = question.NewRepository()
 
 /* DI (Service) */
 var accountService = account.NewService(accountRepository)
 var accountProfileService = account_profile.NewService(accountProfileRepository)
-var questionService = question.NewService(questionRepository)
 var answerService = answer.NewService(answerRepository)
-var commentService = comment.NewService(commentRepository)
 var chatService = chat.NewService(chatRepository)
+var commentService = comment.NewService(commentRepository)
+var questionService = question.NewService(questionRepository)
 
 /* DI (Usecase) */
 var authUsecase = auth_uc.NewUsecase(gorm, accountService, accountProfileService)
 var accountUsecase = account_uc.NewUsecase(gorm, accountService)
-var accountExUsecase = account_extended_uc.NewUsecase(gorm, sqlx)
 var accountProfileUsecase = account_profile_uc.NewUsecase(gorm, accountProfileService)
 var questionUsecase = question_uc.NewUsecase(gorm, questionService)
 var answerUsecase = answer_uc.NewUsecase(gorm, answerService, questionService)
-var answerExUsecase = answer_extended_uc.NewUsecase(gorm, sqlx)
-var commentUsecase = comment_uc.NewUsecase(gorm, commentService)
-var commentExUsecase = comment_extended_uc.NewUsecase(gorm, sqlx)
 var chatUsecase = chat_uc.NewUsecase(gorm, sqlx, chatService)
+var commentUsecase = comment_uc.NewUsecase(gorm, commentService)
+
+var accountExUsecase = account_extended_uc.NewUsecase(gorm, sqlx)
+var answerExUsecase = answer_extended_uc.NewUsecase(gorm, sqlx)
 var chatExUsecase = chat_extended_uc.NewUsecase(gorm, sqlx)
+var commentExUsecase = comment_extended_uc.NewUsecase(gorm, sqlx)
 
 /* DI (Handler) */
-var authHandler = auth_h.NewHandler(authUsecase)
 var accountHandler = account_h.NewHandler(accountUsecase)
 var accountProfileHandler = account_profile_h.NewHandler(accountProfileUsecase)
-var questionHandler = question_h.NewHandler(questionUsecase)
+var authHandler = auth_h.NewHandler(authUsecase)
 var answerHandler = answer_h.NewHandler(answerUsecase)
-var commentHandler = comment_h.NewHandler(commentUsecase)
 var chatHandler = chat_h.NewHandler(chatUsecase)
+var commentHandler = comment_h.NewHandler(commentUsecase)
+var questionHandler = question_h.NewHandler(questionUsecase)
 
 var accountExHandler = account_extended_h.NewHandler(accountExUsecase)
 var answerExHandler = answer_extended_h.NewHandler(answerExUsecase)
-var commentExHandler = comment_extended_h.NewHandler(commentExUsecase)
 var chatExHandler = chat_extended_h.NewHandler(chatExUsecase)
+var commentExHandler = comment_extended_h.NewHandler(commentExUsecase)
 
 func SetApi(r *gin.RouterGroup) {
 	r.Use(ApiErrorHandler())

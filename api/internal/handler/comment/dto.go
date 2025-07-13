@@ -46,11 +46,11 @@ type GetCommentsRequest struct {
 	AnswerId int `form:"answer_id"`
 }
 
-type PostCommentRequest struct {
+type PostOneRequest struct {
 	AnswerId int    `json:"answer_id" binding:"required"`
 	Content  string `json:"content" binding:"required"`
 }
 
-type PutCommentRequest struct {
+type PutOneRequest struct {
 	Content string `json:"content" binding:"required"`
 }

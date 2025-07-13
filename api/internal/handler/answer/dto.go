@@ -64,22 +64,22 @@ type QuestionAnswerUri struct {
 	AnswerId   int `uri:"answer_id" binding:"required"`
 }
 
-type GetAnswersRequest struct {
+type GetRequest struct {
 	QuestionId int `form:"question_id"`
 }
 
-type PostAnswersRequest struct {
+type PostOneRequest struct {
 	QuestionId int    `json:"question_id" binding:"required"`
 	CodeDef    string `json:"code_def" binding:"required"`
 	CodeCall   string `json:"code_call" binding:"required"`
 }
 
-type PutAnswerRequest struct {
+type PutOneRequest struct {
 	CodeDef  string `json:"code_def" binding:"required"`
 	CodeCall string `json:"code_call" binding:"required"`
 }
 
-type AdminGetAnswersRequest struct {
+type AdminGetRequest struct {
 	AccountId  int `form:"account_id"`
 	QuestionId int `form:"question_id"`
 }

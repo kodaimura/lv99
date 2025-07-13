@@ -60,6 +60,6 @@ type GetChatsRequest struct {
 	Message string `json:"message" binding:"required"`
 }
 
-type PutChatsReadRequest struct {
+type PutReadRequest struct {
 	FromId int `json:"from_id" binding:"required"`
 }

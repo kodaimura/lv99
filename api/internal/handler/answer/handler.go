@@ -39,7 +39,7 @@ func NewHandler(usecase usecase.Usecase) Handler {
 // GET /api/answers?question_id=:question_id
 func (h *handler) ApiGet(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req GetAnswersRequest
+	var req GetRequest
 	if err := helper.BindQuery(c, &req); err != nil {
 		c.Error(err)
 		return
@@ -60,7 +60,7 @@ func (h *handler) ApiGet(c *gin.Context) {
 // POST /api/answers
 func (h *handler) ApiPostOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req PostAnswersRequest
+	var req PostOneRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
@@ -105,7 +105,7 @@ func (h *handler) ApiGetOne(c *gin.Context) {
 func (h *handler) ApiPutOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 	var uri AnswerUri
-	var req PutAnswerRequest
+	var req PutOneRequest
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
@@ -152,7 +152,7 @@ func (h *handler) ApiDeleteOne(c *gin.Context) {
 
 // GET /api/admin/answers?account_id=:account_id&question_id=:question_id
 func (h *handler) AdminGet(c *gin.Context) {
-	var req AdminGetAnswersRequest
+	var req AdminGetRequest
 	if err := helper.BindQuery(c, &req); err != nil {
 		c.Error(err)
 		return

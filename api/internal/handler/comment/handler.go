@@ -55,7 +55,7 @@ func (h *handler) ApiGet(c *gin.Context) {
 // POST /api/comments
 func (h *handler) ApiPostOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
-	var req PostCommentRequest
+	var req PostOneRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
@@ -99,7 +99,7 @@ func (h *handler) ApiGetOne(c *gin.Context) {
 func (h *handler) ApiPutOne(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 	var uri CommentUri
-	var req PutCommentRequest
+	var req PutOneRequest
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return

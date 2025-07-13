@@ -40,6 +40,6 @@ func ToAccountResponseList(models []accountModule.Account) []AccountResponse {
 // DTO（Request）
 // -----------------------------
 
-type PutAccountMeRequest struct {
+type PutMeRequest struct {
 	Name string `json:"name" binding:"required"`
 }

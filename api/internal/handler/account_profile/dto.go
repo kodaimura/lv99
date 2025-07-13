@@ -45,7 +45,7 @@ type AccountUri struct {
 	AccountId int `uri:"account_id" binding:"required"`
 }
 
-type PutAccountMeProfileRequest struct {
+type PutMeRequest struct {
 	DisplayName string `json:"display_name" binding:"required"`
 	Bio         string `json:"bio" binding:"omitempty"`
 	AvatarURL   string `json:"avatar_url" binding:"omitempty,url"`

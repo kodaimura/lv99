@@ -47,7 +47,7 @@ func (h *handler) ApiGetMe(c *gin.Context) {
 func (h *handler) ApiPutMe(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 
-	var req PutAccountMeRequest
+	var req PutMeRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
