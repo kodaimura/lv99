@@ -3,8 +3,8 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 
-	"lv99/internal/infrastructure/db"
-	"lv99/internal/infrastructure/externalapi"
+	"lv99/internal/adapter/db"
+	"lv99/internal/adapter/externalapi"
 
 	"lv99/internal/module/account"
 	"lv99/internal/module/account_profile"
