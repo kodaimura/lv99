@@ -8,11 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"lv99/config"
+	"lv99/internal/adapter/auth"
+	"lv99/internal/adapter/externalapi"
+	"lv99/internal/adapter/file"
+	"lv99/internal/adapter/logger"
+	"lv99/internal/adapter/mailer"
 	"lv99/internal/core"
-	"lv99/internal/infrastructure/auth"
-	"lv99/internal/infrastructure/file"
-	"lv99/internal/infrastructure/logger"
-	"lv99/internal/infrastructure/mailer"
 	"lv99/internal/router"
 )
 
@@ -27,6 +28,7 @@ func main() {
 	core.SetLogger(logger.NewMultiLogger(f2))
 	core.SetMailer(mailer.NewSmtpMailer())
 	core.SetAuth(auth.NewJwtAuth())
+	core.SetCodeExecutor(externalapi.NewHttpCodeExecutor())
 
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
