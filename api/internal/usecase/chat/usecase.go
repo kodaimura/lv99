@@ -50,7 +50,9 @@ func (uc *usecase) CreateOne(in CreateOneDto) (chatModule.Chat, error) {
 }
 
 func (uc *usecase) UpdateOne(in UpdateOneDto) (chatModule.Chat, error) {
-	chat, err := uc.chatService.GetOne(chatModule.Chat{Id: in.Id}, uc.db)
+	chat, err := uc.chatService.GetOne(chatModule.Chat{
+		Id: in.Id,
+	}, uc.db)
 	if err != nil {
 		return chatModule.Chat{}, err
 	}
@@ -63,11 +65,16 @@ func (uc *usecase) UpdateOne(in UpdateOneDto) (chatModule.Chat, error) {
 }
 
 func (uc *usecase) DeleteOne(in DeleteOneDto) error {
-	return uc.chatService.DeleteOne(chatModule.Chat{Id: in.Id}, uc.db)
+	return uc.chatService.DeleteOne(chatModule.Chat{
+		Id: in.Id,
+	}, uc.db)
 }
 
 func (uc *usecase) Read(in ReadDto) error {
-	return uc.chatService.Read(chatModule.Chat{FromId: in.FromId, ToId: in.ToId}, uc.db)
+	return uc.chatService.Read(chatModule.Chat{
+		FromId: in.FromId,
+		ToId:   in.ToId,
+	}, uc.db)
 }
 
 func (uc *usecase) Paginate(in PaginateDto) ([]chatModule.Chat, error) {

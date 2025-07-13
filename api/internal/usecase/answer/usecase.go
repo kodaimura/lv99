@@ -58,7 +58,10 @@ func (uc *usecase) CreateOne(in CreateOneDto) (answerModule.Answer, error) {
 	if err != nil {
 		return answerModule.Answer{}, err
 	}
-	q, err := uc.questionService.GetOne(questionModule.Question{Id: in.QuestionId}, uc.db)
+
+	q, err := uc.questionService.GetOne(questionModule.Question{
+		Id: in.QuestionId,
+	}, uc.db)
 	if err != nil {
 		core.Logger.Error(err.Error())
 		return answerModule.Answer{}, core.ErrBadRequest
@@ -100,7 +103,9 @@ func (uc *usecase) UpdateOne(in UpdateOneDto) (answerModule.Answer, error) {
 	if err != nil {
 		return answerModule.Answer{}, err
 	}
-	q, err := uc.questionService.GetOne(questionModule.Question{Id: ans.QuestionId}, uc.db)
+	q, err := uc.questionService.GetOne(questionModule.Question{
+		Id: ans.QuestionId,
+	}, uc.db)
 	if err != nil {
 		return answerModule.Answer{}, err
 	}

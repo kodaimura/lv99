@@ -62,11 +62,16 @@ func (srv *service) UpdateOne(in Chat, db *gorm.DB) (Chat, error) {
 }
 
 func (srv *service) DeleteOne(in Chat, db *gorm.DB) error {
-	return srv.repository.Delete(&Chat{Id: in.Id}, db)
+	return srv.repository.Delete(&Chat{
+		Id: in.Id,
+	}, db)
 }
 
 func (srv *service) Read(in Chat, db *gorm.DB) error {
-	return srv.repository.Read(&Chat{FromId: in.FromId, ToId: in.ToId}, db)
+	return srv.repository.Read(&Chat{
+		FromId: in.FromId,
+		ToId:   in.ToId,
+	}, db)
 }
 
 func (srv *service) Paginate(accounId1 int, accountId2 int, before time.Time, limit int, db *sqlx.DB) ([]Chat, error) {

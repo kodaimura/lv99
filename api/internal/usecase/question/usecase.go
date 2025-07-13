@@ -50,7 +50,9 @@ func (uc *usecase) GetAll(in GetAllDto) ([]questionModule.Question, error) {
 }
 
 func (uc *usecase) GetOne(in GetOneDto) (questionModule.Question, error) {
-	return uc.questionService.GetOne(questionModule.Question{Id: in.Id}, uc.db)
+	return uc.questionService.GetOne(questionModule.Question{
+		Id: in.Id,
+	}, uc.db)
 }
 
 func (uc *usecase) CreateOne(in CreateOneDto) (questionModule.Question, error) {
@@ -73,9 +75,13 @@ func (uc *usecase) UpdateOne(in UpdateOneDto) (questionModule.Question, error) {
 }
 
 func (uc *usecase) DeleteOne(in DeleteOneDto) error {
-	return uc.questionService.DeleteOne(questionModule.Question{Id: in.Id}, uc.db)
+	return uc.questionService.DeleteOne(questionModule.Question{
+		Id: in.Id,
+	}, uc.db)
 }
 
 func (uc *usecase) RestoreOne(in RestoreOneDto) error {
-	return uc.questionService.RestoreOne(questionModule.Question{Id: in.Id}, uc.db)
+	return uc.questionService.RestoreOne(questionModule.Question{
+		Id: in.Id,
+	}, uc.db)
 }

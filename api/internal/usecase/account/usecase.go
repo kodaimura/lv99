@@ -33,13 +33,20 @@ func (uc *usecase) Get(in GetDto) ([]accountModule.Account, error) {
 }
 
 func (uc *usecase) GetOne(in GetOneDto) (accountModule.Account, error) {
-	return uc.accountService.GetOne(accountModule.Account{Id: in.Id}, uc.db)
+	return uc.accountService.GetOne(accountModule.Account{
+		Id: in.Id,
+	}, uc.db)
 }
 
 func (uc *usecase) UpdateOne(in UpdateOneDto) (accountModule.Account, error) {
-	return uc.accountService.UpdateOne(accountModule.Account{Id: in.Id, Name: in.Name}, uc.db)
+	return uc.accountService.UpdateOne(accountModule.Account{
+		Id:   in.Id,
+		Name: in.Name,
+	}, uc.db)
 }
 
 func (uc *usecase) DeleteOne(in DeleteOneDto) error {
-	return uc.accountService.DeleteOne(accountModule.Account{Id: in.Id}, uc.db)
+	return uc.accountService.DeleteOne(accountModule.Account{
+		Id: in.Id,
+	}, uc.db)
 }

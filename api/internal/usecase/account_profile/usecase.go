@@ -34,7 +34,9 @@ func (uc *usecase) Get(in GetDto) ([]profileModule.AccountProfile, error) {
 }
 
 func (uc *usecase) GetOne(in GetOneDto) (profileModule.AccountProfile, error) {
-	return uc.accountProfileService.GetOne(profileModule.AccountProfile{AccountId: in.AccountId}, uc.db)
+	return uc.accountProfileService.GetOne(profileModule.AccountProfile{
+		AccountId: in.AccountId,
+	}, uc.db)
 }
 
 func (uc *usecase) CreateOne(in CreateOneDto) (profileModule.AccountProfile, error) {
@@ -56,5 +58,7 @@ func (uc *usecase) UpdateOne(in UpdateOneDto) (profileModule.AccountProfile, err
 }
 
 func (uc *usecase) DeleteOne(in DeleteOneDto) error {
-	return uc.accountProfileService.DeleteOne(profileModule.AccountProfile{AccountId: in.AccountId}, uc.db)
+	return uc.accountProfileService.DeleteOne(profileModule.AccountProfile{
+		AccountId: in.AccountId,
+	}, uc.db)
 }

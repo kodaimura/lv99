@@ -27,7 +27,9 @@ func (srv *service) Get(in AccountProfile, db *gorm.DB) ([]AccountProfile, error
 }
 
 func (srv *service) GetOne(in AccountProfile, db *gorm.DB) (AccountProfile, error) {
-	return srv.repository.GetOne(&AccountProfile{AccountId: in.AccountId}, db)
+	return srv.repository.GetOne(&AccountProfile{
+		AccountId: in.AccountId,
+	}, db)
 }
 
 func (srv *service) CreateOne(in AccountProfile, db *gorm.DB) (AccountProfile, error) {
@@ -40,7 +42,9 @@ func (srv *service) CreateOne(in AccountProfile, db *gorm.DB) (AccountProfile, e
 }
 
 func (srv *service) UpdateOne(in AccountProfile, db *gorm.DB) (AccountProfile, error) {
-	profile, err := srv.repository.GetOne(&AccountProfile{AccountId: in.AccountId}, db)
+	profile, err := srv.repository.GetOne(&AccountProfile{
+		AccountId: in.AccountId,
+	}, db)
 	if err != nil {
 		return AccountProfile{}, err
 	}
@@ -53,5 +57,7 @@ func (srv *service) UpdateOne(in AccountProfile, db *gorm.DB) (AccountProfile, e
 }
 
 func (srv *service) DeleteOne(in AccountProfile, db *gorm.DB) error {
-	return srv.repository.Delete(&AccountProfile{AccountId: in.AccountId}, db)
+	return srv.repository.Delete(&AccountProfile{
+		AccountId: in.AccountId,
+	}, db)
 }

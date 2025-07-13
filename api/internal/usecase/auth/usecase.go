@@ -68,7 +68,9 @@ func (uc *usecase) Signup(in SignupDto) (accountModule.Account, error) {
 }
 
 func (uc *usecase) Login(in LoginDto) (accountModule.Account, string, string, error) {
-	acct, err := uc.accountService.GetOne(accountModule.Account{Name: in.Name}, uc.db)
+	acct, err := uc.accountService.GetOne(accountModule.Account{
+		Name: in.Name,
+	}, uc.db)
 	if err != nil {
 		if errors.Is(err, core.ErrNotFound) {
 			return accountModule.Account{}, "", "", core.ErrUnauthorized
@@ -116,7 +118,9 @@ func (uc *usecase) Refresh(refreshToken string) (core.AuthPayload, string, error
 }
 
 func (uc *usecase) UpdatePassword(in UpdatePasswordDto) error {
-	acct, err := uc.accountService.GetOne(accountModule.Account{Id: in.Id}, uc.db)
+	acct, err := uc.accountService.GetOne(accountModule.Account{
+		Id: in.Id,
+	}, uc.db)
 	if err != nil {
 		return err
 	}
