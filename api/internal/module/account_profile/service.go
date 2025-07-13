@@ -5,11 +5,11 @@ import (
 )
 
 type Service interface {
-	Get(in GetDto, db *gorm.DB) ([]AccountProfile, error)
-	GetOne(in GetOneDto, db *gorm.DB) (AccountProfile, error)
-	CreateOne(in CreateOneDto, db *gorm.DB) (AccountProfile, error)
-	UpdateOne(in UpdateOneDto, db *gorm.DB) (AccountProfile, error)
-	DeleteOne(in DeleteOneDto, db *gorm.DB) error
+	Get(in AccountProfile, db *gorm.DB) ([]AccountProfile, error)
+	GetOne(in AccountProfile, db *gorm.DB) (AccountProfile, error)
+	CreateOne(in AccountProfile, db *gorm.DB) (AccountProfile, error)
+	UpdateOne(in AccountProfile, db *gorm.DB) (AccountProfile, error)
+	DeleteOne(in AccountProfile, db *gorm.DB) error
 }
 
 type service struct {
@@ -22,15 +22,15 @@ func NewService(repository Repository) Service {
 	}
 }
 
-func (srv *service) Get(in GetDto, db *gorm.DB) ([]AccountProfile, error) {
+func (srv *service) Get(in AccountProfile, db *gorm.DB) ([]AccountProfile, error) {
 	return srv.repository.Get(&AccountProfile{}, db)
 }
 
-func (srv *service) GetOne(in GetOneDto, db *gorm.DB) (AccountProfile, error) {
+func (srv *service) GetOne(in AccountProfile, db *gorm.DB) (AccountProfile, error) {
 	return srv.repository.GetOne(&AccountProfile{AccountId: in.AccountId}, db)
 }
 
-func (srv *service) CreateOne(in CreateOneDto, db *gorm.DB) (AccountProfile, error) {
+func (srv *service) CreateOne(in AccountProfile, db *gorm.DB) (AccountProfile, error) {
 	return srv.repository.Insert(&AccountProfile{
 		AccountId:   in.AccountId,
 		DisplayName: in.DisplayName,
@@ -39,7 +39,7 @@ func (srv *service) CreateOne(in CreateOneDto, db *gorm.DB) (AccountProfile, err
 	}, db)
 }
 
-func (srv *service) UpdateOne(in UpdateOneDto, db *gorm.DB) (AccountProfile, error) {
+func (srv *service) UpdateOne(in AccountProfile, db *gorm.DB) (AccountProfile, error) {
 	profile, err := srv.repository.GetOne(&AccountProfile{AccountId: in.AccountId}, db)
 	if err != nil {
 		return AccountProfile{}, err
@@ -52,6 +52,6 @@ func (srv *service) UpdateOne(in UpdateOneDto, db *gorm.DB) (AccountProfile, err
 	return srv.repository.Update(&profile, db)
 }
 
-func (srv *service) DeleteOne(in DeleteOneDto, db *gorm.DB) error {
+func (srv *service) DeleteOne(in AccountProfile, db *gorm.DB) error {
 	return srv.repository.Delete(&AccountProfile{AccountId: in.AccountId}, db)
 }

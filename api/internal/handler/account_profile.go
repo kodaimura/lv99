@@ -1,12 +1,61 @@
 package handler
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
 	"lv99/internal/helper"
-	module "lv99/internal/module/account_profile"
+	profileModule "lv99/internal/module/account_profile"
+	usecase "lv99/internal/usecase/account_profile"
 )
+
+// -----------------------------
+// DTO（Response）
+// -----------------------------
+
+type AccountProfileResponse struct {
+	AccountId   int       `json:"account_id"`
+	DisplayName string    `json:"display_name"`
+	Bio         string    `json:"bio"`
+	AvatarURL   string    `json:"avatar_url"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}
+
+func ToAccountProfileResponse(m profileModule.AccountProfile) AccountProfileResponse {
+	return AccountProfileResponse{
+		AccountId:   m.AccountId,
+		DisplayName: m.DisplayName,
+		Bio:         m.Bio,
+		AvatarURL:   m.AvatarURL,
+		CreatedAt:   m.CreatedAt,
+		UpdatedAt:   m.UpdatedAt,
+	}
+}
+
+func ToAccountProfileResponseList(models []profileModule.AccountProfile) []AccountProfileResponse {
+	res := make([]AccountProfileResponse, 0, len(models))
+	for _, m := range models {
+		res = append(res, ToAccountProfileResponse(m))
+	}
+	return res
+}
+
+// -----------------------------
+// DTO（Request）
+// -----------------------------
+
+type PutAccountMeProfileRequest struct {
+	DisplayName string `json:"display_name" binding:"required"`
+	Bio         string `json:"bio" binding:"omitempty"`
+	AvatarURL   string `json:"avatar_url" binding:"omitempty,url"`
+}
+
+// -----------------------------
+// Handler Interface
+// -----------------------------
 
 type AccountProfileHandler interface {
 	ApiGetMe(c *gin.Context)
@@ -15,40 +64,44 @@ type AccountProfileHandler interface {
 
 type accountProfileHandler struct {
 	db      *gorm.DB
-	service module.Service
+	usecase usecase.Usecase
 }
 
-func NewAccountProfileHandler(db *gorm.DB, service module.Service) AccountProfileHandler {
+func NewAccountProfileHandler(db *gorm.DB, usecase usecase.Usecase) AccountProfileHandler {
 	return &accountProfileHandler{
 		db:      db,
-		service: service,
+		usecase: usecase,
 	}
 }
+
+// -----------------------------
+// Handler Implementations
+// -----------------------------
 
 // GET /api/accounts/me/profile
 func (ctrl *accountProfileHandler) ApiGetMe(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 
-	profile, err := ctrl.service.GetOne(module.GetOneDto{AccountId: accountId}, ctrl.db)
+	profile, err := ctrl.usecase.GetOne(usecase.GetOneDto{AccountId: accountId}, ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	c.JSON(200, module.ToAccountProfileResponse(profile))
+	c.JSON(200, ToAccountProfileResponse(profile))
 }
 
 // PUT /api/accounts/me/profile
 func (ctrl *accountProfileHandler) ApiPutMe(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 
-	var req module.PutMeRequest
+	var req PutAccountMeProfileRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
-	profile, err := ctrl.service.UpdateOne(module.UpdateOneDto{
+	profile, err := ctrl.usecase.UpdateOne(usecase.UpdateOneDto{
 		AccountId:   accountId,
 		DisplayName: req.DisplayName,
 		Bio:         req.Bio,
@@ -59,5 +112,5 @@ func (ctrl *accountProfileHandler) ApiPutMe(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, module.ToAccountProfileResponse(profile))
+	c.JSON(200, ToAccountProfileResponse(profile))
 }

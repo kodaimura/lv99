@@ -1,12 +1,68 @@
 package handler
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
 	"lv99/internal/helper"
-	module "lv99/internal/module/question"
+	questionModule "lv99/internal/module/question"
+	usecase "lv99/internal/usecase/question"
 )
+
+// -----------------------------
+// DTO（Response）
+// -----------------------------
+
+type QuestionResponse struct {
+	Id        int            `json:"id"`
+	Title     string         `json:"title"`
+	Content   string         `json:"content"`
+	Answer    string         `json:"answer"`
+	Level     int            `json:"level"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+}
+
+func ToQuestionResponse(m questionModule.Question) QuestionResponse {
+	return QuestionResponse(m)
+}
+
+func ToQuestionResponseList(models []questionModule.Question) []QuestionResponse {
+	res := make([]QuestionResponse, 0, len(models))
+	for _, m := range models {
+		res = append(res, ToQuestionResponse(m))
+	}
+	return res
+}
+
+// -----------------------------
+// DTO（Request）
+// -----------------------------
+
+type QuestionUri struct {
+	QuestionId int `uri:"question_id" binding:"required"`
+}
+
+type PostQuestionRequest struct {
+	Title   string `json:"title" binding:"required"`
+	Content string `json:"content" binding:"required"`
+	Answer  string `json:"answer" binding:"required"`
+	Level   int    `json:"level" binding:"required,min=1"`
+}
+
+type PutQuestionRequest struct {
+	Title   string `json:"title" binding:"required"`
+	Content string `json:"content" binding:"required"`
+	Answer  string `json:"answer" binding:"required"`
+	Level   int    `json:"level" binding:"required,min=1"`
+}
+
+// -----------------------------
+// Handler Interface
+// -----------------------------
 
 type QuestionHandler interface {
 	ApiGet(c *gin.Context)
@@ -21,91 +77,95 @@ type QuestionHandler interface {
 
 type questionHandler struct {
 	db      *gorm.DB
-	service module.Service
+	usecase usecase.Usecase
 }
 
-func NewQuestionHandler(db *gorm.DB, service module.Service) QuestionHandler {
+func NewQuestionHandler(db *gorm.DB, usecase usecase.Usecase) QuestionHandler {
 	return &questionHandler{
 		db:      db,
-		service: service,
+		usecase: usecase,
 	}
 }
 
+// -----------------------------
+// Handler Implementations
+// -----------------------------
+
 // GET /api/questions
 func (ctrl *questionHandler) ApiGet(c *gin.Context) {
-	questions, err := ctrl.service.Get(module.GetDto{}, ctrl.db)
+	questions, err := ctrl.usecase.Get(usecase.GetDto{}, ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	c.JSON(200, module.ToQuestionResponseList(questions))
+	c.JSON(200, ToQuestionResponseList(questions))
 }
 
 // GET /api/questions/:question_id
 func (ctrl *questionHandler) ApiGetOne(c *gin.Context) {
-	var uri module.QuestionUri
+	var uri QuestionUri
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
-	question, err := ctrl.service.GetOne(module.GetOneDto{Id: uri.QuestionId}, ctrl.db)
+	question, err := ctrl.usecase.GetOne(usecase.GetOneDto{Id: uri.QuestionId}, ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	c.JSON(200, module.ToQuestionResponse(question))
+	c.JSON(200, ToQuestionResponse(question))
 }
 
 // GET /api/admin/questions
 func (ctrl *questionHandler) AdminGet(c *gin.Context) {
-	questions, err := ctrl.service.GetAll(module.GetAllDto{}, ctrl.db)
+	questions, err := ctrl.usecase.GetAll(usecase.GetAllDto{}, ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	c.JSON(200, module.ToQuestionResponseList(questions))
+	c.JSON(200, ToQuestionResponseList(questions))
 }
 
 // GET /api/admin/questions/:question_id
 func (ctrl *questionHandler) AdminGetOne(c *gin.Context) {
-	var uri module.QuestionUri
+	var uri QuestionUri
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
-	question, err := ctrl.service.GetOne(module.GetOneDto{Id: uri.QuestionId}, ctrl.db)
+	question, err := ctrl.usecase.GetOne(usecase.GetOneDto{Id: uri.QuestionId}, ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	c.JSON(200, module.ToQuestionResponse(question))
+	c.JSON(200, ToQuestionResponse(question))
 }
 
 // POST /api/admin/questions
 func (ctrl *questionHandler) AdminPostOne(c *gin.Context) {
-	var req module.PostOneRequest
+	var req PostQuestionRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
 
-	question, err := ctrl.service.CreateOne(module.CreateOneDto(req), ctrl.db)
+	question, err := ctrl.usecase.CreateOne(usecase.CreateOneDto(req), ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	c.JSON(201, module.ToQuestionResponse(question))
+	c.JSON(201, ToQuestionResponse(question))
 }
 
 // PUT /api/admin/questions/:question_id
 func (ctrl *questionHandler) AdminPutOne(c *gin.Context) {
-	var uri module.QuestionUri
-	var req module.PutOneRequest
+	var uri QuestionUri
+	var req PutQuestionRequest
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
@@ -115,7 +175,7 @@ func (ctrl *questionHandler) AdminPutOne(c *gin.Context) {
 		return
 	}
 
-	question, err := ctrl.service.UpdateOne(module.UpdateOneDto{
+	question, err := ctrl.usecase.UpdateOne(usecase.UpdateOneDto{
 		Id:      uri.QuestionId,
 		Title:   req.Title,
 		Content: req.Content,
@@ -127,17 +187,17 @@ func (ctrl *questionHandler) AdminPutOne(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, module.ToQuestionResponse(question))
+	c.JSON(200, ToQuestionResponse(question))
 }
 
 // DELETE /api/admin/questions/:question_id
 func (ctrl *questionHandler) AdminDeleteOne(c *gin.Context) {
-	var uri module.QuestionUri
+	var uri QuestionUri
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
-	if err := ctrl.service.DeleteOne(module.DeleteOneDto{Id: uri.QuestionId}, ctrl.db); err != nil {
+	if err := ctrl.usecase.DeleteOne(usecase.DeleteOneDto{Id: uri.QuestionId}, ctrl.db); err != nil {
 		c.Error(err)
 		return
 	}
@@ -147,13 +207,13 @@ func (ctrl *questionHandler) AdminDeleteOne(c *gin.Context) {
 
 // PATCH /api/admin/questions/:question_id
 func (ctrl *questionHandler) AdminRestoreOne(c *gin.Context) {
-	var uri module.QuestionUri
+	var uri QuestionUri
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
 		return
 	}
 
-	err := ctrl.service.RestoreOne(module.RestoreOneDto{Id: uri.QuestionId}, ctrl.db)
+	err := ctrl.usecase.RestoreOne(usecase.RestoreOneDto{Id: uri.QuestionId}, ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return

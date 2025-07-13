@@ -7,9 +7,50 @@ import (
 	"lv99/config"
 	"lv99/internal/core"
 	"lv99/internal/helper"
-	profile "lv99/internal/module/account_profile"
-	auth "lv99/internal/module/auth"
+	"lv99/internal/module/auth"
+	usecase "lv99/internal/usecase/auth"
 )
+
+// -----------------------------
+// DTO（Response）
+// -----------------------------
+
+type LoginResponse struct {
+	AccountId        int    `json:"account_id"`
+	AccountRole      int    `json:"account_role"`
+	AccessToken      string `json:"access_token"`
+	RefreshToken     string `json:"refresh_token"`
+	AccessExpiresIn  int    `json:"access_expires_in"`
+	RefreshExpiresIn int    `json:"refresh_expires_in"`
+}
+
+type RefreshResponse struct {
+	AccessToken string `json:"access_token"`
+	ExpiresIn   int    `json:"expires_in"`
+}
+
+// -----------------------------
+// DTO（Request）
+// -----------------------------
+
+type SignupRequest struct {
+	Name     string `json:"name" binding:"required"`
+	Password string `json:"password" binding:"required,min=8"`
+}
+
+type LoginRequest struct {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
+
+type PutMePasswordRequest struct {
+	OldPassword string `json:"old_password" binding:"required"`
+	NewPassword string `json:"new_password" binding:"required"`
+}
+
+// -----------------------------
+// Handler Interface
+// -----------------------------
 
 type AuthHandler interface {
 	ApiSignup(c *gin.Context)
@@ -21,18 +62,20 @@ type AuthHandler interface {
 }
 
 type authHandler struct {
-	db                    *gorm.DB
-	service               auth.Service
-	accountProfileService profile.Service
+	db      *gorm.DB
+	usecase usecase.Usecase
 }
 
-func NewAuthHandler(db *gorm.DB, service auth.Service, accountProfileService profile.Service) AuthHandler {
+func NewAuthHandler(db *gorm.DB, usecase usecase.Usecase) AuthHandler {
 	return &authHandler{
-		db:                    db,
-		service:               service,
-		accountProfileService: accountProfileService,
+		db:      db,
+		usecase: usecase,
 	}
 }
+
+// -----------------------------
+// Handler Implementations
+// -----------------------------
 
 // POST /api/accounts/signup
 func (ctrl *authHandler) ApiSignup(c *gin.Context) {
@@ -42,20 +85,7 @@ func (ctrl *authHandler) ApiSignup(c *gin.Context) {
 		return
 	}
 
-	err := ctrl.db.Transaction(func(tx *gorm.DB) error {
-		acct, err := ctrl.service.Signup(auth.SignupDto(req), tx)
-		if err != nil {
-			return err
-		}
-		_, err = ctrl.accountProfileService.CreateOne(profile.CreateOneDto{
-			AccountId:   acct.Id,
-			DisplayName: acct.Name,
-			Bio:         "",
-			AvatarURL:   "",
-		}, tx)
-		return err
-	})
-
+	_, err := ctrl.usecase.Signup(usecase.SignupDto(req), ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return
@@ -72,27 +102,7 @@ func (ctrl *authHandler) ApiLogin(c *gin.Context) {
 		return
 	}
 
-	acct, err := ctrl.service.Login(auth.LoginDto(req), ctrl.db)
-	if err != nil {
-		c.Error(err)
-		return
-	}
-
-	accessToken, err := core.Auth.CreateAccessToken(core.AuthPayload{
-		AccountId:   acct.Id,
-		AccountName: acct.Name,
-		AccountRole: acct.Role,
-	})
-	if err != nil {
-		c.Error(err)
-		return
-	}
-
-	refreshToken, err := core.Auth.CreateRefreshToken(core.AuthPayload{
-		AccountId:   acct.Id,
-		AccountName: acct.Name,
-		AccountRole: acct.Role,
-	})
+	acct, accessToken, refreshToken, err := ctrl.usecase.Login(usecase.LoginDto(req), ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return
@@ -100,7 +110,6 @@ func (ctrl *authHandler) ApiLogin(c *gin.Context) {
 
 	helper.SetAccessTokenCookie(c, accessToken)
 	helper.SetRefreshTokenCookie(c, refreshToken)
-
 	core.Logger.Info("account login: id=%d name=%s", acct.Id, acct.Name)
 
 	c.JSON(200, auth.LoginResponse{
@@ -117,24 +126,13 @@ func (ctrl *authHandler) ApiLogin(c *gin.Context) {
 func (ctrl *authHandler) ApiRefresh(c *gin.Context) {
 	refreshToken := helper.GetRefreshToken(c)
 
-	payload, err := core.Auth.VerifyRefreshToken(refreshToken)
-	if err != nil {
-		c.Error(core.NewAppError("invalid or expired refresh token", core.ErrCodeUnauthorized))
-		return
-	}
-
-	accessToken, err := core.Auth.CreateAccessToken(core.AuthPayload{
-		AccountId:   payload.AccountId,
-		AccountName: payload.AccountName,
-		AccountRole: payload.AccountRole,
-	})
+	payload, accessToken, err := ctrl.usecase.Refresh(refreshToken, ctrl.db)
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
 	helper.SetAccessTokenCookie(c, accessToken)
-
 	core.Logger.Info("access token refreshed: id=%d name=%s", payload.AccountId, payload.AccountName)
 
 	c.JSON(200, auth.RefreshResponse{
@@ -161,7 +159,7 @@ func (ctrl *authHandler) ApiPutMePassword(c *gin.Context) {
 		return
 	}
 
-	err := ctrl.service.UpdatePassword(auth.UpdatePasswordDto{
+	err := ctrl.usecase.UpdatePassword(usecase.UpdatePasswordDto{
 		Id:          accountId,
 		OldPassword: req.OldPassword,
 		NewPassword: req.NewPassword,

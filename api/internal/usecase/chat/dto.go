@@ -5,8 +5,6 @@ import "time"
 type GetDto struct {
 	FromId int
 	ToId   int
-	Before time.Time
-	Limit  int
 }
 
 type CreateOneDto struct {
@@ -30,4 +28,11 @@ type DeleteOneDto struct {
 type ReadDto struct {
 	ToId   int
 	FromId int
+}
+
+type PaginateDto struct {
+	FromId int
+	ToId   int
+	Before time.Time
+	Limit  int
 }
