@@ -7,30 +7,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Controller interface {
+type Handler interface {
 	ApiGetWithProfile(c *gin.Context)
 	ApiGetRecentCount(c *gin.Context)
 	AdminGetRecentCount(c *gin.Context)
 }
 
-type controller struct {
+type handler struct {
 	usecase usecase.Usecase
 }
 
-func NewController(usecase usecase.Usecase) Controller {
-	return &controller{
+func NewHandler(usecase usecase.Usecase) Handler {
+	return &handler{
 		usecase: usecase,
 	}
 }
 
 // GET /api/api/comments/with-profile?answer_id=:answer_id
-func (ctrl *controller) ApiGetWithProfile(c *gin.Context) {
+func (h *handler) ApiGetWithProfile(c *gin.Context) {
 	var req GetWithProfileRequest
 	if err := helper.BindQuery(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
-	comments, err := ctrl.usecase.GetWithProfile(usecase.GetWithProfileDto(req))
+	comments, err := h.usecase.GetWithProfile(usecase.GetWithProfileDto(req))
 	if err != nil {
 		c.Error(err)
 		return
@@ -40,7 +40,7 @@ func (ctrl *controller) ApiGetWithProfile(c *gin.Context) {
 }
 
 // GET /api/comments/count?since=:since
-func (ctrl *controller) ApiGetRecentCount(c *gin.Context) {
+func (h *handler) ApiGetRecentCount(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 	var req GetCountRequest
 	if err := helper.BindQuery(c, &req); err != nil {
@@ -48,7 +48,7 @@ func (ctrl *controller) ApiGetRecentCount(c *gin.Context) {
 		return
 	}
 
-	counts, err := ctrl.usecase.GetCount(usecase.GetCountDto{
+	counts, err := h.usecase.GetCount(usecase.GetCountDto{
 		AccountId: accountId,
 		Since:     req.Since,
 	})
@@ -60,7 +60,7 @@ func (ctrl *controller) ApiGetRecentCount(c *gin.Context) {
 }
 
 // GET /api/admin/comments/count?since=:since
-func (ctrl *controller) AdminGetRecentCount(c *gin.Context) {
+func (h *handler) AdminGetRecentCount(c *gin.Context) {
 	accountId := helper.GetAccountId(c)
 	var req GetCountRequest
 	if err := helper.BindQuery(c, &req); err != nil {
@@ -68,7 +68,7 @@ func (ctrl *controller) AdminGetRecentCount(c *gin.Context) {
 		return
 	}
 
-	counts, err := ctrl.usecase.GetCountForAdmin(usecase.GetCountDto{
+	counts, err := h.usecase.GetCountForAdmin(usecase.GetCountDto{
 		AccountId: accountId,
 		Since:     req.Since,
 	})

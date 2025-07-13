@@ -2,7 +2,6 @@ package answer
 
 import (
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 
 	"lv99/internal/helper"
 	usecase "lv99/internal/usecase/answer"
@@ -27,7 +26,7 @@ type handler struct {
 	usecase usecase.Usecase
 }
 
-func NewHandler(db *gorm.DB, usecase usecase.Usecase) Handler {
+func NewHandler(usecase usecase.Usecase) Handler {
 	return &handler{
 		usecase: usecase,
 	}
