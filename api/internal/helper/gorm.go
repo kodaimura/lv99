@@ -23,10 +23,10 @@ func HandleGormError(err error) error {
 		return core.ErrConflict
 	}
 	if strings.Contains(err.Error(), "SQLSTATE 23505") {
-        core.Logger.Debug(err.Error())
-        return core.ErrConflict
-    }
+		core.Logger.Debug(err.Error())
+		return core.ErrConflict
+	}
 
 	core.Logger.Error(err.Error())
-	return core.ErrUnexpected
+	return core.NewUnexpectedError(err)
 }

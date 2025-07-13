@@ -63,7 +63,6 @@ func (uc *usecase) CreateOne(in CreateOneDto) (answerModule.Answer, error) {
 		Id: in.QuestionId,
 	}, uc.db)
 	if err != nil {
-		core.Logger.Error(err.Error())
 		return answerModule.Answer{}, core.ErrBadRequest
 	}
 

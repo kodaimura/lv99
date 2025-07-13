@@ -78,7 +78,7 @@ func (uc *usecase) Login(in LoginDto) (accountModule.Account, string, string, er
 		return accountModule.Account{}, "", "", err
 	}
 
-	if err = verifyPassword(acct.Password, in.Password); err != nil {
+	if !verifyPassword(acct.Password, in.Password) {
 		return accountModule.Account{}, "", "", core.ErrUnauthorized
 	}
 
@@ -105,7 +105,7 @@ func (uc *usecase) Login(in LoginDto) (accountModule.Account, string, string, er
 func (uc *usecase) Refresh(refreshToken string) (core.AuthPayload, string, error) {
 	payload, err := core.Auth.VerifyRefreshToken(refreshToken)
 	if err != nil {
-		return core.AuthPayload{}, "", core.NewAppError("invalid or expired refresh token", core.ErrCodeUnauthorized)
+		return core.AuthPayload{}, "", core.ErrUnauthorized
 	}
 
 	accessToken, err := core.Auth.CreateAccessToken(core.AuthPayload{
@@ -124,7 +124,7 @@ func (uc *usecase) UpdatePassword(in UpdatePasswordDto) error {
 	if err != nil {
 		return err
 	}
-	if err = verifyPassword(acct.Password, in.OldPassword); err != nil {
+	if !verifyPassword(acct.Password, in.OldPassword) {
 		return core.ErrBadRequest
 	}
 
@@ -142,9 +142,9 @@ func hashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func verifyPassword(hashedPassword, plainPassword string) error {
+func verifyPassword(hashedPassword, plainPassword string) bool {
 	if err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(plainPassword)); err != nil {
-		return err
+		return false
 	}
-	return nil
+	return true
 }
