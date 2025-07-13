@@ -2,7 +2,6 @@ package answer
 
 import (
 	"lv99/internal/core"
-	"lv99/internal/module/executor"
 	"time"
 
 	answerModule "lv99/internal/module/answer"
@@ -23,20 +22,17 @@ type usecase struct {
 	db              *gorm.DB
 	answerService   answerModule.Service
 	questionService questionModule.Service
-	executorService executor.Service
 }
 
 func NewUsecase(
 	db *gorm.DB,
 	answerService answerModule.Service,
 	questionService questionModule.Service,
-	executorService executor.Service,
 ) Usecase {
 	return &usecase{
 		db:              db,
 		answerService:   answerService,
 		questionService: questionService,
-		executorService: executorService,
 	}
 }
 
@@ -55,7 +51,7 @@ func (uc *usecase) GetOne(in GetOneDto) (answerModule.Answer, error) {
 }
 
 func (uc *usecase) CreateOne(in CreateOneDto) (answerModule.Answer, error) {
-	result, err := uc.executorService.Execute(executor.CodeExecRequest{
+	result, err := core.CodeExecutor.Execute(core.CodeExecRequest{
 		CodeDef:  in.CodeDef,
 		CodeCall: in.CodeCall,
 	})
@@ -97,7 +93,7 @@ func (uc *usecase) UpdateOne(in UpdateOneDto) (answerModule.Answer, error) {
 		return answerModule.Answer{}, err
 	}
 
-	result, err := uc.executorService.Execute(executor.CodeExecRequest{
+	result, err := core.CodeExecutor.Execute(core.CodeExecRequest{
 		CodeDef:  in.CodeDef,
 		CodeCall: in.CodeCall,
 	})

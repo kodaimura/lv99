@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"lv99/config"
-	"lv99/internal/module/executor"
+	"lv99/internal/core"
 )
 
 type HttpCodeExecutor struct {
@@ -22,27 +22,27 @@ func NewHttpCodeExecutor() *HttpCodeExecutor {
 	}
 }
 
-func (api *HttpCodeExecutor) Execute(in executor.CodeExecRequest) (executor.CodeExecResponse, error) {
+func (api *HttpCodeExecutor) Execute(in core.CodeExecRequest) (core.CodeExecResponse, error) {
 	jsonData, err := json.Marshal(in)
 	if err != nil {
-		return executor.CodeExecResponse{}, fmt.Errorf("failed to marshal request: %w", err)
+		return core.CodeExecResponse{}, fmt.Errorf("failed to marshal request: %w", err)
 	}
 
 	req, err := http.NewRequest("POST", config.CodeExecutorHost+"/exec/python", bytes.NewBuffer(jsonData))
 	if err != nil {
-		return executor.CodeExecResponse{}, fmt.Errorf("failed to create request: %w", err)
+		return core.CodeExecResponse{}, fmt.Errorf("failed to create request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := api.httpClient.Do(req)
 	if err != nil {
-		return executor.CodeExecResponse{}, fmt.Errorf("request failed: %w", err)
+		return core.CodeExecResponse{}, fmt.Errorf("request failed: %w", err)
 	}
 	defer resp.Body.Close()
 
-	var res executor.CodeExecResponse
+	var res core.CodeExecResponse
 	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
-		return executor.CodeExecResponse{}, fmt.Errorf("failed to decode response: %w", err)
+		return core.CodeExecResponse{}, fmt.Errorf("failed to decode response: %w", err)
 	}
 
 	re := regexp.MustCompile(`File\s+"\/tmp\/[^\"]+\.py",\s*`)

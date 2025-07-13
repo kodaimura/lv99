@@ -9,6 +9,7 @@ import (
 
 	"lv99/config"
 	"lv99/internal/adapter/auth"
+	"lv99/internal/adapter/externalapi"
 	"lv99/internal/adapter/file"
 	"lv99/internal/adapter/logger"
 	"lv99/internal/adapter/mailer"
@@ -27,6 +28,7 @@ func main() {
 	core.SetLogger(logger.NewMultiLogger(f2))
 	core.SetMailer(mailer.NewSmtpMailer())
 	core.SetAuth(auth.NewJwtAuth())
+	core.SetCodeExecutor(externalapi.NewHttpCodeExecutor())
 
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{

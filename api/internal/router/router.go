@@ -4,14 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"lv99/internal/adapter/db"
-	"lv99/internal/adapter/externalapi"
 
 	"lv99/internal/module/account"
 	"lv99/internal/module/account_profile"
 	"lv99/internal/module/answer"
 	"lv99/internal/module/chat"
 	"lv99/internal/module/comment"
-	"lv99/internal/module/executor"
 	"lv99/internal/module/question"
 
 	account_uc "lv99/internal/usecase/account"
@@ -51,7 +49,6 @@ var commentRepository = comment.NewRepository()
 var chatRepository = chat.NewRepository()
 
 /* DI (Service) */
-var executorService = executor.NewService(externalapi.NewHttpCodeExecutor())
 var accountService = account.NewService(accountRepository)
 var accountProfileService = account_profile.NewService(accountProfileRepository)
 var questionService = question.NewService(questionRepository)
@@ -65,7 +62,7 @@ var accountUsecase = account_uc.NewUsecase(gorm, accountService)
 var accountExUsecase = account_extended_uc.NewUsecase(gorm, sqlx)
 var accountProfileUsecase = account_profile_uc.NewUsecase(gorm, accountProfileService)
 var questionUsecase = question_uc.NewUsecase(gorm, questionService)
-var answerUsecase = answer_uc.NewUsecase(gorm, answerService, questionService, executorService)
+var answerUsecase = answer_uc.NewUsecase(gorm, answerService, questionService)
 var answerExUsecase = answer_extended_uc.NewUsecase(gorm, sqlx)
 var commentUsecase = comment_uc.NewUsecase(gorm, commentService)
 var commentExUsecase = comment_extended_uc.NewUsecase(gorm, sqlx)
