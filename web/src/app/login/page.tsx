@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const LoginPage: React.FC = () => {
   return (
     <>
-      <Header><></></Header>
+      <Header isLoggedIn={false}><></></Header>
       <Main>
         <div className={styles.container}>
           <LoginForm />
