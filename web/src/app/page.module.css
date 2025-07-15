@@ -1,12 +1,56 @@
 .container {
-  width: 90%;
+  max-width: 590px;
   margin: 0 auto;
-  box-sizing: border-box;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding: 2rem 1rem;
+}
 
-  display: flex;
-  justify-content: center;
+.intro {
+  background: #f5f7fa;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-align: left;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.intro h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.intro h2 {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.box {
+  margin-bottom: 1rem;
+  background: #fff;
+  border-left: 4px solid #0070f3;
+  padding: 0.8rem 1rem;
+  border-radius: 4px;
+}
+
+.box ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.box li {
+  margin-bottom: 0.5rem;
+}
+
+.intro a {
+  color: #0070f3;
+  text-decoration: underline;
+}
+
+.intro a:hover {
+  text-decoration: none;
 }
 
 .loginLink {
