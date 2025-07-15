@@ -27,7 +27,7 @@ func (srv *service) Get(in Account, db *gorm.DB) ([]Account, error) {
 }
 
 func (srv *service) GetOne(in Account, db *gorm.DB) (Account, error) {
-	return srv.repository.GetOne(&Account{Id: in.Id}, db)
+	return srv.repository.GetOne(&in, db)
 }
 
 func (srv *service) CreateOne(in Account, db *gorm.DB) (Account, error) {
