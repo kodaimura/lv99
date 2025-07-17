@@ -35,20 +35,20 @@ const AnswerList: React.FC<Props> = ({ questionId }) => {
       {
         answers.length > 0 ? (
           <>
-            {answers.map((answer) => (
+            <button onClick={() => setShowForm(true)} className={styles.button}>
+              回答を追加する
+            </button>
+            <div>
+              {showForm && <AnswerForm questionId={questionId} onSubmit={getAnswers} />}
+            </div>
+            {answers.map((answer, index) => (
               <div className={styles.answerSection} key={answer.id}>
-                <AnswerForm questionId={questionId} answer={answer} onDelete={getAnswers} />
+                <AnswerForm questionId={questionId} answer={answer} onDelete={getAnswers} no={answers.length - index} />
                 <div className={styles.commentSection}>
                   <CommentList answerId={answer.id} />
                 </div>
               </div>
             ))}
-            <div className={styles.addAnswerButton}>
-              {showForm && <AnswerForm questionId={questionId} onSubmit={getAnswers} />}
-            </div>
-            <button onClick={() => setShowForm(true)} className={styles.button}>
-              回答を追加する
-            </button>
           </>
         ) : (
           <div className={styles.answerSection}>

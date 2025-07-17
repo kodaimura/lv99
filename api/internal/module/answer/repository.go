@@ -23,7 +23,7 @@ func NewRepository() Repository {
 
 func (rep *repository) Get(m *Answer, db *gorm.DB) ([]Answer, error) {
 	var accounts []Answer
-	err := db.Order("id ASC").Find(&accounts, m).Error
+	err := db.Order("id DESC").Find(&accounts, m).Error
 	return accounts, helper.HandleGormError(err)
 }
 
