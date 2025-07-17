@@ -24,9 +24,10 @@ type Props = {
   answer?: Answer;
   onSubmit?: () => void;
   onDelete?: () => void;
+  no?: number;
 };
 
-const AnswerForm: React.FC<Props> = ({ questionId, answer, onSubmit, onDelete }) => {
+const AnswerForm: React.FC<Props> = ({ questionId, answer, onSubmit, onDelete, no }) => {
   const [loading, setLoading] = useState(false);
 
   const [id, setId] = useState<number | null>(answer?.id ?? null);
@@ -87,7 +88,11 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer, onSubmit, onDelete })
           <Trash2 size={20} />
         </button>
       )}
-
+      {no && (
+        <div className={styles.metaRow}>
+          <span className={styles.no}>#{no}</span>
+        </div>
+      )}
       <div className={styles.metaRow}>
         <span className={styles.label}>判定:</span>
         <span className={answer && (isCorrect ? styles.correct : styles.incorrect)}>
