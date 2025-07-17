@@ -35,6 +35,12 @@ const AnswerList: React.FC<Props> = ({ questionId }) => {
       {
         answers.length > 0 ? (
           <>
+            <button onClick={() => setShowForm(true)} className={styles.button}>
+              回答を追加する
+            </button>
+            <div>
+              {showForm && <AnswerForm questionId={questionId} onSubmit={getAnswers} />}
+            </div>
             {answers.map((answer) => (
               <div className={styles.answerSection} key={answer.id}>
                 <AnswerForm questionId={questionId} answer={answer} onDelete={getAnswers} />
@@ -43,12 +49,6 @@ const AnswerList: React.FC<Props> = ({ questionId }) => {
                 </div>
               </div>
             ))}
-            <div className={styles.addAnswerButton}>
-              {showForm && <AnswerForm questionId={questionId} onSubmit={getAnswers} />}
-            </div>
-            <button onClick={() => setShowForm(true)} className={styles.button}>
-              回答を追加する
-            </button>
           </>
         ) : (
           <div className={styles.answerSection}>

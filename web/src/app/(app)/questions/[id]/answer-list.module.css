@@ -10,14 +10,9 @@
   border-radius: 6px;
 }
 
-.addAnswerButton {
-  padding-top: 1rem;
-}
-
 .button {
   display: inline-block;
   padding: 0.5rem 1rem;
-  margin-top: 1.5rem;
   background-color: #0070f3;
   color: white;
   border: none;
