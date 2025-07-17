@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './answer-form.module.css';
 import { api } from '@/lib/api/api.client';
 import { Answer } from '@/types/models';
