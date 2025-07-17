@@ -54,6 +54,7 @@ func (srv *service) UpdateOne(in Answer, db *gorm.DB) (Answer, error) {
 	ans.CallOutput = in.CallOutput
 	ans.CallError = in.CallError
 	ans.IsCorrect = in.IsCorrect
+	ans.CorrectAt = in.CorrectAt
 
 	return srv.repository.Update(&ans, db)
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './answer-form.module.css';
 import { api } from '@/lib/api/api.client';
 import { Answer } from '@/types/models';
@@ -37,14 +37,13 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer, onSubmit, onDelete })
   const [callError, setCallError] = useState<string>(answer?.call_error ?? '');
   const [correctAt, setCorrectAt] = useState<string | null>(answer?.correct_at ?? null);
   const [updatedAt, setUpdatedAt] = useState<string | null>(answer?.updated_at ?? null);
-  const [isCorrectTmp, setIsCorrectTmp] = useState<boolean | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setIsCorrectTmp(null);
     setCallOutput('');
     setCallError('');
+    setIsCorrect(null);
 
     try {
       const response: Answer = id
@@ -57,7 +56,6 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer, onSubmit, onDelete })
 
       setId(response.id);
       setIsCorrect(response.is_correct);
-      setIsCorrectTmp(response.is_correct);
       setCallOutput(response.call_output);
       setCallError(response.call_error);
       setCorrectAt(response.correct_at);
@@ -93,7 +91,7 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer, onSubmit, onDelete })
       <div className={styles.metaRow}>
         <span className={styles.label}>判定:</span>
         <span className={answer && (isCorrect ? styles.correct : styles.incorrect)}>
-          {id ? (isCorrect ? "✅ 正解" : "❌不正解") : "—"}
+          {id && isCorrect != null ? (isCorrect ? "✅ 正解" : "❌不正解") : "—"}
         </span>
       </div>
       <div className={styles.metaRow}>
@@ -141,9 +139,9 @@ const AnswerForm: React.FC<Props> = ({ questionId, answer, onSubmit, onDelete })
         </div>
       )}
 
-      {isCorrectTmp !== null && (
-        <p className={`${styles.result} ${isCorrectTmp ? styles.correct2 : styles.incorrect2}`}>
-          {isCorrectTmp ? '✅ 正解です！' : '❌ 不正解です'}
+      {isCorrect !== null && (
+        <p className={`${styles.result} ${isCorrect ? styles.correct2 : styles.incorrect2}`}>
+          {isCorrect ? '✅ 正解です！' : '❌ 不正解です'}
         </p>
       )}
     </form>
