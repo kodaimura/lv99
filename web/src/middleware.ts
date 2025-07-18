@@ -116,7 +116,7 @@ const isExcludedPath = (pathname: string): boolean => {
     '/api/accounts/signup',
     '/api/accounts/refresh',
     '/api/accounts/logout',
-  ].some((path) => pathname.startsWith(path));
+  ].includes(pathname);
 };
 
 export const config = {
