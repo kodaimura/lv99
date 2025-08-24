@@ -110,6 +110,7 @@ const getCookieDomain = (host: string | null): string | undefined => {
 const isExcludedPath = (pathname: string): boolean => {
   if (pathname === '/') return true;
   return [
+    '/_next',
     '/login',
     '/signup',
     '/api/accounts/login',
