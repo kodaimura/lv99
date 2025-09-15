@@ -6,6 +6,7 @@ import styles from './chat-menu.module.css';
 import { AccountWithProfile } from '@/types/models';
 import { api } from '@/lib/api/api.client';
 import { useAuth } from '@/contexts/auth-context';
+import { useReliableWebSocket } from '@/hooks/websocket';
 
 type Props = {
   onClick?: () => void;
@@ -23,6 +24,8 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
   const [accounts, setAccounts] = useState<AccountWithProfile[]>([]);
   const [unreadCounts, setUnreadCounts] = useState<UnreadCountMap>({});
   const { account } = useAuth();
+
+  const { ready, onMessage } = useReliableWebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(false);
@@ -90,9 +93,7 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
     getAccounts();
     getUnreadCounts();
 
-    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
-
-    socket.onmessage = async (event) => {
+    const off = onMessage(async (event) => {
       const data = JSON.parse(event.data);
       if (data.from_id === account.id) return;
 
@@ -114,16 +115,10 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
           console.warn('play failed:', e);
         }
       }
-    };
+    });
 
-    socket.onclose = () => {
-      console.log("WebSocket closed for chat menu");
-    };
-
-    return () => {
-      socket.close();
-    };
-  }, [account?.id]);
+    return off;
+  }, [account?.id, onMessage, soundEnabled]);
 
   const sortedAccounts = [...accounts].sort((a, b) => {
     const updatedA = unreadCounts[a.id]?.updatedAt ?? '1970-01-01T00:00:00Z';

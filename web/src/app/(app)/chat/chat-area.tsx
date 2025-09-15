@@ -5,6 +5,7 @@ import styles from "./chat-area.module.css";
 import Message from "./message";
 import { Chat } from "@/types/models";
 import { api } from "@/lib/api/api.client";
+import { useReliableWebSocket } from '@/hooks/websocket';
 
 type Props = {
   toId: number;
@@ -17,39 +18,37 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const chatBoxRef = useRef<HTMLDivElement>(null);
 
-  const socketRef = useRef<WebSocket | null>(null);
+  const { ready, send, onMessage } = useReliableWebSocket(
+    `${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`
+  );
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    setChats([]);
+    setHasMore(true);
     getChats(true);
     readChats();
-    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
-    socketRef.current = socket;
+    requestAnimationFrame(() => {
+      const box = chatBoxRef.current;
+      if (box) box.scrollTop = box.scrollHeight;
+    });
+  }, [toId]);
 
-    socket.onmessage = (event) => {
+  useEffect(() => {
+    const off = onMessage((event) => {
       const data = JSON.parse(event.data);
       if (data.from_id !== toId && data.to_id !== toId) return;
-      setChats(prev => [...prev, data]);
+      setChats((prev) => [...prev, data]);
       scrollToBottom();
-    };
-
-    socket.onclose = () => {
-      console.log("WebSocket closed");
-    };
-
-    return () => {
-      socket.close();
-    };
-  }, []);
+    });
+    return off;
+  }, [toId, onMessage]);
 
   const sendMessage = () => {
-    if (socketRef.current && message.trim()) {
-      socketRef.current.send(JSON.stringify({
-        to_id: Number(toId),
-        message: message,
-      }));
-      setMessage("");
-    }
+    const text = message.trim();
+    if (!text) return;
+    send(JSON.stringify({ to_id: Number(toId), message: text }));
+    setMessage("");
   };
 
   const scrollToBottom = () => {
@@ -76,7 +75,7 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
         if (isInit) {
           setChats(response.slice().reverse());
         } else {
-          setChats(prev => [...response.slice().reverse(), ...prev]);
+          setChats((prev) => [...response.slice().reverse(), ...prev]);
         }
         scrollToBottom();
       }
@@ -131,7 +130,11 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
           placeholder="Type a message..."
           rows={3}
         />
-        <button onClick={sendMessage} className={styles.button}>
+        <button
+          onClick={sendMessage}
+          className={styles.button}
+          disabled={!ready || !message.trim()}
+        >
           送信
         </button>
       </div>

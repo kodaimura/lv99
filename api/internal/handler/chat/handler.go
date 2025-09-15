@@ -105,6 +105,12 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+const (
+	writeWait  = 10 * time.Second
+	pongWait   = 30 * time.Second
+	pingPeriod = 27 * time.Second
+)
+
 func removeConn(accountId int, conn *websocket.Conn) {
 	socketsMutex.Lock()
 	defer socketsMutex.Unlock()
@@ -139,30 +145,47 @@ func (h *handler) WsConnect(c *gin.Context) {
 		return
 	}
 
+	conn.SetCloseHandler(func(code int, text string) error {
+		removeConn(accountId, conn)
+		return nil
+	})
+
+	// pong で ReadDeadline を延長
+	_ = conn.SetReadDeadline(time.Now().Add(pongWait))
+	conn.SetPongHandler(func(appData string) error {
+		_ = conn.SetReadDeadline(time.Now().Add(pongWait))
+		return nil
+	})
+
+	// 定期 ping（書き込みはロック下で行う）
+	stopPing := make(chan struct{})
+	go func() {
+		ticker := time.NewTicker(pingPeriod)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ticker.C:
+				socketsMutex.Lock()
+				_ = conn.SetWriteDeadline(time.Now().Add(writeWait))
+				if err := conn.WriteControl(websocket.PingMessage, nil, time.Now().Add(writeWait)); err != nil {
+					socketsMutex.Unlock()
+					removeConn(accountId, conn)
+					return
+				}
+				socketsMutex.Unlock()
+			case <-stopPing:
+				return
+			}
+		}
+	}()
+
 	socketsMutex.Lock()
 	sockets[accountId] = append(sockets[accountId], conn)
 	socketsMutex.Unlock()
 
 	defer func() {
-		conn.Close()
-
-		socketsMutex.Lock()
-		defer socketsMutex.Unlock()
-
-		conns := sockets[accountId]
-		newConns := make([]*websocket.Conn, 0, len(conns))
-		for _, c := range conns {
-			if c != conn {
-				newConns = append(newConns, c)
-			}
-		}
-
-		if len(newConns) > 0 {
-			sockets[accountId] = newConns
-		} else {
-			delete(sockets, accountId)
-		}
-		core.Logger.Info("Removed connection for account %d, remaining: %d", accountId, len(sockets[accountId]))
+		close(stopPing)
+		removeConn(accountId, conn)
 	}()
 
 	for {
@@ -172,7 +195,6 @@ func (h *handler) WsConnect(c *gin.Context) {
 			break
 		}
 
-		socketsMutex.Lock()
 		chat, err := h.usecase.CreateOne(usecase.CreateOneDto{
 			FromId:  accountId,
 			ToId:    req.ToId,
@@ -180,32 +202,69 @@ func (h *handler) WsConnect(c *gin.Context) {
 		})
 		if err != nil {
 			core.Logger.Error(err.Error())
-			socketsMutex.Unlock()
 			break
 		}
 
-		// toId 宛のコネクションに送信、失敗時に削除
-		if toConns, ok := sockets[chat.ToId]; ok {
-			for _, toConn := range toConns {
-				if err := toConn.WriteJSON(ToChatReponse(chat)); err != nil {
-					core.Logger.Warn("Failed to send to %d: %v", chat.ToId, err)
-					removeConn(chat.ToId, toConn)
+		// 宛先/送信者の接続リストをスナップショット
+		var toConns []*websocket.Conn
+		var fromConns []*websocket.Conn
+
+		socketsMutex.Lock()
+		if list, ok := sockets[chat.ToId]; ok {
+			toConns = append(toConns, list...)
+		}
+		if chat.FromId != chat.ToId {
+			if list, ok := sockets[chat.FromId]; ok {
+				fromConns = append(fromConns, list...)
+			}
+		}
+
+		resp := ToChatReponse(chat)
+
+		// ロック下で送信＆失敗ならその場で map から除去（同時書き込み防止）
+		for _, toConn := range toConns {
+			_ = toConn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := toConn.WriteJSON(resp); err != nil {
+				core.Logger.Warn("Failed to send to %d: %v", chat.ToId, err)
+				cur := sockets[chat.ToId]
+				kept := cur[:0]
+				for _, c := range cur {
+					if c != toConn {
+						kept = append(kept, c)
+					} else {
+						_ = c.Close()
+					}
+				}
+				if len(kept) > 0 {
+					sockets[chat.ToId] = kept
+				} else {
+					delete(sockets, chat.ToId)
 				}
 			}
 		}
 
-		// fromId 宛のコネクションに送信（toIdと異なる場合）、失敗時に削除
-		if chat.FromId != chat.ToId {
-			if fromConns, ok := sockets[chat.FromId]; ok {
-				for _, fromConn := range fromConns {
-					if err := fromConn.WriteJSON(ToChatReponse(chat)); err != nil {
-						core.Logger.Warn("Failed to send to %d: %v", chat.FromId, err)
-						removeConn(chat.FromId, fromConn)
+		if len(fromConns) > 0 {
+			for _, fromConn := range fromConns {
+				_ = fromConn.SetWriteDeadline(time.Now().Add(writeWait))
+				if err := fromConn.WriteJSON(resp); err != nil {
+					core.Logger.Warn("Failed to send to %d: %v", chat.FromId, err)
+					cur := sockets[chat.FromId]
+					kept := cur[:0]
+					for _, c := range cur {
+						if c != fromConn {
+							kept = append(kept, c)
+						} else {
+							_ = c.Close()
+						}
+					}
+					if len(kept) > 0 {
+						sockets[chat.FromId] = kept
+					} else {
+						delete(sockets, chat.FromId)
 					}
 				}
 			}
 		}
-
 		socketsMutex.Unlock()
 	}
 }

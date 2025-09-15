@@ -6,6 +6,7 @@ import { AccountWithProfile } from '@/types/models';
 import { api } from '@/lib/api/api.client';
 import styles from './chat-menu.module.css';
 import { useAuth } from '@/contexts/auth-context';
+import { useReliableWebSocket } from "@/hooks/websocket";
 
 type Props = {
   onClick?: () => void;
@@ -16,6 +17,8 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [admin, setAdmin] = useState<AccountWithProfile | null>(null);
   const { account } = useAuth();
+
+  const { ready, onMessage } = useReliableWebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(false);
@@ -81,7 +84,7 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
 
     const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
 
-    socket.onmessage = async (event) => {
+    const off = onMessage(async (event) => {
       const data = JSON.parse(event.data);
       if (data.from_id === account.id) return;
       if (data.from_id !== admin.id) return;
@@ -97,16 +100,10 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
           console.warn('play failed:', e);
         }
       }
-    };
+    });
 
-    socket.onclose = () => {
-      console.log("WebSocket closed for chat menu");
-    };
-
-    return () => {
-      socket.close();
-    };
-  }, [admin, account]);
+    return off;
+  }, [admin, account, onMessage]);
 
   const handleClickChat = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
