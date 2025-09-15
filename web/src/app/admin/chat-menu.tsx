@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './chat-menu.module.css';
 import { AccountWithProfile } from '@/types/models';
@@ -22,8 +22,39 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
   const router = useRouter();
   const [accounts, setAccounts] = useState<AccountWithProfile[]>([]);
   const [unreadCounts, setUnreadCounts] = useState<UnreadCountMap>({});
-
   const { account } = useAuth();
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [soundEnabled, setSoundEnabled] = useState(false);
+
+  // 初回ユーザー操作で音声を解錠する
+  useEffect(() => {
+    const unlock = async () => {
+      const el = audioRef.current;
+      if (!el) return;
+      try {
+        el.muted = true;
+        await el.play();
+        el.pause();
+        el.currentTime = 0;
+        el.muted = false;
+        setSoundEnabled(true);
+      } catch (error) {
+        console.error('Failed to unlock audio:', error);
+      }
+    };
+
+    // 一度だけ拾えれば良い（端末差を吸収するため3種登録）
+    window.addEventListener('pointerdown', unlock, { once: true });
+    window.addEventListener('keydown', unlock, { once: true });
+    window.addEventListener('touchstart', unlock, { once: true });
+
+    return () => {
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
+      window.removeEventListener('touchstart', unlock);
+    };
+  }, []);
 
   const getAccounts = async () => {
     try {
@@ -61,7 +92,7 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
 
     const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
 
-    socket.onmessage = (event) => {
+    socket.onmessage = async (event) => {
       const data = JSON.parse(event.data);
       if (data.from_id === account.id) return;
 
@@ -73,8 +104,16 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
         },
       }));
 
-      const audio = new Audio('/message.mp3');
-      audio.play();
+      // 解錠済みなら既存の audio を再生
+      const el = audioRef.current;
+      if (soundEnabled && el) {
+        try {
+          el.currentTime = 0;
+          await el.play();
+        } catch (e) {
+          console.warn('play failed:', e);
+        }
+      }
     };
 
     socket.onclose = () => {
@@ -120,6 +159,7 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
           )}
         </a>
       ))}
+      <audio ref={audioRef} src="/message.mp3" preload="auto" />
     </div>
   );
 };
