@@ -52,7 +52,7 @@ func (uc *usecase) CreateOne(in CreateOneDto) (commentModule.Comment, error) {
 }
 
 func (uc *usecase) UpdateOne(in UpdateOneDto) (commentModule.Comment, error) {
-	return uc.commentService.CreateOne(commentModule.Comment{
+	return uc.commentService.UpdateOne(commentModule.Comment{
 		Id:        in.Id,
 		AccountId: in.AccountId,
 		Content:   in.Content,

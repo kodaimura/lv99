@@ -6,6 +6,7 @@ import styles from './comment-list.module.css';
 import CommentForm from './comment-form';
 import type { CommentWithProfile } from '@/types/models';
 import LocalDate from '@/components/features/local-date';
+import { useAuth } from "@/contexts/auth-context";
 
 type Props = {
   answerId: number;
@@ -17,6 +18,9 @@ const CommentList: React.FC<Props> = ({ answerId }) => {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+
+  const { account } = useAuth();
+  if (!account) return null;
 
   const getComments = useCallback(async () => {
     const response: CommentWithProfile[] = await api.get("/comments/with-profile", { answer_id: answerId });
@@ -85,14 +89,16 @@ const CommentList: React.FC<Props> = ({ answerId }) => {
                     <span className={styles.commentAuthor}>{comment.display_name}</span>
                   </div>
 
-                  <button
-                    className={styles.menuButton}
-                    onClick={() => handleMenuToggle(index)}
-                    aria-haspopup="true"
-                    aria-expanded={openMenuIndex === index}
-                  >
-                    ⋮
-                  </button>
+                  {comment.account_id === account.id && (
+                    <button
+                      className={styles.menuButton}
+                      onClick={() => handleMenuToggle(index)}
+                      aria-haspopup="true"
+                      aria-expanded={openMenuIndex === index}
+                    >
+                      ⋮
+                    </button>
+                  )}
 
                   {openMenuIndex === index && (
                     <div className={styles.menu} ref={menuRef}>
