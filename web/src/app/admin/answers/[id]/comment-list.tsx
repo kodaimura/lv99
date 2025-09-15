@@ -20,7 +20,6 @@ const CommentList: React.FC<Props> = ({ answerId }) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   const { account } = useAuth();
-  if (!account) return null;
 
   const getComments = useCallback(async () => {
     const response: CommentWithProfile[] = await api.get("/comments/with-profile", { answer_id: answerId });
@@ -86,7 +85,7 @@ const CommentList: React.FC<Props> = ({ answerId }) => {
                     <span className={styles.commentDate}><LocalDate isoString={comment.created_at} /></span>
                     <span className={styles.commentAuthor}>{comment.display_name}</span>
                   </div>
-                  {comment.account_id === account.id && (
+                  {comment.account_id === account?.id && (
                     <button
                       className={styles.menuButton}
                       onClick={() => handleMenuToggle(index)}

@@ -25,7 +25,7 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
   const [unreadCounts, setUnreadCounts] = useState<UnreadCountMap>({});
   const { account } = useAuth();
 
-  const { ready, onMessage } = useReliableWebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
+  const { onMessage } = useReliableWebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(false);

@@ -18,7 +18,7 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
   const [admin, setAdmin] = useState<AccountWithProfile | null>(null);
   const { account } = useAuth();
 
-  const { ready, onMessage } = useReliableWebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
+  const { onMessage } = useReliableWebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(false);
@@ -81,8 +81,6 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
     };
 
     fetchUnreadCount();
-
-    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
 
     const off = onMessage(async (event) => {
       const data = JSON.parse(event.data);
