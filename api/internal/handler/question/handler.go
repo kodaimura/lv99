@@ -38,7 +38,12 @@ func NewHandler(usecase usecase.Usecase) Handler {
 
 // GET /api/questions
 func (h *handler) ApiGet(c *gin.Context) {
-	questions, err := h.usecase.Get(usecase.GetDto{})
+	var req GetRequest
+	if err := helper.BindQuery(c, &req); err != nil {
+		c.Error(err)
+		return
+	}
+	questions, err := h.usecase.Get(usecase.GetDto{Level: req.Level})
 	if err != nil {
 		c.Error(err)
 		return

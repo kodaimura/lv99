@@ -43,6 +43,10 @@ type QuestionUri struct {
 	QuestionId int `uri:"question_id" binding:"required"`
 }
 
+type GetRequest struct {
+	Level int `form:"level"`
+}
+
 type PostOneRequest struct {
 	Title   string `json:"title" binding:"required"`
 	Content string `json:"content" binding:"required"`

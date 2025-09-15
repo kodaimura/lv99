@@ -54,7 +54,7 @@ const QuestionList: React.FC = () => {
         </thead>
         <tbody className={styles.tbody}>
           {questions.map((q, i) => (
-            <tr key={i} className={styles.tr} onClick={() => router.push(`/questions/${q.id}`)}>
+            <tr key={i} className={styles.tr} onClick={() => router.push(`/questions/${q.level}`)}>
               <td className={styles.td}>{q.level}</td>
               <td className={styles.td}>{q.title}</td>
               <td className={styles.td}>

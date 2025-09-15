@@ -12,14 +12,16 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ level: string }>;
 };
 
 const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
-  const { id } = await params;
+  const { level } = await params;
   let question: Question | null = null;
   try {
-    question = await api.get(`questions/${id}`);
+    // levelで取得に変更 ... levelはユニークである必要がある(運用で担保) 
+    let questions: Question[] = await api.get(`questions?level=${level}`);
+    question = questions[0];
   } catch { }
 
   if (!question) {
@@ -29,9 +31,9 @@ const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
   return (
     <div className={styles.container}>
       <div className={styles.navigation}>
-        {question.id > 1 ?
+        {question.level > 1 ?
           (
-            <Link href={`/questions/${question.id - 1}`}>
+            <Link href={`/questions/${question.level - 1}`}>
               <IoIosArrowBack size={20} />
             </Link>
           ) : (
@@ -43,7 +45,7 @@ const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
         <span className={styles.levelBadge}>Lv {question.level}</span>
         {question.id < 100 ?
           (
-            <Link href={`/questions/${question.id + 1}`}>
+            <Link href={`/questions/${question.level + 1}`}>
               <IoIosArrowForward size={20} />
             </Link>
           ) : (
