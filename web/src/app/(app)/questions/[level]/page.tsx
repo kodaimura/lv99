@@ -20,7 +20,7 @@ const QuestionDetailPage: React.FC<Props> = async ({ params }) => {
   let question: Question | null = null;
   try {
     // levelで取得に変更 ... levelはユニークである必要がある(運用で担保) 
-    let questions: Question[] = await api.get(`questions?level=${level}`);
+    const questions: Question[] = await api.get(`questions?level=${level}`);
     question = questions[0];
   } catch { }
 
