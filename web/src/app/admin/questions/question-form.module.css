@@ -3,12 +3,17 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 10px;
+  gap: 14px;
 }
 
 .error {
-  color: #dd0000;
+  color: var(--color-danger);
+  background: #fff1f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 0.85rem;
   white-space: pre-line;
+  text-align: left;
 }
 
 .inputGroup {
@@ -17,23 +22,27 @@
 
 .label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #333;
+  margin-bottom: 7px;
+  font-weight: 700;
+  color: var(--color-brand);
 }
 
 .input {
   width: 100%;
-  padding: 10px;
+  padding: 12px 13px;
   font-size: 1rem;
-  border: 2px solid #ddd;
-  border-radius: 5px;
-  transition: border-color 0.3s;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .input:focus {
-  border-color: #6a11cb;
+  border-color: var(--color-primary);
   outline: none;
+  box-shadow: var(--focus-ring);
+  background: #ffffff;
 }
 
 .textarea {
@@ -41,17 +50,20 @@
 }
 
 .submitButton {
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  background: linear-gradient(135deg, #263244, #4b5d75);
   color: white;
-  padding: 10px;
-  font-size: 1.2rem;
-  font-weight: bold;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 700;
   border: none;
-  border-radius: 5px;
+  border-radius: 999px;
   cursor: pointer;
-  transition: 0.3s;
+  box-shadow: 0 12px 24px rgba(51, 65, 85, 0.22);
+  transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
 }
 
 .submitButton:hover {
-  background: linear-gradient(135deg, #5a0dbb, #1f5ae0);
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(51, 65, 85, 0.26);
 }

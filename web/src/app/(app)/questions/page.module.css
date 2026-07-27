@@ -1,11 +1,10 @@
 .container {
-  width: 90%;
+  width: min(1120px, calc(100% - 40px));
   margin: 0 auto;
   box-sizing: border-box;
-  padding-top: 30px;
+  padding-top: clamp(1.6rem, 4vw, 2.6rem);
   padding-bottom: 100px;
 
   display: flex;
-  justify-content: center;
   flex-direction: column;
 }

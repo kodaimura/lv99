@@ -1,14 +1,18 @@
 .container {
-  width: 90%;
+  width: min(1120px, calc(100% - 40px));
   margin: 0 auto;
-  padding-top: 30px;
+  padding-top: clamp(1.6rem, 4vw, 2.6rem);
   padding-bottom: 100px;
 }
 
 .header {
-  border-bottom: 2px solid #4a90e2;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 5px solid var(--color-accent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
   margin-bottom: 1.5rem;
-  padding-bottom: 8px;
+  padding: 1.15rem 1.25rem;
 }
 
 .navigation {
@@ -21,27 +25,32 @@
 
 .levelBadge {
   display: inline-block;
-  background-color: #3182ce;
+  background-color: var(--color-brand);
   color: white;
   border-radius: 100px;
-  padding: 4px 15px;
+  padding: 5px 14px;
   font-weight: 700;
   font-size: 1rem;
 }
 
 .backButton {
-  background-color: #f3f4f6;
-  color: #374151;
+  background-color: var(--color-surface-solid);
+  color: var(--color-brand);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
 }
 
 .backButton:hover {
-  background-color: #e5e7eb;
+  background-color: var(--color-surface-muted);
 }
 
 .nextButton {
-  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, #263244, #4b5d75);
   color: white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  box-shadow: 0 12px 24px rgba(51, 65, 85, 0.22);
 }
 
 .nextButton:hover {
@@ -50,13 +59,15 @@
 
 
 .title {
-  font-size: 1.3rem;
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
   font-weight: 700;
-  color: #1a202c;
+  color: var(--color-brand-strong);
+  letter-spacing: -0.04em;
 }
 
 .content {
-  margin-top: 5px;
+  margin-top: 8px;
   font-size: 1rem;
   white-space: pre-wrap;
+  color: var(--color-text);
 }

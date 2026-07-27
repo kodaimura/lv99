@@ -1,20 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { JetBrains_Mono, Noto_Sans_JP } from "next/font/google";
 import "@/globals.css";
 import { Providers } from "./providers";
 import type { Account } from "@/types/models";
 import { cookies } from "next/headers";
 
-const geistSans = Geist({
+const appSans = Noto_Sans_JP({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   preload: false,
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
+const appMono = JetBrains_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   preload: false,
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -57,8 +61,8 @@ export default async function RootLayout({
   } catch { }
 
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="ja">
+      <body className={`${appSans.variable} ${appMono.variable}`}>
         <Providers initAccount={account}>
           {children}
         </Providers>

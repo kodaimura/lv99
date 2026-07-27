@@ -1,7 +1,7 @@
 .messageRow {
   display: flex;
-  margin-bottom: 8px;
-  padding: 0 12px;
+  margin-bottom: 10px;
+  padding: 0 8px;
 }
 
 .me {
@@ -14,33 +14,34 @@
 
 .bubble {
   max-width: 70%;
-  padding: 10px 14px;
-  border-radius: 18px;
+  padding: 10px 14px 11px;
+  border-radius: 20px;
   position: relative;
   display: flex;
   flex-direction: column;
   white-space: pre-wrap;
   word-break: break-word;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
   font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.62);
 }
 
 
 .me .bubble {
-  background-color: #f9f9f9;
-  color: #000000;
-  border-bottom-right-radius: 6px;
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  color: var(--color-text);
+  border-bottom-right-radius: 7px;
 }
 
 .other .bubble {
-  background-color: #e5e7eb;
-  color: #1f2937;
-  border-bottom-left-radius: 6px;
+  background: linear-gradient(135deg, #263244, #475569);
+  color: #f8fafc;
+  border-bottom-left-radius: 7px;
 }
 
 .meta {
   font-size: 10px;
-  color: #6b7280;
+  color: var(--color-text-muted);
   margin-bottom: 4px;
   text-align: right;
   user-select: none;
@@ -52,9 +53,10 @@
 
 .other .meta {
   text-align: left;
+  color: rgba(248, 250, 252, 0.66);
 }
 
 .text {
   font-size: 15px;
-  line-height: 1.4;
+  line-height: 1.55;
 }

@@ -1,19 +1,35 @@
 .page {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 118px);
   overflow: hidden;
+  width: min(980px, calc(100% - 32px));
+  margin: 18px auto 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  background: var(--color-surface);
+}
+
+@media (max-width: 768px) {
+  .page {
+    height: calc(100vh - 96px);
+    width: calc(100% - 20px);
+    margin-top: 10px;
+  }
 }
 
 .header {
-  height: 50px;
-  padding: 0 16px;
+  min-height: 58px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #ccc;
-  font-weight: bold;
-  font-size: 18px;
-  background: white;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  color: var(--color-brand-strong);
 }
 
 .chatAreaWrapper {

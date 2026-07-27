@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./chat-area.module.css";
 import Message from "./message";
 import { Chat } from "@/types/models";
@@ -10,6 +10,8 @@ import { useReliableWebSocket } from '@/hooks/websocket';
 type Props = {
   toId: number;
 };
+
+const MAX_COMPOSER_LINES = 5;
 
 const parseChatTime = (chat: Chat) => {
   const time = Date.parse(chat.created_at);
@@ -32,6 +34,7 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
   const [hasMore, setHasMore] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
   const chatBoxRef = useRef<HTMLDivElement>(null);
+  const composerRef = useRef<HTMLTextAreaElement>(null);
   const chatsRef = useRef<Chat[]>([]);
   const loadingRef = useRef(false);
   const requestSeqRef = useRef(0);
@@ -44,6 +47,27 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
   useEffect(() => {
     chatsRef.current = chats;
   }, [chats]);
+
+  const resizeComposer = useCallback(() => {
+    const composer = composerRef.current;
+    if (!composer) return;
+
+    const styles = window.getComputedStyle(composer);
+    const lineHeight = parseFloat(styles.lineHeight) || 23;
+    const paddingTop = parseFloat(styles.paddingTop) || 0;
+    const paddingBottom = parseFloat(styles.paddingBottom) || 0;
+    const minHeight = parseFloat(styles.minHeight) || lineHeight + paddingTop + paddingBottom;
+    const maxHeight = lineHeight * MAX_COMPOSER_LINES + paddingTop + paddingBottom;
+
+    composer.style.height = "0px";
+    const nextHeight = Math.max(minHeight, Math.min(composer.scrollHeight, maxHeight));
+    composer.style.height = `${nextHeight}px`;
+    composer.style.overflowY = composer.scrollHeight > maxHeight ? "auto" : "hidden";
+  }, []);
+
+  useLayoutEffect(() => {
+    resizeComposer();
+  }, [message, resizeComposer]);
 
   const scrollToBottom = useCallback(() => {
     requestAnimationFrame(() => {
@@ -154,20 +178,24 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
         <div ref={bottomRef} />
       </div>
       <div className={styles.inputArea}>
-        <textarea
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className={styles.input}
-          placeholder="Type a message..."
-          rows={3}
-        />
-        <button
-          onClick={sendMessage}
-          className={styles.button}
-          disabled={!ready || !message.trim()}
+        <div className={styles.composer}>
+          <textarea
+            ref={composerRef}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className={styles.input}
+            placeholder="Type a message..."
+            rows={1}
+          />
+          <button
+            onClick={sendMessage}
+            className={styles.button}
+            disabled={!ready || !message.trim()}
+          aria-label="メッセージを送信"
         >
-          送信
+          <span className={styles.buttonIcon}>↑</span>
         </button>
+        </div>
       </div>
     </div>
   );

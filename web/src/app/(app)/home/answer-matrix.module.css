@@ -1,18 +1,25 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  gap: 4px;
+  gap: 6px;
   margin: 16px 0;
 }
 
 .cell {
-  padding: 6px;
+  padding: 7px 6px;
   font-size: 12px;
   text-align: center;
-  border-radius: 4px;
-  color: #333;
-  font-weight: bold;
-  border: 1px solid #ccc;
+  border-radius: var(--radius-sm);
+  color: var(--color-brand-strong);
+  font-weight: 700;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.cell:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.10);
 }
 
 .link {

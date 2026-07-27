@@ -8,5 +8,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  min-height: calc(100vh - 64px);
+  transform: translateY(-6vh);
+}
+
+@media (max-width: 768px) {
+  .container {
+    transform: translateY(-3vh);
+  }
 }

@@ -1,10 +1,12 @@
 .footer {
   position: fixed;
-  bottom: 10px;
-  right: 20px;
+  bottom: 14px;
+  right: 22px;
   height: 1rem;
-  color: #2e2e2e;
-  font-size: 0.85rem;
+  color: rgba(51, 65, 85, 0.66);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   user-select: none;
   background: transparent;
   box-shadow: none;

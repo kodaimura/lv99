@@ -1,38 +1,45 @@
 .container {
-  max-width: 590px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: clamp(2rem, 6vw, 5rem) 1.25rem;
 }
 
 .intro {
-  background: #f5f7fa;
-  border-radius: 8px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: var(--color-surface);
+  border: 1px solid rgba(216, 224, 234, 0.9);
+  border-radius: var(--radius-xl);
+  padding: clamp(1.5rem, 5vw, 2.7rem);
+  box-shadow: var(--shadow-lg);
   text-align: left;
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.8;
+  backdrop-filter: blur(18px);
 }
 
 .intro h1 {
-  font-size: 1.8rem;
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1.12;
   margin-bottom: 1rem;
-  color: #222;
+  color: var(--color-brand-strong);
+  letter-spacing: -0.06em;
 }
 
 .intro h2 {
-  font-size: 1.2rem;
-  margin-top: 1.5rem;
+  font-size: 1.1rem;
+  margin-top: 1.7rem;
   margin-bottom: 0.5rem;
-  color: #333;
+  color: var(--color-brand);
+  letter-spacing: -0.02em;
 }
 
 .box {
   margin-bottom: 1rem;
-  background: #fff;
-  border-left: 4px solid #0070f3;
-  padding: 0.8rem 1rem;
-  border-radius: 4px;
+  background: linear-gradient(180deg, #ffffff, #f7fafc);
+  border: 1px solid var(--color-border);
+  border-left: 5px solid var(--color-accent);
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .box ul {
@@ -45,8 +52,10 @@
 }
 
 .intro a {
-  color: #0070f3;
+  color: var(--color-primary);
   text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
 }
 
 .intro a:hover {
@@ -54,16 +63,18 @@
 }
 
 .loginLink {
-  padding: 5px 10px;
-  background: transparent;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.08);
   color: white;
   text-decoration: none;
-  font-weight: bold;
-  border: 2px solid white;
-  border-radius: 5px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: 999px;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
 }
 
 .loginLink:hover {
   background: white;
-  color: #2575fc;
+  color: var(--color-brand);
+  transform: translateY(-1px);
 }

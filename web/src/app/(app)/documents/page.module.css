@@ -1,24 +1,32 @@
 .container {
-  width: 90%;
+  width: min(900px, calc(100% - 40px));
   margin: 0 auto;
-  padding-top: 30px;
+  padding-top: clamp(1.6rem, 4vw, 2.6rem);
   padding-bottom: 100px;
 }
 
 .title {
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 700;
   margin-bottom: 1.5rem;
+  color: var(--color-brand-strong);
+  letter-spacing: -0.05em;
 }
 
 .section {
   margin-bottom: 2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: clamp(1rem, 3vw, 1.4rem);
 }
 
 .heading {
   font-size: 1.2rem;
-  font-weight: bold;
+  font-weight: 700;
   margin-bottom: 0.5rem;
+  color: var(--color-brand);
 }
 
 .text {
@@ -26,12 +34,14 @@
 }
 
 .code {
-  background: #f4f4f4;
+  background: #172033;
+  color: #e5edf7;
   padding: 1rem;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
   white-space: pre-wrap;
   overflow-x: auto;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .list {

@@ -1,56 +1,59 @@
 .container {
-  width: 90%;
+  width: min(1120px, calc(100% - 40px));
   margin: 0 auto;
   box-sizing: border-box;
-  padding-top: 30px;
+  padding-top: clamp(1.6rem, 4vw, 2.6rem);
   padding-bottom: 100px;
 
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  gap: 1.25rem;
 }
 
 .section {
-  margin-bottom: 30px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  margin-bottom: 0;
 }
 
 .heading {
-  font-size: 20px;
-  font-weight: bold;
-  border-left: 5px solid #ffcc00;
+  font-size: clamp(1.1rem, 2vw, 1.32rem);
+  font-weight: 700;
+  border-left: 5px solid var(--color-accent);
   padding-left: 12px;
   margin-bottom: 16px;
-  color: #333;
+  color: var(--color-brand-strong);
+  letter-spacing: -0.03em;
 }
 
 .countItem {
   overflow: hidden;
+  border-radius: var(--radius-md);
 }
 
 .countItem:hover {
-  background-color: #f3f4f6;
-  border-bottom-left-radius: 8px;
+  background-color: var(--color-surface-muted);
 }
 
 .countContent {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  border-bottom-left-radius: 8px;
+  padding: 0.7rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .levelTag {
   display: inline-block;
-  background-color: #e0e7ff;
-  color: #3730a3;
+  background-color: var(--color-brand-soft);
+  color: var(--color-brand);
   font-size: 0.9rem;
   font-weight: 500;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
-  ;
 }
 
 .title {

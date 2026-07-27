@@ -1,12 +1,11 @@
 .container {
-  width: 90%;
+  width: min(1120px, calc(100% - 40px));
   margin: 0 auto;
   box-sizing: border-box;
-  padding-top: 1rem;
+  padding-top: clamp(1.2rem, 3vw, 2.2rem);
   padding-bottom: 100px;
 
   display: flex;
-  justify-content: center;
   flex-direction: column;
 }
 
@@ -17,47 +16,57 @@
 }
 
 .addButton {
-  background-color: #4CAF50;
+  background: linear-gradient(135deg, #15803d, #22c55e);
   color: white;
-  padding: 8px 16px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: 999px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 700;
   height: 40px;
+  box-shadow: 0 12px 24px rgba(21, 128, 61, 0.20);
+  transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
 }
 
 .addButton:hover {
-  background-color: #45a049;
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(21, 128, 61, 0.24);
 }
 
 .tableContainer {
   overflow-x: auto;
   margin-top: 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 0.9rem;
-  background-color: white;
+  background-color: transparent;
 }
 
 .thead {
-  background-color: #f5f5f5;
+  background-color: rgba(241, 245, 249, 0.92);
 }
 
 .th,
 .td {
-  border: 1px solid #ddd;
-  padding: 12px 12px;
+  border-bottom: 1px solid rgba(216, 224, 234, 0.76);
+  padding: 13px 14px;
   text-align: left;
 }
 
 .th {
-  font-weight: bold;
-  color: #333;
+  font-weight: 700;
+  color: var(--color-brand);
   text-align: center;
+  white-space: nowrap;
 }
 
 .th:nth-child(1) {
@@ -115,10 +124,14 @@
 }
 
 .tr:nth-child(even) {
-  background-color: #fafafa;
+  background-color: rgba(248, 250, 252, 0.58);
 }
 
 .tr:hover {
-  background-color: #f0f8ff;
+  background-color: #eef6ff;
   transition: background-color 0.2s ease-in-out;
+}
+
+.tr:last-child .td {
+  border-bottom: none;
 }

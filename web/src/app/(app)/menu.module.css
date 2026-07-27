@@ -1,15 +1,17 @@
 .sidebar {
-  width: 240px;
+  width: 248px;
   height: 100vh;
-  background: linear-gradient(180deg, #1e293b, #334155);
+  background:
+    radial-gradient(circle at 18% 10%, rgba(244, 196, 48, 0.18), transparent 12rem),
+    linear-gradient(180deg, #172033 0%, #23324a 54%, #334155 100%);
   color: #f8fafc;
-  padding: 1rem;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  padding: 78px 14px 20px;
+  box-shadow: 18px 0 45px rgba(15, 23, 42, 0.18);
   position: fixed;
   top: 0;
   left: 0;
-  padding-top: 70px;
-  transition: left 0.3s ease-in-out;
+  border-right: 1px solid rgba(255, 255, 255, 0.10);
+  transition: left 0.26s ease-in-out;
   z-index: 500;
 }
 
@@ -30,34 +32,41 @@
 }
 
 .menu li {
-  margin: 1rem 0;
+  margin: 0.35rem 0;
 }
 
 .item {
-  color: white;
+  color: rgba(248, 250, 252, 0.88);
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 700;
   display: block;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  padding: 0.72rem 0.85rem;
+  border-radius: 13px;
+  letter-spacing: -0.01em;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
 }
 
 .item:hover {
-  background-color: #374151;
+  background: rgba(255, 255, 255, 0.10);
+  color: #ffffff;
+  transform: translateX(3px);
 }
 
 .menuButton {
   display: none;
   position: fixed;
-  top: 0.5rem;
-  left: 1rem;
+  top: 0.62rem;
+  left: 0.85rem;
   z-index: 1100;
-  font-size: 2rem;
-  background: none;
-  border: none;
+  font-size: 1.65rem;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
   color: white;
   cursor: pointer;
+  width: 42px;
+  height: 42px;
+  line-height: 1;
 }
 
 @media (max-width: 768px) {
@@ -69,6 +78,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(15, 23, 42, 0.48);
+  backdrop-filter: blur(4px);
   z-index: 400;
 }

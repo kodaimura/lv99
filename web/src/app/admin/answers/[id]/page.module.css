@@ -1,36 +1,37 @@
 .container {
-  padding: 24px;
-  width: 90%;
-  margin: 10px auto 150px auto;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-  background-color: #f9fafb;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(129, 31, 31, 0.1);
+  padding: clamp(1.3rem, 3vw, 2rem);
+  width: min(1120px, calc(100% - 40px));
+  margin: 24px auto 150px auto;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
 }
 
 .header {
-  border-bottom: 2px solid #4a90e2;
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: 16px;
-  padding-bottom: 8px;
+  padding-bottom: 12px;
 }
 
 .levelBadge {
   display: inline-block;
-  background-color: #3182ce;
+  background-color: var(--color-brand);
   color: white;
-  border-radius: 12px;
-  padding: 2px 10px;
+  border-radius: 999px;
+  padding: 4px 11px;
   font-weight: 700;
   font-size: 0.85rem;
   margin-right: 8px;
 }
 
 .title {
-  font-size: 1.3rem;
+  font-size: clamp(1.3rem, 3vw, 1.75rem);
   font-weight: 700;
-  color: #1a202c;
+  color: var(--color-brand-strong);
   padding: 5px 0;
+  letter-spacing: -0.04em;
 }
 
 .content {
@@ -42,18 +43,19 @@
 .displayName {
   font-weight: 600;
   font-size: 1.1rem;
-  color: #2a4365;
+  color: var(--color-brand);
   margin-bottom: 8px;
 }
 
 .answerInfo {
   margin-top: 20px;
-  background-color: #f7fafc;
-  border-radius: 8px;
+  background-color: #f8fafc;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   padding: 16px 24px;
-  font-family: "Segoe UI Mono", Consolas, monospace;
-  color: #2d3748;
-  box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+  font-family: var(--font-geist-mono), monospace;
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
 }
 
 .metaRow {
@@ -63,18 +65,18 @@
 }
 
 .label {
-  font-weight: bold;
-  color: #555;
+  font-weight: 700;
+  color: var(--color-text-muted);
   min-width: 80px;
 }
 
 .correct {
-  color: green;
+  color: var(--color-success);
   font-weight: bold;
 }
 
 .incorrect {
-  color: crimson;
+  color: var(--color-danger);
   font-weight: bold;
 }
 
@@ -89,10 +91,11 @@
 }
 
 .callOutput {
-  background-color: #e6fffa;
-  color: #22543d;
+  background-color: #ecfdf5;
+  color: #14532d;
   padding: 12px 16px;
-  border-radius: 6px;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-md);
   margin-top: 10px;
   font-family: monospace;
   overflow-x: auto;
@@ -100,10 +103,11 @@
 }
 
 .callError {
-  background-color: #ffe6e6;
-  color: #822727;
+  background-color: #fff1f2;
+  color: #9f1239;
   padding: 12px 16px;
-  border-radius: 6px;
+  border: 1px solid #fecdd3;
+  border-radius: var(--radius-md);
   margin-top: 10px;
   font-family: monospace;
   overflow-x: auto;
@@ -113,7 +117,7 @@
 .codeTitle {
   font-size: 16px;
   margin-bottom: 8px;
-  color: #333;
+  color: var(--color-brand-strong);
 }
 
 .commentsSection {
@@ -121,11 +125,12 @@
 }
 
 .commentItem {
-  background-color: #edf2f7;
-  border-left: 4px solid #3182ce;
+  background-color: #f8fafc;
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
   padding: 12px 16px;
   margin-bottom: 12px;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
-  color: #2d3748;
+  color: var(--color-text);
 }
