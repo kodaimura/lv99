@@ -7,7 +7,7 @@ services:
       - ./api:/app
       - ./api/linux/logrotate.d/app:/etc/logrotate.d/app
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     depends_on:
       - db
     environment:
@@ -23,7 +23,7 @@ services:
     volumes:
       - ./web:/app
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
