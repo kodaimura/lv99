@@ -32,10 +32,9 @@ export const useReliableWebSocket = (url: string, opts: Options = {}) => {
   const pongTimer = useRef<number | null>(null);
   const reconnectTimer = useRef<number | null>(null);
 
-  // StrictMode の初回マウント→即アンマウント対策:
-  // CONNECTING 中にクリーンアップで即 close すると警告が出るので、
-  // いったんフラグだけ立てて、onopen で正常 close する。
-  const willCloseOnOpenRef = useRef(false);
+  // StrictMode の初回マウント→即アンマウント対策。
+  // CONNECTING 中に即 close せず、対象ソケットごとに「開いたら閉じる」を記録する。
+  const closeOnOpenRef = useRef<WeakSet<WebSocket>>(new WeakSet());
 
   // アンマウント後に再接続スケジューリングしないためのフラグ
   const aliveRef = useRef(true);
@@ -109,12 +108,12 @@ export const useReliableWebSocket = (url: string, opts: Options = {}) => {
 
     const ws = new WebSocket(url);
     wsRef.current = ws;
-    willCloseOnOpenRef.current = false;
 
     ws.onopen = () => {
-      // StrictMode 初回アンマウントの「あとで閉じる」指示があれば、正常 close して終わり
-      if (willCloseOnOpenRef.current) {
-        try { ws.close(); } catch { }
+      // 古い接続が遅れて open しても、現行接続として扱わず閉じる。
+      if (!aliveRef.current || wsRef.current !== ws || closeOnOpenRef.current.has(ws)) {
+        closeOnOpenRef.current.delete(ws);
+        try { ws.close(1000, "stale connection"); } catch { }
         return;
       }
       setReady(true);
@@ -141,9 +140,10 @@ export const useReliableWebSocket = (url: string, opts: Options = {}) => {
     ws.onerror = () => { /* 接続失敗などで発生するが、特に何もしない */ };
 
     ws.onclose = () => {
+      if (wsRef.current !== ws) return;
       setReady(false);
       cleanupTimers();
-      if (wsRef.current === ws) wsRef.current = null;
+      wsRef.current = null;
       scheduleReconnect();
     };
   }, [flush, isPong, pingEveryMs, scheduleReconnect, startHeartbeat, url]);
@@ -153,6 +153,7 @@ export const useReliableWebSocket = (url: string, opts: Options = {}) => {
 
   useEffect(() => {
     aliveRef.current = true;
+    const closeOnOpen = closeOnOpenRef.current;
 
     // オンライン復帰やタブ復帰で積極的に再接続
     const onOnline = () => connectRef.current();
@@ -176,7 +177,7 @@ export const useReliableWebSocket = (url: string, opts: Options = {}) => {
 
       // ★ CONNECTING 中は「確立後に正常 close」させる（警告回避）
       if (ws.readyState === WebSocket.CONNECTING) {
-        willCloseOnOpenRef.current = true;
+        closeOnOpen.add(ws);
         return;
       }
 

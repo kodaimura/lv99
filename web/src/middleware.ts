@@ -109,6 +109,8 @@ const getCookieDomain = (host: string | null): string | undefined => {
 
 const isExcludedPath = (pathname: string): boolean => {
   if (pathname === '/') return true;
+  if (/\.(?:ico|png|jpg|jpeg|svg|gif|webp|mp3|wav|txt|xml)$/i.test(pathname)) return true;
+
   return [
     '/_next',
     '/login',

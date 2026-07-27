@@ -12,6 +12,18 @@ type Props = {
   onClick?: () => void;
 };
 
+const hasSeenChatId = (seen: Set<number>, id: unknown) => {
+  if (typeof id !== "number") return false;
+  if (seen.has(id)) return true;
+
+  seen.add(id);
+  if (seen.size > 500) {
+    const oldest = seen.values().next().value;
+    if (oldest !== undefined) seen.delete(oldest);
+  }
+  return false;
+};
+
 const ChatMenu: React.FC<Props> = ({ onClick }) => {
   const router = useRouter();
   const [unreadCount, setUnreadCount] = useState(0);
@@ -21,6 +33,7 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
   const { onMessage } = useReliableWebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const seenChatIdsRef = useRef<Set<number>>(new Set());
   const [soundEnabled, setSoundEnabled] = useState(false);
 
   // 初回ユーザー操作で音声を解錠する
@@ -84,6 +97,7 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
 
     const off = onMessage(async (event) => {
       const data = JSON.parse(event.data);
+      if (hasSeenChatId(seenChatIdsRef.current, data.id)) return;
       if (data.from_id === account.id) return;
       if (data.from_id !== admin.id) return;
       setUnreadCount((prev) => prev + 1);
@@ -101,7 +115,7 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
     });
 
     return off;
-  }, [admin, account, onMessage]);
+  }, [admin, account, onMessage, soundEnabled]);
 
   const handleClickChat = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();

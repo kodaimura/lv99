@@ -20,6 +20,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/web/Dockerfile
+      target: dev
     volumes:
       - ./web:/app
     ports:
