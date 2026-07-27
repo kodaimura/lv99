@@ -23,7 +23,7 @@ const QuestionForm: React.FC<Props> = ({ onSuccess, question }) => {
       setId(question.id);
       setTitle(question.title);
       setContent(question.content);
-      setAnswer(question.answer);
+      setAnswer(question.answer ?? '');
       setLevel(question.level);
     }
   }, [question]);

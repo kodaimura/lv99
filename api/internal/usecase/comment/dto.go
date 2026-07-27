@@ -1,8 +1,9 @@
 package comment
 
 type GetDto struct {
-	AnswerId  int
-	AccountId int
+	AnswerId    int
+	AccountId   int
+	AccountRole int
 }
 
 type GetOneDto struct {
@@ -11,9 +12,10 @@ type GetOneDto struct {
 }
 
 type CreateOneDto struct {
-	AnswerId  int
-	AccountId int
-	Content   string
+	AnswerId    int
+	AccountId   int
+	AccountRole int
+	Content     string
 }
 
 type UpdateOneDto struct {

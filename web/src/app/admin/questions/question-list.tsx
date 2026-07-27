@@ -37,7 +37,7 @@ const QuestionList: React.FC<Props> = ({
               <td className={styles.td}>{q.level}</td>
               <td className={styles.td}>{q.title}</td>
               <td className={styles.td}>{q.content}</td>
-              <td className={styles.td}>{q.answer}</td>
+              <td className={styles.td}>{q.answer ?? ''}</td>
               <td className={styles.td}><LocalDate isoString={q.updated_at} /></td>
               <td className={styles.td}><button onClick={() => onClickEdit(q)}>編集</button></td>
               <td className={styles.td}>

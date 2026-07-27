@@ -106,18 +106,18 @@ func SetApi(r *gin.RouterGroup) {
 
 		auth.GET("/answers", answerHandler.ApiGet)
 		auth.POST("/answers", answerHandler.ApiPostOne)
+		auth.GET("/answers/status", answerExHandler.ApiGetStatus)
 		auth.GET("/answers/:answer_id", answerHandler.ApiGetOne)
 		auth.PUT("/answers/:answer_id", answerHandler.ApiPutOne)
 		auth.DELETE("/answers/:answer_id", answerHandler.ApiDeleteOne)
-		auth.GET("/answers/status", answerExHandler.ApiGetStatus)
 
 		auth.GET("/comments", commentHandler.ApiGet)
 		auth.POST("/comments", commentHandler.ApiPostOne)
+		auth.GET("/comments/with-profile", commentExHandler.ApiGetWithProfile)
+		auth.GET("/comments/count", commentExHandler.ApiGetRecentCount)
 		auth.GET("/comments/:comment_id", commentHandler.ApiGetOne)
 		auth.PUT("/comments/:comment_id", commentHandler.ApiPutOne)
 		auth.DELETE("/comments/:comment_id", commentHandler.ApiDeleteOne)
-		auth.GET("/comments/with-profile", commentExHandler.ApiGetWithProfile)
-		auth.GET("/comments/count", commentExHandler.ApiGetRecentCount)
 
 		auth.GET("/chats/unread-count", chatExHandler.ApiGetUnreadCount)
 		auth.GET("/chats/:to_id", chatHandler.ApiGet)
@@ -126,7 +126,7 @@ func SetApi(r *gin.RouterGroup) {
 		auth.GET("/accounts/admin/with-profile", accountExHandler.ApiGetAdminWithProfile)
 	}
 
-	admin := r.Group("/admin", ApiAuthMiddleware())
+	admin := r.Group("/admin", ApiAdminMiddleware())
 	{
 		admin.POST("/accounts/signup", authHandler.ApiSignup)
 		admin.GET("/accounts/with-profile", accountExHandler.AdminGetWithProfile)
@@ -139,10 +139,10 @@ func SetApi(r *gin.RouterGroup) {
 		admin.DELETE("/questions/:question_id", questionHandler.AdminDeleteOne)
 		admin.PATCH("/questions/:question_id", questionHandler.AdminRestoreOne)
 
-		admin.GET("/answers", answerHandler.AdminGet)
-		admin.GET("/answers/:answer_id", answerHandler.AdminGetOne)
 		admin.GET("/answers/search", answerExHandler.AdminSearch)
 		admin.GET("/answers/status", answerExHandler.AdminGetStatus)
+		admin.GET("/answers", answerHandler.AdminGet)
+		admin.GET("/answers/:answer_id", answerHandler.AdminGetOne)
 
 		admin.GET("/comments/count", commentExHandler.AdminGetRecentCount)
 	}

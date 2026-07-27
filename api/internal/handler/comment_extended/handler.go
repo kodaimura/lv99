@@ -25,12 +25,17 @@ func NewHandler(usecase usecase.Usecase) Handler {
 
 // GET /api/api/comments/with-profile?answer_id=:answer_id
 func (h *handler) ApiGetWithProfile(c *gin.Context) {
+	payload := helper.GetPayload(c)
 	var req GetWithProfileRequest
 	if err := helper.BindQuery(c, &req); err != nil {
 		c.Error(err)
 		return
 	}
-	comments, err := h.usecase.GetWithProfile(usecase.GetWithProfileDto(req))
+	comments, err := h.usecase.GetWithProfile(usecase.GetWithProfileDto{
+		AnswerId:    req.AnswerId,
+		AccountId:   payload.AccountId,
+		AccountRole: payload.AccountRole,
+	})
 	if err != nil {
 		c.Error(err)
 		return

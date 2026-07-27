@@ -3,14 +3,16 @@ package chat
 import "time"
 
 type GetDto struct {
-	FromId int
-	ToId   int
+	FromId      int
+	ToId        int
+	AccountRole int
 }
 
 type CreateOneDto struct {
-	FromId  int
-	ToId    int
-	Message string
+	FromId      int
+	ToId        int
+	AccountRole int
+	Message     string
 }
 
 type UpdateOneDto struct {
@@ -26,13 +28,15 @@ type DeleteOneDto struct {
 }
 
 type ReadDto struct {
-	ToId   int
-	FromId int
+	ToId        int
+	FromId      int
+	AccountRole int
 }
 
 type PaginateDto struct {
-	FromId int
-	ToId   int
-	Before time.Time
-	Limit  int
+	FromId      int
+	ToId        int
+	AccountRole int
+	Before      time.Time
+	Limit       int
 }

@@ -35,6 +35,7 @@ func NewHandler(usecase usecase.Usecase) Handler {
 
 // GET /api/comments?answer_id=:answer_id
 func (h *handler) ApiGet(c *gin.Context) {
+	payload := helper.GetPayload(c)
 	var req GetCommentsRequest
 	if err := helper.BindQuery(c, &req); err != nil {
 		c.Error(err)
@@ -42,7 +43,9 @@ func (h *handler) ApiGet(c *gin.Context) {
 	}
 
 	comments, err := h.usecase.Get(usecase.GetDto{
-		AnswerId: req.AnswerId,
+		AnswerId:    req.AnswerId,
+		AccountId:   payload.AccountId,
+		AccountRole: payload.AccountRole,
 	})
 	if err != nil {
 		c.Error(err)
@@ -54,7 +57,7 @@ func (h *handler) ApiGet(c *gin.Context) {
 
 // POST /api/comments
 func (h *handler) ApiPostOne(c *gin.Context) {
-	accountId := helper.GetAccountId(c)
+	payload := helper.GetPayload(c)
 	var req PostOneRequest
 	if err := helper.BindJSON(c, &req); err != nil {
 		c.Error(err)
@@ -62,9 +65,10 @@ func (h *handler) ApiPostOne(c *gin.Context) {
 	}
 
 	comment, err := h.usecase.CreateOne(usecase.CreateOneDto{
-		AnswerId:  req.AnswerId,
-		AccountId: accountId,
-		Content:   req.Content,
+		AnswerId:    req.AnswerId,
+		AccountId:   payload.AccountId,
+		AccountRole: payload.AccountRole,
+		Content:     req.Content,
 	})
 	if err != nil {
 		c.Error(err)

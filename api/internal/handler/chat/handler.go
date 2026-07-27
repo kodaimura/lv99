@@ -2,6 +2,7 @@ package chat
 
 import (
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 
 	"github.com/gorilla/websocket"
 
+	"lv99/config"
 	"lv99/internal/core"
 	"lv99/internal/helper"
 	usecase "lv99/internal/usecase/chat"
@@ -40,7 +42,7 @@ func NewHandler(usecase usecase.Usecase) Handler {
 
 // GET /api/chats/:to_id?before=timestamp
 func (h *handler) ApiGet(c *gin.Context) {
-	accountId := helper.GetAccountId(c)
+	payload := helper.GetPayload(c)
 	var uri ChatRoomUri
 	if err := helper.BindUri(c, &uri); err != nil {
 		c.Error(err)
@@ -61,10 +63,11 @@ func (h *handler) ApiGet(c *gin.Context) {
 	}
 
 	chats, err := h.usecase.Paginate(usecase.PaginateDto{
-		FromId: accountId,
-		ToId:   uri.ToId,
-		Before: before,
-		Limit:  30,
+		FromId:      payload.AccountId,
+		ToId:        uri.ToId,
+		AccountRole: payload.AccountRole,
+		Before:      before,
+		Limit:       30,
 	})
 	if err != nil {
 		c.Error(err)
@@ -76,7 +79,7 @@ func (h *handler) ApiGet(c *gin.Context) {
 
 // PUT /api/chats/read
 func (h *handler) ApiRead(c *gin.Context) {
-	accountId := helper.GetAccountId(c)
+	payload := helper.GetPayload(c)
 
 	var req PutReadRequest
 	if err := helper.BindJSON(c, &req); err != nil {
@@ -85,8 +88,9 @@ func (h *handler) ApiRead(c *gin.Context) {
 	}
 
 	err := h.usecase.Read(usecase.ReadDto{
-		FromId: req.FromId,
-		ToId:   accountId,
+		FromId:      req.FromId,
+		ToId:        payload.AccountId,
+		AccountRole: payload.AccountRole,
 	})
 	if err != nil {
 		c.Error(err)
@@ -101,7 +105,9 @@ var socketsMutex sync.Mutex
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
-		return true // 開発用：CORS制限なし
+		origin := strings.TrimRight(r.Header.Get("Origin"), "/")
+		allowed := strings.TrimRight(config.FrontendOrigin, "/")
+		return origin != "" && origin == allowed
 	},
 }
 
@@ -137,7 +143,8 @@ func removeConn(accountId int, conn *websocket.Conn) {
 }
 
 func (h *handler) WsConnect(c *gin.Context) {
-	accountId := helper.GetAccountId(c)
+	payload := helper.GetPayload(c)
+	accountId := payload.AccountId
 
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
@@ -196,9 +203,10 @@ func (h *handler) WsConnect(c *gin.Context) {
 		}
 
 		chat, err := h.usecase.CreateOne(usecase.CreateOneDto{
-			FromId:  accountId,
-			ToId:    req.ToId,
-			Message: req.Message,
+			FromId:      accountId,
+			ToId:        req.ToId,
+			AccountRole: payload.AccountRole,
+			Message:     req.Message,
 		})
 		if err != nil {
 			core.Logger.Error(err.Error())

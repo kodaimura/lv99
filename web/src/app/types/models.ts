@@ -31,7 +31,7 @@ export type Question = {
   id: number;
   title: string;
   content: string;
-  answer: string;
+  answer?: string;
   level: number;
   updated_at: string;
   deleted_at: string | null;

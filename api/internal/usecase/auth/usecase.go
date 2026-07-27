@@ -108,13 +108,22 @@ func (uc *usecase) Refresh(refreshToken string) (core.AuthPayload, string, error
 		return core.AuthPayload{}, "", core.ErrUnauthorized
 	}
 
-	accessToken, err := core.Auth.CreateAccessToken(core.AuthPayload{
-		AccountId:   payload.AccountId,
-		AccountName: payload.AccountName,
-		AccountRole: payload.AccountRole,
-	})
+	acct, err := uc.accountService.GetOne(accountModule.Account{
+		Id: payload.AccountId,
+	}, uc.db)
+	if err != nil {
+		return core.AuthPayload{}, "", core.ErrUnauthorized
+	}
 
-	return payload, accessToken, err
+	currentPayload := core.AuthPayload{
+		AccountId:   acct.Id,
+		AccountName: acct.Name,
+		AccountRole: acct.Role,
+	}
+
+	accessToken, err := core.Auth.CreateAccessToken(currentPayload)
+
+	return currentPayload, accessToken, err
 }
 
 func (uc *usecase) UpdatePassword(in UpdatePasswordDto) error {

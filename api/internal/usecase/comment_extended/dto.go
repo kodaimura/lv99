@@ -16,7 +16,9 @@ type CommentWithProfile struct {
 }
 
 type GetWithProfileDto struct {
-	AnswerId int
+	AnswerId    int
+	AccountId   int
+	AccountRole int
 }
 
 type CommentCount struct {

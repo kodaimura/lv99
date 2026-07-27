@@ -76,7 +76,7 @@ func (h *handler) AdminGet(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, ToQuestionResponseList(questions))
+	c.JSON(200, ToAdminQuestionResponseList(questions))
 }
 
 // GET /api/admin/questions/:question_id
@@ -92,7 +92,7 @@ func (h *handler) AdminGetOne(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, ToQuestionResponse(question))
+	c.JSON(200, ToAdminQuestionResponse(question))
 }
 
 // POST /api/admin/questions
@@ -109,7 +109,7 @@ func (h *handler) AdminPostOne(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, ToQuestionResponse(question))
+	c.JSON(201, ToAdminQuestionResponse(question))
 }
 
 // PUT /api/admin/questions/:question_id
@@ -137,7 +137,7 @@ func (h *handler) AdminPutOne(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, ToQuestionResponse(question))
+	c.JSON(200, ToAdminQuestionResponse(question))
 }
 
 // DELETE /api/admin/questions/:question_id

@@ -1,6 +1,8 @@
 package comment_extended
 
 import (
+	"lv99/internal/helper"
+
 	"github.com/jmoiron/sqlx"
 	"gorm.io/gorm"
 )
@@ -24,7 +26,12 @@ func NewUsecase(db *gorm.DB, dbx *sqlx.DB) Usecase {
 }
 
 func (uc *usecase) GetWithProfile(in GetWithProfileDto) ([]CommentWithProfile, error) {
-	return QueryWithProfile(in.AnswerId, uc.dbx)
+	return QueryWithProfile(
+		in.AnswerId,
+		in.AccountId,
+		in.AccountRole == helper.ACCOUNT_ROLE_ADMIN,
+		uc.dbx,
+	)
 }
 
 func (uc *usecase) GetCount(in GetCountDto) ([]CommentCount, error) {

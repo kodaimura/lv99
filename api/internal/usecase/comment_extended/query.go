@@ -6,8 +6,14 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func QueryWithProfile(answerId int, db *sqlx.DB) ([]CommentWithProfile, error) {
+func QueryWithProfile(answerId int, accountId int, isAdmin bool, db *sqlx.DB) ([]CommentWithProfile, error) {
 	var accounts []CommentWithProfile
+	args := []any{answerId}
+	accessCondition := ""
+	if !isAdmin {
+		accessCondition = "AND a.account_id = $2"
+		args = append(args, accountId)
+	}
 
 	err := db.Select(&accounts,
 		`SELECT
@@ -22,10 +28,14 @@ func QueryWithProfile(answerId int, db *sqlx.DB) ([]CommentWithProfile, error) {
 		 FROM comment as c
 		 JOIN account_profile as p 
 		   ON c.account_id = p.account_id
+		 JOIN answer as a
+		   ON c.answer_id = a.id
 		 WHERE c.deleted_at IS NULL
 		   AND c.answer_id = $1
+		   AND a.deleted_at IS NULL
+		   `+accessCondition+`
 		 ORDER BY c.id ASC;`,
-		answerId,
+		args...,
 	)
 
 	return accounts, err
