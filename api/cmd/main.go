@@ -31,6 +31,7 @@ func main() {
 	core.SetCodeExecutor(externalapi.NewHttpCodeExecutor())
 
 	r := gin.Default()
+	_ = r.SetTrustedProxies(nil)
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{config.FrontendOrigin},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},

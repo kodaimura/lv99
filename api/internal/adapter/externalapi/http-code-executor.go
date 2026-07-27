@@ -4,8 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"net/url"
 	"regexp"
+	"strings"
 	"time"
 
 	"lv99/config"
@@ -23,12 +26,17 @@ func NewHttpCodeExecutor() *HttpCodeExecutor {
 }
 
 func (api *HttpCodeExecutor) Execute(in core.CodeExecRequest) (core.CodeExecResponse, error) {
+	executorURL, err := buildExecutorURL()
+	if err != nil {
+		return core.CodeExecResponse{}, err
+	}
+
 	jsonData, err := json.Marshal(in)
 	if err != nil {
 		return core.CodeExecResponse{}, fmt.Errorf("failed to marshal request: %w", err)
 	}
 
-	req, err := http.NewRequest("POST", config.CodeExecutorHost+"/exec/python", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", executorURL, bytes.NewBuffer(jsonData))
 	if err != nil {
 		return core.CodeExecResponse{}, fmt.Errorf("failed to create request: %w", err)
 	}
@@ -40,8 +48,12 @@ func (api *HttpCodeExecutor) Execute(in core.CodeExecRequest) (core.CodeExecResp
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
+		return core.CodeExecResponse{}, fmt.Errorf("code executor returned status %d", resp.StatusCode)
+	}
+
 	var res core.CodeExecResponse
-	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+	if err := json.NewDecoder(io.LimitReader(resp.Body, 1<<20)).Decode(&res); err != nil {
 		return core.CodeExecResponse{}, fmt.Errorf("failed to decode response: %w", err)
 	}
 
@@ -50,4 +62,24 @@ func (api *HttpCodeExecutor) Execute(in core.CodeExecRequest) (core.CodeExecResp
 	res.Error = cleaned
 
 	return res, nil
+}
+
+func buildExecutorURL() (string, error) {
+	host := strings.TrimRight(config.CodeExecutorHost, "/")
+	if host == "" {
+		return "", fmt.Errorf("code executor host is not configured")
+	}
+
+	parsed, err := url.Parse(host)
+	if err != nil {
+		return "", fmt.Errorf("invalid code executor host: %w", err)
+	}
+	if parsed.Scheme != "http" && parsed.Scheme != "https" {
+		return "", fmt.Errorf("invalid code executor scheme: %s", parsed.Scheme)
+	}
+	if parsed.Host == "" {
+		return "", fmt.Errorf("invalid code executor host")
+	}
+
+	return host + "/exec/python", nil
 }

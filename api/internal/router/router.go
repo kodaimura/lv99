@@ -86,6 +86,7 @@ var commentExHandler = comment_extended_h.NewHandler(commentExUsecase)
 
 func SetApi(r *gin.RouterGroup) {
 	r.Use(ApiErrorHandler())
+	r.Use(RequestBodyLimitMiddleware(1 << 20))
 	//r.POST("/accounts/signup", authHandler.ApiSignup)
 	r.POST("/accounts/login", authHandler.ApiLogin)
 	r.POST("/accounts/refresh", authHandler.ApiRefresh)

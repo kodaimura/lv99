@@ -100,10 +100,36 @@ func ApiErrorHandler() gin.HandlerFunc {
 				err,
 				c.Request.Method,
 				c.Request.URL.String(),
-				c.Request.Header,
+				sanitizeHeaders(c.Request.Header),
 			)
 		}
 
 		c.JSON(status, resp)
 	}
+}
+
+func RequestBodyLimitMiddleware(maxBytes int64) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if c.Request.Body != nil {
+			c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, maxBytes)
+		}
+		c.Next()
+	}
+}
+
+func sanitizeHeaders(headers http.Header) http.Header {
+	sanitized := headers.Clone()
+	for _, key := range []string{
+		"Authorization",
+		"Cookie",
+		"Proxy-Authorization",
+		"Set-Cookie",
+		"X-Api-Key",
+		"X-Csrf-Token",
+	} {
+		if _, ok := sanitized[key]; ok {
+			sanitized.Set(key, "[REDACTED]")
+		}
+	}
+	return sanitized
 }
