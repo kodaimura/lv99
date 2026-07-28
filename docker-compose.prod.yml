@@ -11,7 +11,6 @@ services:
     depends_on:
       - code-runner
     environment:
-      - ENV=prod
       - CODE_EXECUTOR_HOST=http://code-runner:8080
     working_dir: /app
     command: sh -c "go build cmd/main.go && ./main"

@@ -60,11 +60,7 @@ var (
 )
 
 func init() {
-	env := os.Getenv("ENV")
-	if env != "" {
-		env = "." + env
-	}
-	envFile, err := findEnvFile(fmt.Sprintf(".env%s", env))
+	envFile, err := findEnvFile(".env")
 	if err != nil {
 		log.Panic("Failed to find environment variables:", err)
 	}

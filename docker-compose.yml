@@ -12,7 +12,6 @@ services:
       - db
       - code-runner
     environment:
-      - ENV=dev
       - CODE_EXECUTOR_HOST=http://code-runner:8080
     working_dir: /app
     command: sh -c "go run cmd/main.go"
