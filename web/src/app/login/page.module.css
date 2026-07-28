@@ -12,6 +12,23 @@
   transform: translateY(-6vh);
 }
 
+.homeLink {
+  padding: 8px 14px;
+  color: #f8fafc;
+  text-decoration: none;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.homeLink:hover {
+  background: rgba(255, 255, 255, 0.13);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
 @media (max-width: 768px) {
   .container {
     transform: translateY(-3vh);

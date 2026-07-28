@@ -21,6 +21,15 @@ import AdminAccountPage from '@/admin/account/page';
 
 const LoadingScreen = () => <div style={{ padding: '4rem 1.5rem', textAlign: 'center' }}>読み込み中...</div>;
 
+const PublicOnly = () => {
+  const { account, isLoading } = useAuth();
+
+  if (isLoading) return <LoadingScreen />;
+  if (account) return <Navigate to="/home" replace />;
+
+  return <Outlet />;
+};
+
 const RequireAuth = () => {
   const { account, isLoading } = useAuth();
   const location = useLocation();
@@ -45,8 +54,10 @@ const RequireAdmin = () => {
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<PublicHome />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route element={<PublicOnly />}>
+        <Route path="/" element={<PublicHome />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Route>
 
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>

@@ -6,6 +6,11 @@ type RefreshResponse = {
   access_token: string;
 };
 
+const shouldRefreshOnUnauthorized = (endpoint: string) => {
+  const normalized = endpoint.replace(/^\/+/, '').split('?', 1)[0];
+  return !['accounts/login', 'accounts/refresh', 'accounts/logout'].includes(normalized);
+};
+
 class Api {
   url: string;
 
@@ -43,7 +48,7 @@ class Api {
     const response = await fetch(`${this.url}/${endpoint}`, options);
 
     if (!response.ok) {
-      if (response.status === 401 && retry && window.location.pathname !== '/login') {
+      if (response.status === 401 && retry && shouldRefreshOnUnauthorized(endpoint)) {
         const refreshed = await this.tryRefreshToken();
         if (refreshed) {
           return this.apiFetch<T>(endpoint, method, body, false);
