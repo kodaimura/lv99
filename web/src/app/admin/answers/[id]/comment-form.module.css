@@ -30,10 +30,10 @@
 
 .button {
   padding: 9px 16px;
-  background: linear-gradient(135deg, #263244, #4b5d75);
+  background: linear-gradient(135deg, #536276, #728198);
   color: white;
   border: none;
-  border-radius: 999px;
+  border-radius: 7px;
   cursor: pointer;
   font-weight: 600;
   transition: transform 0.18s ease, filter 0.18s ease;
@@ -54,7 +54,7 @@
   background-color: var(--color-surface-solid);
   color: var(--color-brand);
   border: 1px solid var(--color-border);
-  border-radius: 999px;
+  border-radius: 7px;
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.2s ease;

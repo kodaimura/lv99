@@ -2,7 +2,7 @@
   background-color: var(--color-surface-solid);
   padding: 9px 16px;
   font-weight: 700;
-  border-radius: 999px;
+  border-radius: 6px;
   border: 1px solid var(--color-border);
   cursor: pointer;
   color: var(--color-brand);

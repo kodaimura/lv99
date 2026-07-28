@@ -7,29 +7,29 @@
 :root {
   --font-geist-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
   --font-geist-mono: "JetBrains Mono", "SFMono-Regular", "Consolas", monospace;
-  --color-bg: #eef3f8;
-  --color-bg-soft: #f7f9fc;
-  --color-surface: rgba(255, 255, 255, 0.92);
-  --color-surface-solid: #ffffff;
-  --color-surface-muted: #f3f6fa;
-  --color-text: #172033;
-  --color-text-muted: #64748b;
-  --color-border: #d8e0ea;
-  --color-border-strong: #bfcbda;
-  --color-brand: #334155;
-  --color-brand-strong: #1e293b;
-  --color-brand-soft: #e2e8f0;
+  --color-bg: #edf1f5;
+  --color-bg-soft: #f5f7fa;
+  --color-surface: rgba(250, 252, 255, 0.90);
+  --color-surface-solid: #fbfcfe;
+  --color-surface-muted: #eef3f8;
+  --color-text: #223044;
+  --color-text-muted: #68788d;
+  --color-border: #d8e1ec;
+  --color-border-strong: #c2cfdd;
+  --color-brand: #3b4658;
+  --color-brand-strong: #273141;
+  --color-brand-soft: #e7edf4;
   --color-accent: #f4c430;
-  --color-primary: #2563eb;
+  --color-primary: #3b82c4;
   --color-success: #16a34a;
   --color-danger: #dc2626;
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-  --shadow-md: 0 14px 35px rgba(15, 23, 42, 0.10);
-  --shadow-lg: 0 24px 70px rgba(15, 23, 42, 0.14);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
+  --shadow-sm: 0 1px 2px rgba(22, 31, 45, 0.035);
+  --shadow-md: 0 10px 22px rgba(22, 31, 45, 0.065);
+  --shadow-lg: 0 16px 40px rgba(22, 31, 45, 0.085);
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 9px;
+  --radius-xl: 12px;
   --focus-ring: 0 0 0 4px rgba(37, 99, 235, 0.16);
 }
 
@@ -47,9 +47,9 @@ body {
   color: var(--color-text);
   line-height: 1.65;
   background:
-    radial-gradient(circle at 12% 8%, rgba(244, 196, 48, 0.16), transparent 28rem),
-    radial-gradient(circle at 88% 0%, rgba(51, 65, 85, 0.12), transparent 30rem),
-    linear-gradient(180deg, #f8fafc 0%, var(--color-bg) 42%, #e8eef6 100%);
+    radial-gradient(circle at 12% 8%, rgba(244, 196, 48, 0.13), transparent 28rem),
+    radial-gradient(circle at 88% 0%, rgba(67, 80, 99, 0.10), transparent 30rem),
+    linear-gradient(180deg, #f7f9fc 0%, var(--color-bg) 46%, #e5ebf2 100%);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }

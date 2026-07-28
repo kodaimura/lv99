@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.50);
+  background: rgba(49, 68, 91, 0.28);
   backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
@@ -54,7 +54,7 @@
 .closeButton {
   background: var(--color-surface-muted);
   border: none;
-  border-radius: 999px;
+  border-radius: 6px;
   font-size: 1.3rem;
   color: var(--color-text-muted);
   cursor: pointer;

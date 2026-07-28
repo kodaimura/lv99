@@ -19,7 +19,7 @@
   display: inline-block;
   background-color: var(--color-brand);
   color: white;
-  border-radius: 999px;
+  border-radius: 6px;
   padding: 4px 11px;
   font-weight: 700;
   font-size: 0.85rem;

@@ -4,25 +4,25 @@
   padding: 2px 7px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 700;
-  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.28);
+  font-weight: 720;
+  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.24);
 }
 
 .item {
-  color: rgba(248, 250, 252, 0.88);
-  font-weight: 700;
+  color: rgba(248, 250, 252, 0.92);
+  font-weight: 720;
   display: flex;
   justify-content: space-between;
   align-items: center;
   text-decoration: none;
   padding: 0.72rem 0.85rem;
-  border-radius: 13px;
+  border-radius: 6px;
   transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
   cursor: pointer;
 }
 
 .item:hover {
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
   transform: translateX(3px);
 }

@@ -65,16 +65,16 @@
 .loginLink {
   padding: 8px 14px;
   background: rgba(255, 255, 255, 0.08);
-  color: white;
+  color: #f8fafc;
   text-decoration: none;
   font-weight: 700;
-  border: 1px solid rgba(255, 255, 255, 0.58);
-  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 6px;
   transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
 }
 
 .loginLink:hover {
-  background: white;
-  color: var(--color-brand);
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
   transform: translateY(-1px);
 }

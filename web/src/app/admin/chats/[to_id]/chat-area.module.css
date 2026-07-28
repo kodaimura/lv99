@@ -16,14 +16,14 @@
 }
 
 .inputArea {
-  --composer-area-padding: 12px;
-  --composer-min-height: 48px;
-  --composer-input-min-height: 46px;
-  --composer-input-max-height: calc(7.5rem + 22px);
-  --composer-line-height: 1.5rem;
-  --composer-button-size: 34px;
-  --composer-button-inset: 6px;
-  --composer-padding-block: 11px;
+  --composer-area-padding: 10px;
+  --composer-min-height: 40px;
+  --composer-input-min-height: 38px;
+  --composer-input-max-height: calc(7rem + 14px);
+  --composer-line-height: 22px;
+  --composer-button-size: 30px;
+  --composer-button-inset: 5px;
+  --composer-padding-block: 8px;
 
   border-top: 1px solid var(--color-border);
   padding: var(--composer-area-padding);
@@ -37,7 +37,7 @@
   width: 100%;
   min-height: var(--composer-min-height);
   border: 1px solid var(--color-border-strong);
-  border-radius: 15px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.95);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
@@ -49,13 +49,14 @@
 }
 
 .input {
+  display: block;
   resize: none;
   width: 100%;
   min-height: var(--composer-input-min-height);
   max-height: var(--composer-input-max-height);
-  padding: var(--composer-padding-block) 58px var(--composer-padding-block) 15px;
+  padding: var(--composer-padding-block) 52px var(--composer-padding-block) 13px;
   border: none;
-  border-radius: 14px;
+  border-radius: 6px;
   background: transparent;
   font-size: 1rem;
   line-height: var(--composer-line-height);
@@ -73,30 +74,30 @@
 
 .button {
   position: absolute;
-  right: 10px;
-  bottom: var(--composer-button-inset);
+  right: 8px;
+  bottom: calc((var(--composer-min-height) - var(--composer-button-size)) / 2 - 1px);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: var(--composer-button-size);
   height: var(--composer-button-size);
   padding: 0;
-  background: linear-gradient(135deg, #263244, #4b5d75);
+  background: linear-gradient(135deg, #536276, #728198);
   color: #f8fafc;
   border: none;
-  border-radius: 999px;
+  border-radius: 7px;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
   line-height: 1;
   cursor: pointer;
-  box-shadow: 0 12px 24px rgba(51, 65, 85, 0.22);
+  box-shadow: 0 12px 24px rgba(39, 49, 65, 0.12);
   transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
 }
 
 .button:hover {
   filter: brightness(1.06);
   transform: none;
-  box-shadow: 0 16px 30px rgba(51, 65, 85, 0.26);
+  box-shadow: 0 16px 30px rgba(39, 49, 65, 0.15);
 }
 
 .button:disabled {

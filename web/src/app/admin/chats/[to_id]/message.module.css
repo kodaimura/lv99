@@ -15,28 +15,28 @@
 .bubble {
   max-width: 70%;
   padding: 10px 14px 11px;
-  border-radius: 20px;
+  border-radius: 10px;
   position: relative;
   display: flex;
   flex-direction: column;
   white-space: pre-wrap;
   word-break: break-word;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 20px rgba(49, 68, 91, 0.06);
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(210, 219, 230, 0.78);
 }
 
 
 .me .bubble {
   background: linear-gradient(135deg, #ffffff, #f8fafc);
   color: var(--color-text);
-  border-bottom-right-radius: 7px;
+  border-bottom-right-radius: 3px;
 }
 
 .other .bubble {
-  background: linear-gradient(135deg, #263244, #475569);
-  color: #f8fafc;
-  border-bottom-left-radius: 7px;
+  background: linear-gradient(135deg, #f1f3f6, #e8edf2);
+  color: var(--color-text);
+  border-bottom-left-radius: 3px;
 }
 
 .meta {
@@ -53,7 +53,7 @@
 
 .other .meta {
   text-align: left;
-  color: rgba(248, 250, 252, 0.66);
+  color: var(--color-text-muted);
 }
 
 .text {
