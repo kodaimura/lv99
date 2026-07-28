@@ -1,6 +1,6 @@
 import { Account } from '@/types/models';
 import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from 'react';
-import { getApiBaseUrl } from '@/lib/env';
+import { api } from '@/lib/api/api.client';
 
 type AuthContextType = {
   account: Account | null;
@@ -17,26 +17,11 @@ type Props = {
 };
 
 const fetchAccount = async (): Promise<Account | null> => {
-  const baseUrl = getApiBaseUrl();
-
-  const requestMe = () => fetch(`${baseUrl}/accounts/me`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-  });
-
-  let response = await requestMe();
-  if (response.status === 401) {
-    const refresh = await fetch(`${baseUrl}/accounts/refresh`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-    });
-    if (refresh.ok) response = await requestMe();
+  try {
+    return await api.get<Account>('accounts/me');
+  } catch {
+    return null;
   }
-
-  if (!response.ok) return null;
-  return (await response.json()) as Account;
 };
 
 export const AuthProvider: React.FC<Props> = ({ children, initAccount = null }) => {

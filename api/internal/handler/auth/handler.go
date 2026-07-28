@@ -67,7 +67,7 @@ func (h *handler) ApiLogin(c *gin.Context) {
 		return
 	}
 
-	helper.SetAccessTokenCookie(c, accessToken)
+	helper.ClearAccessTokenCookie(c)
 	helper.SetRefreshTokenCookie(c, refreshToken)
 	core.Logger.Info("account login: id=%d name=%s", acct.Id, acct.Name)
 
@@ -91,7 +91,7 @@ func (h *handler) ApiRefresh(c *gin.Context) {
 		return
 	}
 
-	helper.SetAccessTokenCookie(c, accessToken)
+	helper.ClearAccessTokenCookie(c)
 	core.Logger.Info("access token refreshed: id=%d name=%s", payload.AccountId, payload.AccountName)
 
 	c.JSON(200, RefreshResponse{
@@ -103,7 +103,7 @@ func (h *handler) ApiRefresh(c *gin.Context) {
 // POST /api/accounts/logout
 func (h *handler) ApiLogout(c *gin.Context) {
 	core.Auth.RevokeRefreshToken(helper.GetRefreshToken(c))
-	helper.SetAccessTokenCookie(c, "")
+	helper.ClearAccessTokenCookie(c)
 	helper.SetRefreshTokenCookie(c, "")
 	c.JSON(200, gin.H{})
 }

@@ -1,11 +1,16 @@
 'use client';
 
 import { api } from '@/lib/api/api.client';
+import { clearAccessToken } from '@/lib/auth-token';
 import styles from './logout-button.module.css';
 
 const logout = async () => {
-  await api.post('/accounts/logout', {});
-  window.location.replace('/login');
+  try {
+    await api.post('/accounts/logout', {});
+  } finally {
+    clearAccessToken();
+    window.location.replace('/login');
+  }
 }
 
 const LogoutButton = () => {

@@ -8,6 +8,7 @@ import { api } from '@/lib/api/api.client';
 import { useAuth } from '@/contexts/auth-context';
 import { useReliableWebSocket } from '@/hooks/websocket';
 import { getWsBaseUrl } from '@/lib/env';
+import { getWebSocketAuthProtocols } from '@/lib/auth-token';
 
 type Props = {
   onClick?: () => void;
@@ -38,7 +39,10 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
   const [unreadCounts, setUnreadCounts] = useState<UnreadCountMap>({});
   const { account } = useAuth();
 
-  const { onMessage } = useReliableWebSocket(`${getWsBaseUrl()}/ws/chats`);
+  const { onMessage } = useReliableWebSocket(
+    `${getWsBaseUrl()}/ws/chats`,
+    { protocols: getWebSocketAuthProtocols },
+  );
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const seenChatIdsRef = useRef<Set<number>>(new Set());

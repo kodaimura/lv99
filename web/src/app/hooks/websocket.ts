@@ -9,9 +9,10 @@ type Options = {
   pongTimeoutMs?: number;  // アプリ層 pong 待ちタイムアウト (ms)
   makePing?: () => any;    // 送る ping の形（既定: {type:"ping"}）
   isPong?: (data: any) => boolean; // pong 判定（既定: {type:"pong"}）
+  protocols?: string[] | (() => string[] | null) | null;
 };
 
-export const useReliableWebSocket = (url: string, opts: Options = {}) => {
+export const useReliableWebSocket = (url: string | (() => string | null) | null, opts: Options = {}) => {
   const {
     retryBaseMs = 500,
     retryMaxMs = 8000,
@@ -20,6 +21,7 @@ export const useReliableWebSocket = (url: string, opts: Options = {}) => {
     pongTimeoutMs = 10000,
     makePing = () => ({ type: "ping", t: Date.now() }),
     isPong = (d) => d && d.type === "pong",
+    protocols = null,
   } = opts;
 
   const wsRef = useRef<WebSocket | null>(null);
@@ -91,6 +93,14 @@ export const useReliableWebSocket = (url: string, opts: Options = {}) => {
   // connect を参照で安定化（再接続スケジュールから呼ぶ）
   const connectRef = useRef<() => void>(() => { });
 
+  const resolveUrl = useCallback(() => {
+    return typeof url === "function" ? url() : url;
+  }, [url]);
+
+  const resolveProtocols = useCallback(() => {
+    return typeof protocols === "function" ? protocols() : protocols;
+  }, [protocols]);
+
   const scheduleReconnect = useCallback(() => {
     if (!aliveRef.current) return; // アンマウント後は再接続しない
     setReady(false);
@@ -114,7 +124,17 @@ export const useReliableWebSocket = (url: string, opts: Options = {}) => {
       return;
     }
 
-    const ws = new WebSocket(url);
+    const resolvedUrl = resolveUrl();
+    if (!resolvedUrl) {
+      setReady(false);
+      scheduleReconnect();
+      return;
+    }
+
+    const resolvedProtocols = resolveProtocols();
+    const ws = resolvedProtocols?.length
+      ? new WebSocket(resolvedUrl, resolvedProtocols)
+      : new WebSocket(resolvedUrl);
     wsRef.current = ws;
 
     ws.onopen = () => {
@@ -158,7 +178,7 @@ export const useReliableWebSocket = (url: string, opts: Options = {}) => {
       wsRef.current = null;
       scheduleReconnect();
     };
-  }, [flush, isPong, pingEveryMs, scheduleReconnect, startHeartbeat, url]);
+  }, [flush, isPong, pingEveryMs, resolveProtocols, resolveUrl, scheduleReconnect, startHeartbeat]);
 
   // connect を安定参照に格納
   useEffect(() => { connectRef.current = connect; }, [connect]);

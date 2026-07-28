@@ -7,6 +7,11 @@ import { api } from '@/lib/api/api.client';
 import styles from './login-form.module.css';
 import { useAuth } from '@/contexts/auth-context';
 import { Account } from '@/types/models';
+import { setAccessToken } from '@/lib/auth-token';
+
+type LoginResponse = {
+  access_token: string;
+};
 
 const LoginForm: React.FC = () => {
   const { setAccount } = useAuth();
@@ -20,7 +25,8 @@ const LoginForm: React.FC = () => {
     setError('');
 
     try {
-      await api.post('accounts/login', { name, password });
+      const login = await api.post<LoginResponse>('accounts/login', { name, password });
+      setAccessToken(login.access_token);
       const me: Account = await api.get('accounts/me');
 
       setAccount(me);

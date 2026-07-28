@@ -10,17 +10,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GetAccessToken retrieves the access token from cookie or Authorization header.
-// If the cookie is not found, it attempts to extract a Bearer token from the header.
-func GetAccessToken(c *gin.Context) string {
-	token, err := c.Cookie(COOKIE_KEY_ACCESS_TOKEN)
-	if err == nil {
-		return token
-	}
+const accessTokenSubprotocolPrefix = "access_token."
 
+// GetAccessToken retrieves the access token from Authorization header.
+// Browser WebSocket clients cannot set custom headers, so ws endpoints pass it as a WebSocket subprotocol.
+func GetAccessToken(c *gin.Context) string {
 	bearer := c.GetHeader("Authorization")
 	if strings.HasPrefix(bearer, "Bearer ") {
 		return strings.TrimSpace(bearer[7:])
+	}
+
+	for _, protocol := range strings.Split(c.GetHeader("Sec-WebSocket-Protocol"), ",") {
+		protocol = strings.TrimSpace(protocol)
+		if strings.HasPrefix(protocol, accessTokenSubprotocolPrefix) {
+			return strings.TrimSpace(strings.TrimPrefix(protocol, accessTokenSubprotocolPrefix))
+		}
 	}
 
 	return ""
@@ -36,19 +40,15 @@ func GetRefreshToken(c *gin.Context) string {
 	return ""
 }
 
-// SetAccessTokenCookie sets the access token cookie in the response
-func SetAccessTokenCookie(c *gin.Context, accessToken string) {
-	maxAge := config.AccessTokenExpiresSeconds
-	if accessToken == "" {
-		maxAge = -1
-	}
+// ClearAccessTokenCookie removes legacy access-token cookies during migration to in-memory access tokens.
+func ClearAccessTokenCookie(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie(
-		COOKIE_KEY_ACCESS_TOKEN, 
-		accessToken, 
-		maxAge, 
-		"/", config.AppHost, 
-		config.CookieAccessSecure, 
+		COOKIE_KEY_ACCESS_TOKEN,
+		"",
+		-1,
+		"/", config.AppHost,
+		config.CookieAccessSecure,
 		config.CookieAccessHttpOnly,
 	)
 }
@@ -61,11 +61,11 @@ func SetRefreshTokenCookie(c *gin.Context, refreshToken string) {
 	}
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie(
-		COOKIE_KEY_REFRESH_TOKEN, 
-		refreshToken, 
+		COOKIE_KEY_REFRESH_TOKEN,
+		refreshToken,
 		maxAge,
-		"/", config.AppHost, 
-		config.CookieRefreshSecure, 
+		"/", config.AppHost,
+		config.CookieRefreshSecure,
 		config.CookieRefreshHttpOnly,
 	)
 }

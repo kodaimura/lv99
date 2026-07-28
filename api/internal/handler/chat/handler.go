@@ -104,6 +104,7 @@ var sockets = make(map[int][]*websocket.Conn)
 var socketsMutex sync.Mutex
 
 var upgrader = websocket.Upgrader{
+	Subprotocols: []string{"lv99"},
 	CheckOrigin: func(r *http.Request) bool {
 		origin := strings.TrimRight(r.Header.Get("Origin"), "/")
 		allowed := strings.TrimRight(config.FrontendOrigin, "/")

@@ -1,5 +1,10 @@
 import { getApiBaseUrl } from '@/lib/env';
 import { HttpError } from './common';
+import { clearAccessToken, getAccessToken, setAccessToken } from '@/lib/auth-token';
+
+type RefreshResponse = {
+  access_token: string;
+};
 
 class Api {
   url: string;
@@ -9,11 +14,17 @@ class Api {
   }
 
   private async createFetchOptions(method: string, body?: unknown): Promise<RequestInit> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    const accessToken = getAccessToken();
+    if (accessToken) {
+      headers.Authorization = `Bearer ${accessToken}`;
+    }
+
     const options: RequestInit = {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       credentials: 'include',
     };
 
@@ -68,8 +79,16 @@ class Api {
         credentials: 'include',
       });
 
-      return response.ok;
+      if (!response.ok) {
+        clearAccessToken();
+        return false;
+      }
+
+      const data = (await response.json()) as RefreshResponse;
+      setAccessToken(data.access_token);
+      return Boolean(data.access_token);
     } catch {
+      clearAccessToken();
       return false;
     }
   }
