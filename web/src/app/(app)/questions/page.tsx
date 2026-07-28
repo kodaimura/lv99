@@ -1,19 +1,12 @@
-export const dynamic = 'force-dynamic';
-
 import React from 'react';
 import styles from './page.module.css';
 import QuestionList from './question-list';
-import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "lv99 - 問題一覧",
-};
-
-const QuestionsPage: React.FC = async () => {
+const QuestionsPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <QuestionList />
-    </div >
+    </div>
   );
 };
 

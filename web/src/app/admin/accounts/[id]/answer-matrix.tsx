@@ -3,7 +3,7 @@
 import React from 'react';
 import styles from './answer-matrix.module.css';
 import type { AnswerStatus, Question } from '@/types/models';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 
 type Props = {
   accountId: number;
@@ -56,7 +56,7 @@ const AnswerMatrix: React.FC<Props> = ({ accountId, questions, answerStatus }) =
         );
 
         return questionId ? (
-          <Link key={level} href={`/admin/answers/?account_id=${accountId}&level=${level}`} className={styles.link}>
+          <Link key={level} to={`/admin/answers?account_id=${accountId}&level=${level}`} className={styles.link}>
             {cell}
           </Link>
         ) : (

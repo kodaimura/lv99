@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import styles from './chat-menu.module.css';
 import { AccountWithProfile } from '@/types/models';
 import { api } from '@/lib/api/api.client';
 import { useAuth } from '@/contexts/auth-context';
 import { useReliableWebSocket } from '@/hooks/websocket';
+import { getWsBaseUrl } from '@/lib/env';
 
 type Props = {
   onClick?: () => void;
@@ -32,12 +33,12 @@ const hasSeenChatId = (seen: Set<number>, id: unknown) => {
 };
 
 const ChatMenu: React.FC<Props> = ({ onClick }) => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [accounts, setAccounts] = useState<AccountWithProfile[]>([]);
   const [unreadCounts, setUnreadCounts] = useState<UnreadCountMap>({});
   const { account } = useAuth();
 
-  const { onMessage } = useReliableWebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
+  const { onMessage } = useReliableWebSocket(`${getWsBaseUrl()}/ws/chats`);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const seenChatIdsRef = useRef<Set<number>>(new Set());
@@ -145,7 +146,7 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
       ...prev,
       [accountId]: { ...prev[accountId], count: 0, },
     }));
-    router.push(`/admin/chats/${accountId}`);
+    navigate(`/admin/chats/${accountId}`);
     onClick?.();
   }
 

@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import { AccountWithProfile } from '@/types/models';
 import { api } from '@/lib/api/api.client';
 import styles from './chat-menu.module.css';
 import { useAuth } from '@/contexts/auth-context';
 import { useReliableWebSocket } from "@/hooks/websocket";
+import { getWsBaseUrl } from '@/lib/env';
 
 type Props = {
   onClick?: () => void;
@@ -25,12 +26,12 @@ const hasSeenChatId = (seen: Set<number>, id: unknown) => {
 };
 
 const ChatMenu: React.FC<Props> = ({ onClick }) => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
   const [admin, setAdmin] = useState<AccountWithProfile | null>(null);
   const { account } = useAuth();
 
-  const { onMessage } = useReliableWebSocket(`${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`);
+  const { onMessage } = useReliableWebSocket(`${getWsBaseUrl()}/ws/chats`);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const seenChatIdsRef = useRef<Set<number>>(new Set());
@@ -120,7 +121,7 @@ const ChatMenu: React.FC<Props> = ({ onClick }) => {
   const handleClickChat = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setUnreadCount(0);
-    router.push('/chat');
+    navigate('/chat');
     onClick?.();
   };
 

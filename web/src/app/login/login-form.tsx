@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import { HttpError } from '@/lib/api/common';
 import { api } from '@/lib/api/api.client';
 import styles from './login-form.module.css';
@@ -13,7 +13,7 @@ const LoginForm: React.FC = () => {
   const [name, setName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,9 +25,9 @@ const LoginForm: React.FC = () => {
 
       setAccount(me);
       if (me.role == 0) {
-        router.push('/admin');
+        navigate('/admin');
       } else {
-        router.push('/home');
+        navigate('/home');
       }
     } catch (err) {
       if (err instanceof HttpError && err.status === 401) {

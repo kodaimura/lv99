@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from '@/lib/env';
 import { HttpError } from './common';
 
 class Api {
@@ -73,10 +74,15 @@ class Api {
     }
   }
 
-  async get<T>(endpoint: string, params?: Record<string, any>): Promise<T> {
+  async get<T>(endpoint: string, params?: Record<string, unknown>): Promise<T> {
     if (params && typeof params === 'object') {
-      const query = new URLSearchParams(params).toString();
-      endpoint += `?${query}`;
+      const query = new URLSearchParams(
+        Object.entries(params).reduce<Record<string, string>>((acc, [key, value]) => {
+          if (value !== undefined && value !== null) acc[key] = String(value);
+          return acc;
+        }, {}),
+      ).toString();
+      if (query) endpoint += endpoint.includes('?') ? `&${query}` : `?${query}`;
     }
     return this.apiFetch<T>(endpoint, 'GET');
   }
@@ -99,7 +105,7 @@ class Api {
 
   handleHttpError(error: HttpError): void {
     console.error(error);
-    const status = error.status
+    const status = error.status;
     if (status === 403) {
       alert('アクセスが拒否されました');
     } else if (status === 401 && window.location.pathname !== '/login') {
@@ -108,6 +114,6 @@ class Api {
   }
 }
 
-const api = new Api(`${process.env.NEXT_PUBLIC_API_HOST}/api`);
+const api = new Api(getApiBaseUrl());
 
 export { Api, api };

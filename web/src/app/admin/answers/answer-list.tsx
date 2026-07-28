@@ -2,7 +2,7 @@
 
 import React from 'react';
 import styles from './answer-list.module.css';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import LocalDate from '@/components/features/local-date';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 const AnswerList: React.FC<Props> = ({
   answers,
 }) => {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   return (
     <div className={styles.tableContainer}>
@@ -30,7 +30,7 @@ const AnswerList: React.FC<Props> = ({
         </thead>
         <tbody className={styles.tbody}>
           {answers.map((a, i) => (
-            <tr key={i} className={styles.tr} onClick={() => { router.push(`answers/${a.answer_id}`); }}>
+            <tr key={i} className={styles.tr} onClick={() => { navigate(`/admin/answers/${a.answer_id}`); }}>
               <td className={styles.td}><LocalDate isoString={a.updated_at} /></td>
               <td className={styles.td}>{a.account_name}</td>
               <td className={styles.td}>{a.question_title}</td>

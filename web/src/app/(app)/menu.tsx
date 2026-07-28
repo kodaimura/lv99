@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './menu.module.css';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import ChatMenu from './chat-menu';
 import Settings from './settings';
 
@@ -23,13 +23,13 @@ const Menu: React.FC = () => {
         <nav className={styles.menu}>
           <ul>
             <li>
-              <Link href="/home" onClick={closeSidebar} className={styles.item}>ダッシュボード</Link>
+              <Link to="/home" onClick={closeSidebar} className={styles.item}>ダッシュボード</Link>
             </li>
             <li>
-              <Link href="/questions" onClick={closeSidebar} className={styles.item}>問題一覧</Link>
+              <Link to="/questions" onClick={closeSidebar} className={styles.item}>問題一覧</Link>
             </li>
             <li>
-              <Link href="/documents" onClick={closeSidebar} className={styles.item}>ドキュメント</Link>
+              <Link to="/documents" onClick={closeSidebar} className={styles.item}>ドキュメント</Link>
             </li>
             <li>
               <ChatMenu onClick={closeSidebar} />

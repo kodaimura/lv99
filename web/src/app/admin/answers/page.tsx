@@ -1,41 +1,64 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './page.module.css';
-import { api } from '@/lib/api/api.server';
+import { api } from '@/lib/api/api.client';
 import AnswerList from './answer-list';
-import { Metadata } from 'next';
+import { useSearchParams } from 'react-router-dom';
 
-export const metadata: Metadata = {
-  title: "lv99 - 回答一覧",
+type AnswerSearchResult = {
+  answer_id: number;
+  updated_at: string;
+  account_name: string;
+  question_title: string;
+  is_correct: boolean;
+  code_def: string;
+  comment_count: number;
+  comment_at: string | null;
+  comment_account_name: string | null;
 };
-type SearchParams = {
-  account_id?: string;
-  level?: string;
+
+const isIntegerString = (value: string | null): value is string => {
+  if (typeof value !== 'string') return false;
+  return /^-?\d+$/.test(value);
 };
 
-const AnswersPage = async ({
-  searchParams
-}: {
-  searchParams: Promise<SearchParams>;
-}) => {
-  const { account_id, level } = await searchParams;
-  const isIntegerString = (value: string | any): boolean => {
-    if (typeof value !== 'string') {
-      return false;
-    }
-    return /^-?\d+$/.test(value);
-  }
-  let params = {};
-  if (isIntegerString(account_id)) {
-    params = { ...params, account_id: account_id };
-  }
-  if (isIntegerString(level)) {
-    params = { ...params, level: level };
-  }
+const AnswersPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const [answers, setAnswers] = useState<AnswerSearchResult[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const data: any[] = await api.get('admin/answers/search', params);
+  useEffect(() => {
+    let active = true;
+
+    const fetchAnswers = async () => {
+      setLoading(true);
+      const params: Record<string, string> = {};
+      const accountId = searchParams.get('account_id');
+      const level = searchParams.get('level');
+
+      if (isIntegerString(accountId)) params.account_id = accountId;
+      if (isIntegerString(level)) params.level = level;
+
+      try {
+        const data = await api.get<AnswerSearchResult[]>('admin/answers/search', params);
+        if (active) setAnswers(data);
+      } catch (error) {
+        console.error('Failed to fetch answers:', error);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    fetchAnswers();
+    return () => {
+      active = false;
+    };
+  }, [searchParams]);
+
+  if (loading) return <div className={styles.container}>読み込み中...</div>;
+
   return (
     <div className={styles.container}>
-      <AnswerList answers={data} />
+      <AnswerList answers={answers} />
     </div>
   );
 };

@@ -3,7 +3,7 @@
 import React from 'react';
 import styles from './answer-matrix.module.css';
 import type { AnswerStatus, Question } from '@/types/models';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 
 type Props = {
   questions: Question[];
@@ -12,12 +12,10 @@ type Props = {
 
 const AnswerMatrix: React.FC<Props> = ({ questions, answerStatus }) => {
   const levelMap: Record<number, number> = {};
-  const levelToQuestionIdMap: Record<number, number> = {};
   const questionToLevelMap: Record<number, number> = {};
 
   questions.forEach((q) => {
     questionToLevelMap[q.id] = q.level;
-    levelToQuestionIdMap[q.level] = q.id;
   });
 
   answerStatus.forEach((status) => {
@@ -42,7 +40,7 @@ const AnswerMatrix: React.FC<Props> = ({ questions, answerStatus }) => {
     <div className={styles.grid}>
       {levels.map((level) => {
         const count = levelMap[level] || 0;
-        const questionId = levelToQuestionIdMap[level];
+        const hasQuestion = questions.some((question) => question.level === level);
         const cell = (
           <div
             key={level}
@@ -54,8 +52,8 @@ const AnswerMatrix: React.FC<Props> = ({ questions, answerStatus }) => {
           </div>
         );
 
-        return questionId ? (
-          <Link key={level} href={`/questions/${questionId}`} className={styles.link}>
+        return hasQuestion ? (
+          <Link key={level} to={`/questions/${level}`} className={styles.link}>
             {cell}
           </Link>
         ) : (

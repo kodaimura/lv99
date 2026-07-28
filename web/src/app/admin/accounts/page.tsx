@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './page.module.css';
 import { AccountWithProfile } from '@/types/models';
 import { api } from '@/lib/api/api.client';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import Modal from '@/components/ui/modal';
 import AccountForm from './account-form';
 import LocalDate from '@/components/features/local-date';
@@ -60,7 +60,7 @@ const AccountsPage: React.FC = () => {
                 <td className={styles.td}>{account.display_name}</td>
                 <td className={styles.td}><LocalDate isoString={account.created_at} /></td>
                 <td className={styles.td}>
-                  <Link href={`/admin/accounts/${account.id}`}>回答状況</Link>
+                  <Link to={`/admin/accounts/${account.id}`}>回答状況</Link>
                 </td>
               </tr>
             ))}

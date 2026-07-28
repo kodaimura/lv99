@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from './question-list.module.css';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import type { Question, AnswerStatus } from "@/types/models";
 import LocalDate from '@/components/features/local-date';
 import { api } from '@/lib/api/api.client';
@@ -11,7 +11,7 @@ const QuestionList: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [statusMap, setStatusMap] = useState<Record<number, AnswerStatus>>([]);
 
-  const router = useRouter();
+  const navigate = useNavigate();
   const getQuestions = async () => {
     try {
       const response: Question[] = await api.get('questions');
@@ -54,7 +54,7 @@ const QuestionList: React.FC = () => {
         </thead>
         <tbody className={styles.tbody}>
           {questions.map((q, i) => (
-            <tr key={i} className={styles.tr} onClick={() => router.push(`/questions/${q.level}`)}>
+            <tr key={i} className={styles.tr} onClick={() => navigate(`/questions/${q.level}`)}>
               <td className={styles.td}>{q.level}</td>
               <td className={styles.td}>{q.title}</td>
               <td className={styles.td}>

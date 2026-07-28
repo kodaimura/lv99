@@ -69,13 +69,21 @@ export const useReliableWebSocket = (url: string, opts: Options = {}) => {
       const ws = wsRef.current;
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
 
-      try { ws.send(JSON.stringify(makePing())); } catch { }
+      try {
+        ws.send(JSON.stringify(makePing()));
+      } catch {
+        // The close handler will trigger the reconnect path if the socket is stale.
+      }
 
       // pong待ちタイマー
       if (pongTimer.current) clearTimeout(pongTimer.current);
       pongTimer.current = window.setTimeout(() => {
         // pong なし → 接続が死んでいる前提で閉じて再接続
-        try { ws.close(); } catch { }
+        try {
+          ws.close();
+        } catch {
+          // Browser WebSocket close can throw for stale sockets; reconnect handles recovery.
+        }
       }, pongTimeoutMs);
     }, pingEveryMs) as unknown as number;
   }, [makePing, pingEveryMs, pongTimeoutMs]);
@@ -113,7 +121,11 @@ export const useReliableWebSocket = (url: string, opts: Options = {}) => {
       // 古い接続が遅れて open しても、現行接続として扱わず閉じる。
       if (!aliveRef.current || wsRef.current !== ws || closeOnOpenRef.current.has(ws)) {
         closeOnOpenRef.current.delete(ws);
-        try { ws.close(1000, "stale connection"); } catch { }
+        try {
+          ws.close(1000, "stale connection");
+        } catch {
+          // Stale sockets may already be closed by the browser.
+        }
         return;
       }
       setReady(true);
@@ -183,7 +195,11 @@ export const useReliableWebSocket = (url: string, opts: Options = {}) => {
 
       // OPEN / CLOSING は普通に閉じる
       if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CLOSING) {
-        try { ws.close(); } catch { }
+        try {
+          ws.close();
+        } catch {
+          // Ignore close races during React unmount.
+        }
       }
     };
   }, []);

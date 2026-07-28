@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './menu.module.css';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import ChatMenu from './chat-menu';
 import Settings from './settings';
 
@@ -24,16 +24,16 @@ const Menu: React.FC = () => {
         <nav className={styles.menu}>
           <ul>
             <li>
-              <Link href="/admin" onClick={closeSidebar} className={styles.item}>ダッシュボード</Link>
+              <Link to="/admin" onClick={closeSidebar} className={styles.item}>ダッシュボード</Link>
             </li>
             <li>
-              <Link href="/admin/questions" onClick={closeSidebar} className={styles.item}>問題登録</Link>
+              <Link to="/admin/questions" onClick={closeSidebar} className={styles.item}>問題登録</Link>
             </li>
             <li>
-              <Link href="/admin/answers" onClick={closeSidebar} className={styles.item}>回答一覧</Link>
+              <Link to="/admin/answers" onClick={closeSidebar} className={styles.item}>回答一覧</Link>
             </li>
             <li>
-              <Link href="/admin/accounts" onClick={closeSidebar} className={styles.item}>アカウント一覧</Link>
+              <Link to="/admin/accounts" onClick={closeSidebar} className={styles.item}>アカウント一覧</Link>
             </li>
           </ul>
         </nav>

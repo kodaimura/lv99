@@ -5,6 +5,8 @@
 }
 
 :root {
+  --font-geist-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+  --font-geist-mono: "JetBrains Mono", "SFMono-Regular", "Consolas", monospace;
   --color-bg: #eef3f8;
   --color-bg-soft: #f7f9fc;
   --color-surface: rgba(255, 255, 255, 0.92);

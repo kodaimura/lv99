@@ -4,14 +4,14 @@ import React, { useState } from 'react';
 import { HttpError } from '@/lib/api/common';
 import { api } from '@/lib/api/api.client';
 import styles from './form.module.css';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 
 const PasswordForm: React.FC = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +31,7 @@ const PasswordForm: React.FC = () => {
         new_password: newPassword,
       });
       await api.post('/accounts/logout', {});
-      router.push('/login');
+      navigate('/login');
     } catch (err) {
       if (err instanceof HttpError && err.status === 400) {
         setError('現在のパスワードが正しくありません。');

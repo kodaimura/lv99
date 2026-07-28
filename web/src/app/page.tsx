@@ -2,13 +2,13 @@ import styles from "./page.module.css";
 import Header from '@/components/layout/header';
 import Main from '@/components/layout/main';
 import Footer from "@/components/layout/footer";
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   return (
     <>
       <Header isLoggedIn={false}>
-        <Link href="/login" className={styles.loginLink}>ログイン</Link>
+        <Link to="/login" className={styles.loginLink}>ログイン</Link>
       </Header>
       <Main>
         <div className={styles.container}>

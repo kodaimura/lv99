@@ -6,6 +6,7 @@ import Message from "./message";
 import { Chat } from "@/types/models";
 import { api } from "@/lib/api/api.client";
 import { useReliableWebSocket } from '@/hooks/websocket';
+import { getWsBaseUrl } from '@/lib/env';
 
 type Props = {
   toId: number;
@@ -40,7 +41,7 @@ const ChatArea: React.FC<Props> = ({ toId }) => {
   const requestSeqRef = useRef(0);
 
   const { ready, send, onMessage } = useReliableWebSocket(
-    `${process.env.NEXT_PUBLIC_WS_HOST}/ws/chats`
+    `${getWsBaseUrl()}/ws/chats`
   );
   const [message, setMessage] = useState("");
 

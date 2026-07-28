@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import { Link } from 'react-router-dom';
 import { FiSettings } from "react-icons/fi";
 import styles from "./settings.module.css";
 import { api } from '@/lib/api/api.client';
@@ -47,7 +47,7 @@ const Settings = () => {
 
       {open && (
         <nav className={styles.menu}>
-          <Link href="/admin/account" className={styles.link}>アカウント設定</Link>
+          <Link to="/admin/account" className={styles.link}>アカウント設定</Link>
           <button className={styles.logout} onClick={logout}>ログアウト</button>
         </nav>
       )}

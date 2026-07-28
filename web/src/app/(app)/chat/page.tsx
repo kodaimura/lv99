@@ -1,17 +1,35 @@
-export const dynamic = 'force-dynamic';
+import { useEffect, useState } from 'react';
+import styles from './page.module.css';
+import ChatArea from './chat-area';
+import { api } from '@/lib/api/api.client';
+import { AccountWithProfile } from '@/types/models';
 
-import styles from "./page.module.css";
-import ChatArea from "./chat-area";
-import { api } from "@/lib/api/api.server";
-import { AccountWithProfile } from "@/types/models";
-import type { Metadata } from "next";
+const ChatPage: React.FC = () => {
+  const [account, setAccount] = useState<AccountWithProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export const metadata: Metadata = {
-  title: "lv99 - チャット",
-};
+  useEffect(() => {
+    let active = true;
 
-const ChatPage: React.FC = async () => {
-  const account: AccountWithProfile = await api.get("/accounts/admin/with-profile");
+    const fetchAdmin = async () => {
+      try {
+        const data: AccountWithProfile = await api.get('/accounts/admin/with-profile');
+        if (active) setAccount(data);
+      } catch (error) {
+        console.error('Failed to fetch chat account:', error);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    fetchAdmin();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (loading) return <div className={styles.page}>読み込み中...</div>;
+  if (!account) return <div className={styles.page}>チャット相手を取得できませんでした。</div>;
 
   return (
     <div className={styles.page}>
@@ -21,6 +39,6 @@ const ChatPage: React.FC = async () => {
       </div>
     </div>
   );
-}
+};
 
 export default ChatPage;

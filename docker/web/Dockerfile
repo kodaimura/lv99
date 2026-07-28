@@ -13,29 +13,18 @@ CMD ["npm", "run", "dev"]
 
 FROM deps AS builder
 
-ARG API_HOST=http://api:8000
-ARG NEXT_PUBLIC_API_HOST=http://localhost:8000
-ARG NEXT_PUBLIC_WS_HOST=ws://localhost:8000
+ARG VITE_API_HOST=http://localhost:8000
+ARG VITE_WS_HOST=ws://localhost:8000
 
-ENV API_HOST=$API_HOST
-ENV NEXT_PUBLIC_API_HOST=$NEXT_PUBLIC_API_HOST
-ENV NEXT_PUBLIC_WS_HOST=$NEXT_PUBLIC_WS_HOST
-ENV NEXT_TELEMETRY_DISABLED=1
+ENV VITE_API_HOST=$VITE_API_HOST
+ENV VITE_WS_HOST=$VITE_WS_HOST
 
 COPY web .
 RUN npm run build
 
-FROM node:23.11-slim AS runner
+FROM nginx:1.27-alpine AS runner
 
-WORKDIR /app
+COPY docker/web/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
-ENV HOSTNAME=0.0.0.0
-
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-
-CMD ["node", "server.js"]
+EXPOSE 3000
