@@ -2,6 +2,7 @@ package answer
 
 import (
 	"lv99/internal/core"
+	"strings"
 	"time"
 
 	answerModule "lv99/internal/module/answer"
@@ -68,7 +69,7 @@ func (uc *usecase) CreateOne(in CreateOneDto) (answerModule.Answer, error) {
 
 	isCorrect := false
 	var correctAt *time.Time
-	if result.Output == q.Answer {
+	if isCorrectOutput(result.Output, q.Answer) {
 		isCorrect = true
 		now := time.Now()
 		correctAt = &now
@@ -113,7 +114,7 @@ func (uc *usecase) UpdateOne(in UpdateOneDto) (answerModule.Answer, error) {
 	ans.CodeCall = in.CodeCall
 	ans.CallOutput = result.Output
 	ans.CallError = result.Error
-	ans.IsCorrect = result.Output == q.Answer
+	ans.IsCorrect = isCorrectOutput(result.Output, q.Answer)
 
 	if ans.IsCorrect && (ans.CorrectAt == nil || ans.CorrectAt.IsZero()) {
 		now := time.Now()
@@ -128,4 +129,14 @@ func (uc *usecase) DeleteOne(in DeleteOneDto) error {
 		Id:        in.Id,
 		AccountId: in.AccountId,
 	}, uc.db)
+}
+
+func isCorrectOutput(output string, answer string) bool {
+	return normalizeComparableOutput(output) == normalizeComparableOutput(answer)
+}
+
+func normalizeComparableOutput(value string) string {
+	value = strings.ReplaceAll(value, "\r\n", "\n")
+	value = strings.ReplaceAll(value, "\r", "\n")
+	return strings.TrimRight(value, " \t\n")
 }

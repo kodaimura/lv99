@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/joho/godotenv"
@@ -63,7 +64,11 @@ func init() {
 	if env != "" {
 		env = "." + env
 	}
-	err := godotenv.Load(fmt.Sprintf("config/env/.env%s", env))
+	envFile, err := findEnvFile(fmt.Sprintf(".env%s", env))
+	if err != nil {
+		log.Panic("Failed to find environment variables:", err)
+	}
+	err = godotenv.Load(envFile)
 	if err != nil {
 		log.Panic("Failed to load environment variables:", err)
 	}
@@ -131,4 +136,28 @@ func getEnv(key string, defaultValue ...string) string {
 		return defaultValue[0]
 	}
 	return value
+}
+
+func findEnvFile(fileName string) (string, error) {
+	dir, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+
+	for {
+		candidate := filepath.Join(dir, "config", "env", fileName)
+		if _, err := os.Stat(candidate); err == nil {
+			return candidate, nil
+		} else if !os.IsNotExist(err) {
+			return "", err
+		}
+
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			break
+		}
+		dir = parent
+	}
+
+	return "", fmt.Errorf("config/env/%s not found", fileName)
 }

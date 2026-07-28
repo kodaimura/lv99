@@ -8,8 +8,11 @@ services:
       - ./api/linux/logrotate.d/app:/etc/logrotate.d/app
     ports:
       - "127.0.0.1:8000:8000"
+    depends_on:
+      - code-runner
     environment:
       - ENV=prod
+      - CODE_EXECUTOR_HOST=http://code-runner:8080
     working_dir: /app
     command: sh -c "go build cmd/main.go && ./main"
     restart: always
@@ -28,4 +31,25 @@ services:
     environment:
       - NODE_ENV=production
     working_dir: /app
+    restart: always
+
+  code-runner:
+    build:
+      context: .
+      dockerfile: ./docker/code-runner/Dockerfile
+    expose:
+      - "8080"
+    environment:
+      - CODE_RUNNER_TIMEOUT_SECONDS=5
+      - CODE_RUNNER_MAX_SOURCE_BYTES=65536
+      - CODE_RUNNER_MAX_OUTPUT_BYTES=65536
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 64
+    mem_limit: 256m
     restart: always
