@@ -18,6 +18,7 @@ import AdminAccountsPage from '@/admin/accounts/page';
 import AdminAccountDetailPage from '@/admin/accounts/[id]/page';
 import AdminChatPage from '@/admin/chats/[to_id]/page';
 import AdminAccountPage from '@/admin/account/page';
+import { getAuthenticatedEntryPath } from '@/lib/auth-redirect';
 
 const LoadingScreen = () => <div style={{ padding: '4rem 1.5rem', textAlign: 'center' }}>読み込み中...</div>;
 
@@ -25,7 +26,7 @@ const PublicOnly = () => {
   const { account, isLoading } = useAuth();
 
   if (isLoading) return <LoadingScreen />;
-  if (account) return <Navigate to={account.role === 0 ? "/admin" : "/home"} replace />;
+  if (account) return <Navigate to={getAuthenticatedEntryPath(account)} replace />;
 
   return <Outlet />;
 };

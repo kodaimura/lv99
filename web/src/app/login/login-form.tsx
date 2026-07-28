@@ -8,6 +8,7 @@ import styles from './login-form.module.css';
 import { useAuth } from '@/contexts/auth-context';
 import { Account } from '@/types/models';
 import { setAccessToken } from '@/lib/auth-token';
+import { getAuthenticatedEntryPath } from '@/lib/auth-redirect';
 
 type LoginResponse = {
   access_token: string;
@@ -30,11 +31,7 @@ const LoginForm: React.FC = () => {
       const me: Account = await api.get('accounts/me');
 
       setAccount(me);
-      if (me.role == 0) {
-        navigate('/admin');
-      } else {
-        navigate('/home');
-      }
+      navigate(getAuthenticatedEntryPath(me));
     } catch (err) {
       if (err instanceof HttpError && err.status === 401) {
         setError('ユーザ名又はパスワードが異なります。');
