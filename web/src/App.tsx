@@ -25,7 +25,7 @@ const PublicOnly = () => {
   const { account, isLoading } = useAuth();
 
   if (isLoading) return <LoadingScreen />;
-  if (account) return <Navigate to="/home" replace />;
+  if (account) return <Navigate to={account.role === 0 ? "/admin" : "/home"} replace />;
 
   return <Outlet />;
 };
